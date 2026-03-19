@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAR Framework — Interactive Teaching Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   ROOT & RESET
+══════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:     #f4f1ec;
+  --bg2:    #ede9e2;
+  --white:  #faf8f4;
+  --ink:    #1a1612;
+  --ink2:   #3d352c;
+  --muted:  #7a6e62;
+  --rule:   rgba(26,22,18,0.1);
+  --amber:  #c87820;
+  --amber2: #e09030;
+  --amber3: rgba(200,120,32,0.12);
+  --red:    #b83020;
+  --red3:   rgba(184,48,32,0.1);
+  --green:  #1a6040;
+  --green3: rgba(26,96,64,0.1);
+  --blue:   #1a4080;
+  --blue3:  rgba(26,64,128,0.1);
+  --navy:   #0e1e30;
+}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Outfit',sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+.header{
+  background:var(--navy);
+  color:#fff;
+  padding:0 32px;
+  display:flex;
+  align-items:center;
+  gap:32px;
+  height:56px;
+  flex-shrink:0;
+  border-bottom:3px solid var(--amber);
+}
+.header-title{
+  font-family:'Fraunces',serif;
+  font-size:1.1em;
+  font-weight:700;
+  letter-spacing:-0.02em;
+  white-space:nowrap;
+}
+.header-subtitle{
+  font-size:0.72em;
+  color:rgba(255,255,255,0.45);
+  font-family:'DM Mono',monospace;
+  letter-spacing:0.06em;
+  white-space:nowrap;
+}
+
+/* ══════════════════════════════════════════════
+   LESSON NAV TABS
+══════════════════════════════════════════════ */
+.lesson-nav{
+  background:var(--white);
+  border-bottom:1px solid var(--rule);
+  display:flex;
+  overflow-x:auto;
+  scrollbar-width:none;
+  flex-shrink:0;
+  padding:0 24px;
+}
+.lesson-nav::-webkit-scrollbar{display:none;}
+.lesson-btn{
+  font-family:'Outfit',sans-serif;
+  font-size:0.78em;
+  font-weight:500;
+  padding:14px 20px;
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.lesson-btn:hover{color:var(--ink);}
+.lesson-btn.active{
+  color:var(--amber);
+  border-bottom-color:var(--amber);
+  font-weight:600;
+}
+.lesson-icon{font-size:1.2em;}
+
+/* ══════════════════════════════════════════════
+   LESSON PANELS
+══════════════════════════════════════════════ */
+.lessons-wrap{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+}
+.lesson{
+  display:none;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+.lesson.active{display:flex;}
+
+/* ══════════════════════════════════════════════
+   SHARED COMPONENTS
+══════════════════════════════════════════════ */
+.lesson-sidebar{
+  width:280px;
+  flex-shrink:0;
+  background:var(--white);
+  border-right:1px solid var(--rule);
+  padding:28px 22px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.lesson-main{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+  background:var(--bg);
+}
+
+.lesson-title{
+  font-family:'Fraunces',serif;
+  font-size:1.35em;
+  font-weight:600;
+  line-height:1.2;
+  letter-spacing:-0.02em;
+  color:var(--ink);
+}
+.lesson-title em{font-style:italic;color:var(--amber);}
+
+.lesson-desc{
+  font-size:0.8em;
+  color:var(--muted);
+  line-height:1.65;
+}
+
+.ctrl-block{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.ctrl-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.65em;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--amber);
+  margin-bottom:3px;
+  display:block;
+}
+.ctrl-desc{
+  font-size:0.72em;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+input[type=range]{
+  width:100%;
+  accent-color:var(--amber);
+  cursor:pointer;
+}
+.ctrl-val{
+  font-family:'DM Mono',monospace;
+  font-size:0.85em;
+  font-weight:500;
+  color:var(--ink);
+  text-align:right;
+  display:block;
+  margin-top:2px;
+}
+.insight-box{
+  background:var(--amber3);
+  border-left:3px solid var(--amber);
+  padding:12px 14px;
+  font-size:0.76em;
+  line-height:1.65;
+  color:var(--ink2);
+  border-radius:0 4px 4px 0;
+}
+.insight-box strong{color:var(--amber);font-weight:600;}
+.fact-box{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:6px;
+  padding:12px 14px;
+  font-size:0.72em;
+  color:var(--muted);
+  line-height:1.6;
+}
+.fact-box strong{color:var(--ink);font-weight:600;}
+
+/* Stat pill */
+.stat-pill{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:8px 0;
+  border-bottom:1px solid var(--rule);
+}
+.stat-pill:last-child{border-bottom:none;}
+.sp-val{
+  font-family:'Fraunces',serif;
+  font-size:1.4em;
+  font-weight:600;
+  color:var(--amber);
+}
+.sp-lbl{
+  font-size:0.72em;
+  color:var(--muted);
+  font-family:'DM Mono',monospace;
+  font-size:0.65em;
+  letter-spacing:0.04em;
+  text-align:right;
+  max-width:130px;
+  line-height:1.4;
+}
+
+
+/* ══════════════════════════════════════════════
+   LESSON 1 — THE CHANGEOVER FACTORY
+══════════════════════════════════════════════ */
+#factory-canvas{
+  width:100%;
+  height:100%;
+}
+
+/* ══════════════════════════════════════════════
+   LESSON 2 — BULLWHIP
+══════════════════════════════════════════════ */
+#bullwhip-canvas{
+  width:100%;
+  height:100%;
+}
+
+/* ══════════════════════════════════════════════
+   LESSON 3 — SILENT TAX
+══════════════════════════════════════════════ */
+.tax-stage{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  padding:32px;
+}
+.money-burn{
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  border:3px solid var(--amber);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background:radial-gradient(circle at 50% 50%, rgba(200,120,32,0.08), transparent 70%);
+  box-shadow:0 0 60px rgba(200,120,32,0.1);
+}
+.money-burn-main{
+  font-family:'Fraunces',serif;
+  font-size:3.2em;
+  font-weight:700;
+  color:var(--red);
+  line-height:1;
+}
+.money-burn-sub{
+  font-family:'DM Mono',monospace;
+  font-size:0.7em;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-top:4px;
+}
+.money-burn-annual{
+  font-size:0.82em;
+  color:var(--muted);
+  margin-top:8px;
+}
+.fire-particles{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  overflow:hidden;
+  pointer-events:none;
+}
+.fire-dot{
+  position:absolute;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--amber2);
+  animation:rise 2s ease-out infinite;
+  opacity:0;
+}
+@keyframes rise{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(-60px) scale(0.3);}
+}
+.cost-breakdown{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  max-width:500px;
+}
+.cost-item{
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:6px;
+  padding:10px 14px;
+  text-align:center;
+  min-width:100px;
+}
+.ci-val{
+  font-family:'Fraunces',serif;
+  font-size:1.1em;
+  color:var(--red);
+  display:block;
+}
+.ci-lbl{
+  font-size:0.65em;
+  color:var(--muted);
+  font-family:'DM Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+
+/* ══════════════════════════════════════════════
+   LESSON 4 — ABC-XYZ  (fixed layout)
+══════════════════════════════════════════════ */
+.abcxyz-stage{
+  width:100%; height:100%;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  grid-template-columns:1fr;
+  padding:16px 20px;
+  gap:12px;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+.abcxyz-top{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  flex-shrink:0;
+}
+.item-pool{
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:8px;
+  padding:10px 12px;
+  min-width:150px;
+  max-width:200px;
+  flex-shrink:0;
+}
+.pool-title{
+  font-family:'DM Mono',monospace;
+  font-size:0.62em;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.item-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 9px;
+  border-radius:20px;
+  font-size:0.7em;
+  font-weight:500;
+  cursor:grab;
+  margin:2px;
+  transition:transform 0.15s, box-shadow 0.15s;
+  user-select:none;
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  color:var(--ink);
+  white-space:nowrap;
+}
+.item-chip:hover{transform:scale(1.04);box-shadow:0 2px 10px rgba(0,0,0,0.12);}
+.item-chip.dragging{opacity:0.45;transform:scale(0.93);}
+
+/* The matrix itself fills remaining vertical space */
+.matrix-grid{
+  display:grid;
+  grid-template-columns:52px repeat(3,1fr);
+  grid-template-rows:34px repeat(3,1fr);
+  gap:4px;
+  min-height:0;  /* allow shrink inside grid */
+}
+.mhdr{
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:0.62em;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);
+  flex-direction:column;gap:1px;
+}
+.mrow-lbl{
+  display:flex;align-items:center;justify-content:flex-end;
+  padding-right:7px;
+  font-family:'DM Mono',monospace;font-size:0.62em;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;
+  flex-direction:column;gap:1px;
+}
+.mcell{
+  border-radius:6px;
+  border:2px dashed rgba(0,0,0,0.1);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  padding:6px 5px;
+  transition:all 0.18s;
+  position:relative;
+  overflow:hidden;
+  min-height:0;
+}
+.mcell.drag-over{
+  border-color:var(--amber) !important;
+  transform:scale(1.03);
+  z-index:2;
+}
+.mcell-label{
+  font-family:'Fraunces',serif;
+  font-size:1.05em;font-weight:700;
+  display:block;margin-bottom:1px;line-height:1;
+}
+.mcell-iar{
+  font-family:'DM Mono',monospace;
+  font-size:0.5em;letter-spacing:0.05em;text-transform:uppercase;
+  opacity:0.85;line-height:1.25;text-align:center;
+}
+.mcell-items{
+  display:flex;flex-wrap:wrap;gap:2px;
+  margin-top:3px;justify-content:center;
+}
+.placed-chip{
+  padding:1px 6px;
+  border-radius:10px;
+  font-size:0.58em;
+  font-weight:600;
+  background:rgba(0,0,0,0.12);
+  color:inherit;
+  white-space:nowrap;
+}
+.abcxyz-info{
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:0.76em;
+  color:var(--muted);
+  line-height:1.62;
+  flex-shrink:0;
+  max-height:100px;
+  overflow-y:auto;
+}
+
+/* Matrix cell colour coding */
+.mc-high{background:rgba(26,96,64,0.15);border-color:rgba(26,96,64,0.25) !important;}
+.mc-med {background:rgba(200,120,32,0.13);border-color:rgba(200,120,32,0.25) !important;}
+.mc-low {background:rgba(26,22,18,0.04);border-color:rgba(26,22,18,0.08) !important;}
+.mc-bad {background:rgba(184,48,32,0.11);border-color:rgba(184,48,32,0.22) !important;}
+
+/* ══════════════════════════════════════════════
+   LESSON 5 — IAR LOOP
+══════════════════════════════════════════════ */
+#iar-loop-canvas{
+  width:100%;
+  height:100%;
+}
+.iar-controls{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+}
+.iar-btn{
+  padding:9px 22px;
+  border:none;
+  border-radius:24px;
+  font-family:'Outfit',sans-serif;
+  font-size:0.8em;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.iar-btn.primary{background:var(--amber);color:white;}
+.iar-btn.secondary{background:var(--green);color:white;}
+.iar-btn.reset{background:var(--bg2);color:var(--ink2);border:1px solid var(--rule);}
+.iar-btn:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.15);}
+
+/* ══════════════════════════════════════════════
+   LESSON 6 — BOOTSTRAP
+══════════════════════════════════════════════ */
+.bootstrap-stage{
+  width:100%;
+  height:100%;
+  padding:28px 32px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.bs-timeline{
+  display:flex;
+  gap:0;
+  position:relative;
+}
+.bs-timeline::before{
+  content:'';
+  position:absolute;
+  top:28px;left:28px;right:28px;
+  height:2px;
+  background:linear-gradient(90deg,var(--red),var(--amber),var(--green));
+}
+.bs-step{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+}
+.bs-dot{
+  width:56px;height:56px;
+  border-radius:50%;
+  border:3px solid var(--bg2);
+  background:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4em;
+  z-index:1;
+  position:relative;
+  transition:all 0.2s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.bs-step.active .bs-dot{
+  border-color:var(--amber);
+  box-shadow:0 0 0 4px var(--amber3);
+}
+.bs-title{
+  font-family:'Outfit',sans-serif;
+  font-size:0.72em;
+  font-weight:600;
+  text-align:center;
+  color:var(--muted);
+  line-height:1.3;
+}
+.bs-step.active .bs-title{color:var(--ink);}
+.bs-detail{
+  background:var(--white);
+  border:1px solid var(--rule);
+  border-radius:8px;
+  padding:22px 26px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  flex:1;
+}
+.bs-detail-body{
+  font-size:0.8em;
+  color:var(--ink2);
+  line-height:1.72;
+}
+.bs-range{
+  font-family:'Fraunces',serif;
+  font-size:1.6em;
+  color:var(--amber);
+  margin-bottom:8px;
+  display:block;
+}
+.bs-cashflow{
+  background:var(--bg);
+  border-radius:6px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.cf-bar-row{
+  display:flex;align-items:center;gap:8px;
+}
+.cf-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.6em;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;
+  min-width:90px;
+}
+.cf-bar{
+  height:18px;
+  border-radius:3px;
+  transition:width 0.6s ease;
+}
+.cf-val{
+  font-family:'DM Mono',monospace;
+  font-size:0.65em;color:var(--muted);
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">IAR Framework — Interactive Visual Lessons</div>
+  <div class="header-subtitle">Inventory-to-Agility Reallocation · Teaching Tool</div>
+</div>
+
+<!-- LESSON NAV -->
+<nav class="lesson-nav">
+  <button class="lesson-btn active" onclick="showLesson(0,this)"><span class="lesson-icon">🏭</span> The Changeover Factory</button>
+  <button class="lesson-btn" onclick="showLesson(1,this)"><span class="lesson-icon">🌊</span> The Bullwhip Effect</button>
+  <button class="lesson-btn" onclick="showLesson(2,this)"><span class="lesson-icon">🔥</span> The Silent Tax</button>
+  <button class="lesson-btn" onclick="showLesson(3,this)"><span class="lesson-icon">📊</span> ABC-XYZ Diagnostic</button>
+  <button class="lesson-btn" onclick="showLesson(4,this)"><span class="lesson-icon">♻️</span> The IAR Flywheel</button>
+  <button class="lesson-btn" onclick="showLesson(5,this)"><span class="lesson-icon">🪜</span> Bootstrap Path</button>
+</nav>
+
+<!-- LESSONS -->
+<div class="lessons-wrap">
+
+<!-- ════════════════════════════════
+  LESSON 1: THE CHANGEOVER FACTORY
+════════════════════════════════ -->
+<div class="lesson active" id="l0">
+  <div class="lesson-sidebar">
+    <div>
+      <div class="lesson-title">The <em>Changeover</em> Factory</div>
+      <div style="height:2px;background:var(--amber);margin:10px 0;width:32px;"></div>
+      <div class="lesson-desc">Watch what happens to inventory when changing a production line is expensive vs. free. This is the <strong>EOQ insight</strong> — the mathematical heart of the IAR thesis.</div>
+    </div>
+
+    <div class="ctrl-block">
+      <div>
+        <span class="ctrl-label">Changeover Time</span>
+        <div class="ctrl-desc">How long does it take to switch the factory from Product A to Product B?</div>
+        <input type="range" id="co-time" min="0" max="100" value="80" oninput="updateFactory()">
+        <span class="ctrl-val" id="co-time-v">8 hours</span>
+      </div>
+
+      <div>
+        <span class="ctrl-label">Daily Demand Rate</span>
+        <div class="ctrl-desc">How fast do customers order?</div>
+        <input type="range" id="co-demand" min="1" max="20" value="10" oninput="updateFactory()">
+        <span class="ctrl-val" id="co-demand-v">10 units/day</span>
+      </div>
+    </div>
+
+    <div class="ctrl-block">
+      <div class="stat-pill"><span class="sp-val" id="sp-batch">—</span><span class="sp-lbl">Optimal batch size (EOQ)</span></div>
+      <div class="stat-pill"><span class="sp-val" id="sp-inv">—</span><span class="sp-lbl">Average inventory held</span></div>
+      <div class="stat-pill"><span class="sp-val" id="sp-cycle">—</span><span class="sp-lbl">Production cycle length</span></div>
+      <div class="stat-pill"><span class="sp-val" id="sp-holdcost">—</span><span class="sp-lbl">Annual holding cost (25% rate)</span></div>
+    </div>
+
+    <div class="insight-box" id="factory-insight">
+      Adjust the changeover time slider to see how inventory levels respond. The EOQ formula says: Batch Size ∝ √(Changeover Cost).
+    </div>
+
+    <div class="fact-box">
+      <strong>Toyota SMED:</strong> Reduced stamping press changeover from 4 hours to 8 minutes. Result: batch sizes fell 85%, inventory fell in proportion. This is not automation — it is the EOQ mechanism.
+    </div>
+  </div>
+
+  <div class="lesson-main">
+    <canvas id="factory-canvas"></canvas>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+  LESSON 2: THE BULLWHIP
+════════════════════════════════ -->
+<div class="lesson" id="l1">
+  <div class="lesson-sidebar">
+    <div>
+      <div class="lesson-title">The <em>Bullwhip</em> Effect</div>
+      <div style="height:2px;background:var(--blue);margin:10px 0;width:32px;"></div>
+      <div class="lesson-desc">A small demand ripple at the retail end becomes a violent production swing upstream. Longer production cycles = bigger swings = more excess inventory. <strong>Robotics shrinks the cycle, dampening the whip.</strong></div>
+    </div>
+
+    <div class="ctrl-block">
+      <div>
+        <span class="ctrl-label">Production Cycle (weeks)</span>
+        <div class="ctrl-desc">How often can the factory update its production plan?</div>
+        <input type="range" id="bw-cycle" min="1" max="12" value="8" oninput="updateBullwhip()">
+        <span class="ctrl-val" id="bw-cycle-v">8-week cycle</span>
+      </div>
+
+      <div>
+        <span class="ctrl-label">Demand Variability</span>
+        <div class="ctrl-desc">How much does customer demand fluctuate week to week?</div>
+        <input type="range" id="bw-var" min="5" max="40" value="20" oninput="updateBullwhip()">
+        <span class="ctrl-val" id="bw-var-v">±20%</span>
+      </div>
+    </div>
+
+    <div class="ctrl-block">
+      <div class="stat-pill"><span class="sp-val" id="bw-retailamp">—</span><span class="sp-lbl">Retail demand swing</span></div>
+      <div class="stat-pill"><span class="sp-val" id="bw-distamp">—</span><span class="sp-lbl">Distributor order swing</span></div>
+      <div class="stat-pill"><span class="sp-val" id="bw-mfgamp">—</span><span class="sp-lbl">Manufacturer production swing</span></div>
+      <div class="stat-pill"><span class="sp-val" id="bw-safety">—</span><span class="sp-lbl">Required safety stock (weeks)</span></div>
+    </div>
+
+    <div class="insight-box" id="bullwhip-insight">
+      Drag "Production Cycle" to see how cycle length amplifies demand swings upstream. Robotics compresses cycles from 8 weeks → 1 week, dramatically damping the bullwhip.
+    </div>
+  </div>
+
+  <div class="lesson-main">
+    <canvas id="bullwhip-canvas"></canvas>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+  LESSON 3: THE SILENT TAX
+════════════════════════════════ -->
+<div class="lesson" id="l2">
+  <div class="lesson-sidebar">
+    <div>
+      <div class="lesson-title">The <em>Silent Tax</em> on Inventory</div>
+      <div style="height:2px;background:var(--red);margin:10px 0;width:32px;"></div>
+      <div class="lesson-desc">Inventory sitting in a warehouse is not neutral. Every day it costs you money. Insurance. Storage. Capital tied up that could be invested. Obsolescence risk. This is the <strong>holding cost</strong> — the silent tax that makes the IAR case economically compelling.</div>
+    </div>
+
+    <div class="ctrl-block">
+      <div>
+        <span class="ctrl-label">Total Inventory Value ($M)</span>
+        <input type="range" id="st-inv" min="1" max="500" value="120" oninput="updateSilentTax()">
+        <span class="ctrl-val" id="st-inv-v">$120M</span>
+      </div>
+      <div>
+        <span class="ctrl-label">Holding Cost Rate (%/year)</span>
+        <input type="range" id="st-rate" min="10" max="40" value="25" oninput="updateSilentTax()">
+        <span class="ctrl-val" id="st-rate-v">25%</span>
+      </div>
+      <div>
+        <span class="ctrl-label">IAR-Addressable Fraction (%)</span>
+        <input type="range" id="st-iar" min="10" max="55" value="38" oninput="updateSilentTax()">
+        <span class="ctrl-val" id="st-iar-v">38%</span>
+      </div>
+    </div>
+
+    <div class="ctrl-block">
+      <div class="stat-pill"><span class="sp-val" id="st-daily" style="color:var(--red);">—</span><span class="sp-lbl">Cost per day (total inventory)</span></div>
+      <div class="stat-pill"><span class="sp-val" id="st-annual" style="color:var(--red);">—</span><span class="sp-lbl">Annual holding cost (total)</span></div>
+      <div class="stat-pill"><span class="sp-val" id="st-excess">—</span><span class="sp-lbl">IAR-zone inventory value</span></div>
+      <div class="stat-pill"><span class="sp-val" id="st-waste" style="color:var(--red);">—</span><span class="sp-lbl">Annual cost of excess (waste)</span></div>
+    </div>
+
+    <div class="insight-box">
+      The <strong>IAR-zone annual cost</strong> is the money you are paying every year to store inventory that robots could render unnecessary. That is your first-year robot budget — without spending a single dollar of new money.
+    </div>
+  </div>
+
+  <div class="lesson-main">
+    <div class="tax-stage">
+      <div class="money-burn" id="money-burn-viz">
+        <div class="fire-particles" id="fire-particles"></div>
+        <div class="money-burn-main" id="mb-daily">$0</div>
+        <div class="money-burn-sub">per day</div>
+        <div class="money-burn-annual" id="mb-annual">$0M / year</div>
+      </div>
+
+      <div class="cost-breakdown" id="cost-breakdown">
+        <div class="cost-item"><span class="ci-val" id="ci-capital">—</span><span class="ci-lbl">Capital cost</span></div>
+        <div class="cost-item"><span class="ci-val" id="ci-storage">—</span><span class="ci-lbl">Storage</span></div>
+        <div class="cost-item"><span class="ci-val" id="ci-insure">—</span><span class="ci-lbl">Insurance</span></div>
+        <div class="cost-item"><span class="ci-val" id="ci-obsol">—</span><span class="ci-lbl">Obsolescence</span></div>
+      </div>
+
+      <div style="background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:18px 24px;max-width:500px;width:100%;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.65em;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Inventory Composition</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;height:32px;border-radius:4px;overflow:hidden;">
+          <div id="bar-genuine" style="background:rgba(26,64,128,0.5);transition:flex 0.5s ease;display:flex;align-items:center;justify-content:center;font-size:0.65em;color:white;font-family:'DM Mono',monospace;"></div>
+          <div id="bar-iar" style="background:rgba(200,120,32,0.7);transition:flex 0.5s ease;display:flex;align-items:center;justify-content:center;font-size:0.65em;color:white;font-family:'DM Mono',monospace;"></div>
+        </div>
+        <div style="display:flex;gap:16px;">
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(26,64,128,0.5);"></div><span style="font-size:0.7em;color:var(--muted);">Genuinely needed</span></div>
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:rgba(200,120,32,0.7);"></div><span style="font-size:0.7em;color:var(--muted);">IAR-addressable excess</span></div>
+        </div>
+        <div style="margin-top:12px;font-size:0.72em;color:var(--muted);line-height:1.6;" id="st-insight-text">
+          Adjust the sliders to see how much of your holding cost is avoidable through robotics-enabled agility.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+  LESSON 4: ABC-XYZ DIAGNOSTIC
+════════════════════════════════ -->
+<div class="lesson" id="l3">
+  <div class="lesson-sidebar">
+    <div>
+      <div class="lesson-title"><em>ABC-XYZ</em> Diagnostic</div>
+      <div style="height:2px;background:var(--green);margin:10px 0;width:32px;"></div>
+      <div class="lesson-desc">Drag inventory items into the matrix to classify them. The colour shows their <strong>IAR applicability</strong> — how much of that inventory is agility-addressable vs. genuinely required.</div>
+    </div>
+
+    <div class="fact-box">
+      <strong>A/B/C</strong> = Pareto value ranking. A items = top 80% of inventory value.<br><br>
+      <strong>X/Y/Z</strong> = Demand predictability. X = stable (CoV &lt;0.5), Z = volatile (CoV &gt;1.0).<br><br>
+      The <strong>IAR zone</strong> = high-value items with predictable demand (AX, AY, BX). These are held in excess purely because changeover is expensive.
+    </div>
+
+    <div class="fact-box" style="margin-top:8px;">
+      <strong>Green cells</strong> = high IAR opportunity. Robots directly reduce the inventory buffer here via the EOQ mechanism.<br><br>
+      <strong>Red cells</strong> = genuine safety stock. Not IAR-addressable. Demand is too volatile or value too high.
+    </div>
+
+    <div style="margin-top:8px;">
+      <button onclick="resetMatrix()" style="padding:8px 16px;border:1px solid var(--rule);border-radius:4px;background:var(--white);font-family:'Outfit',sans-serif;font-size:0.75em;cursor:pointer;color:var(--muted);">↺ Reset Items</button>
+    </div>
+  </div>
+
+  <div class="lesson-main" style="overflow:hidden;">
+    <div class="abcxyz-stage">
+
+      <!-- Row 1: Item pool + hint -->
+      <div class="abcxyz-top">
+        <div class="item-pool">
+          <div class="pool-title">Drag items →</div>
+          <div id="item-pool-items"></div>
+        </div>
+        <div style="flex:1;font-size:0.74em;color:var(--muted);line-height:1.65;padding:4px 0;">
+          <strong style="color:var(--ink);">How to use:</strong> Drag each item into the correct matrix cell based on its description (hover to read). Green = high IAR opportunity. Red = genuine safety stock, not IAR-addressable. After placing, see the strategy below.
+        </div>
+        <button onclick="resetMatrix()" style="flex-shrink:0;padding:7px 14px;border:1px solid var(--rule);border-radius:4px;background:var(--white);font-family:'Outfit',sans-serif;font-size:0.72em;cursor:pointer;color:var(--muted);height:fit-content;">↺ Reset</button>
+      </div>
+
+      <!-- Row 2: The matrix (fills remaining space) -->
+      <div class="matrix-grid" id="abcxyz-matrix">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Row 3: Info strip -->
+      <div class="abcxyz-info" id="abcxyz-info">
+        Drag an item from the pool into a matrix cell to see the IAR strategy for that inventory category.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+  LESSON 5: IAR FLYWHEEL
+════════════════════════════════ -->
+<div class="lesson" id="l4">
+  <div class="lesson-sidebar">
+    <div>
+      <div class="lesson-title">The <em>IAR Flywheel</em></div>
+      <div style="height:2px;background:var(--amber);margin:10px 0;width:32px;"></div>
+      <div class="lesson-desc">Watch how the IAR loop works as a self-reinforcing system. Press <strong>Invest in Robots</strong> to start the cycle and observe how each step triggers the next.</div>
+    </div>
+
+    <div class="ctrl-block">
+      <div>
+        <span class="ctrl-label">Initial Inventory ($M)</span>
+        <input type="range" id="fl-inv" min="20" max="300" value="120" oninput="updateFlywheel()">
+        <span class="ctrl-val" id="fl-inv-v">$120M</span>
+      </div>
+      <div>
+        <span class="ctrl-label">Robot Investment ($M)</span>
+        <input type="range" id="fl-rob" min="1" max="30" value="10" oninput="updateFlywheel()">
+        <span class="ctrl-val" id="fl-rob-v">$10M</span>
+      </div>
+      <div>
+        <span class="ctrl-label">Changeover Reduction (%)</span>
+        <input type="range" id="fl-co" min="20" max="85" value="60" oninput="updateFlywheel()">
+        <span class="ctrl-val" id="fl-co-v">60%</span>
+      </div>
+    </div>
+
+    <div class="ctrl-block">
+      <div class="stat-pill"><span class="sp-val" id="fl-inventoryaftr">—</span><span class="sp-lbl">Inventory after Phase 1</span></div>
+      <div class="stat-pill"><span class="sp-val" id="fl-released">—</span><span class="sp-lbl">Capital released</span></div>
+      <div class="stat-pill"><span class="sp-val" id="fl-annualsave">—</span><span class="sp-lbl">Annual holding cost saving</span></div>
+      <div class="stat-pill"><span class="sp-val" id="fl-payback">—</span><span class="sp-lbl">Fleet payback (savings only)</span></div>
+    </div>
+
+    <div class="insight-box" id="flywheel-insight">
+      Press "Invest in Robots" to start the flywheel. Watch each step activate in sequence.
+    </div>
+  </div>
+
+  <div class="lesson-main" style="position:relative;">
+    <canvas id="iar-loop-canvas"></canvas>
+    <div class="iar-controls">
+      <button class="iar-btn primary" onclick="startFlywheel()">▶ Invest in Robots</button>
+      <button class="iar-btn reset" onclick="resetFlywheel()">↺ Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+  LESSON 6: BOOTSTRAP PATH
+════════════════════════════════ -->
+<div class="lesson" id="l5">
+  <div class="lesson-sidebar">
+    <div>
+      <div class="lesson-title">The <em>Bootstrap</em> Problem</div>
+      <div style="height:2px;background:var(--green);margin:10px 0;width:32px;"></div>
+      <div class="lesson-desc">The most common practitioner question: <em>"The robots need to go in before inventory savings arrive. How do I fund that?"</em><br><br>Five strategies, ordered from lowest capital commitment to highest. Click each to see how it works.</div>
+    </div>
+
+    <div class="fact-box">
+      The <strong>"zero net new capital"</strong> claim is accurate over 24–36 months — not on Day 0. The bootstrap section provides five real paths to bridge that gap.
+    </div>
+
+    <div class="fact-box" style="margin-top:8px;">
+      <strong>Recommended sequence:</strong><br>
+      Month 0–6: Single-cell pilot (Strategy 1)<br>
+      Month 6–18: RaaS or Lease (Strategy 2–3)<br>
+      Month 18–36: Inventory-funded CapEx (Strategy 5)<br><br>
+      By Month 30, the fleet is self-funding from holding cost savings.
+    </div>
+  </div>
+
+  <div class="lesson-main" style="overflow:hidden;">
+    <div class="bootstrap-stage">
+
+      <div class="bs-timeline" id="bs-timeline">
+        <!-- Steps injected by JS -->
+      </div>
+
+      <div class="bs-detail" id="bs-detail">
+        <div>
+          <span class="bs-range" id="bs-range">—</span>
+          <div class="bs-detail-body" id="bs-body">Select a strategy above to see how it works.</div>
+        </div>
+        <div class="bs-cashflow">
+          <div style="font-family:'DM Mono',monospace;font-size:0.6em;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Cash Flow Profile</div>
+          <div class="cf-bar-row"><span class="cf-label">Upfront Cost</span><div class="cf-bar" id="cf-upfront" style="background:rgba(184,48,32,0.5);width:0px;"></div><span class="cf-val" id="cf-upfront-v">—</span></div>
+          <div class="cf-bar-row"><span class="cf-label">Monthly Cost</span><div class="cf-bar" id="cf-monthly" style="background:rgba(184,48,32,0.3);width:0px;"></div><span class="cf-val" id="cf-monthly-v">—</span></div>
+          <div class="cf-bar-row"><span class="cf-label">Tax Saving</span><div class="cf-bar" id="cf-tax" style="background:rgba(26,96,64,0.5);width:0px;"></div><span class="cf-val" id="cf-tax-v">—</span></div>
+          <div class="cf-bar-row"><span class="cf-label">Risk Level</span><div class="cf-bar" id="cf-risk" style="background:rgba(26,64,128,0.4);width:0px;"></div><span class="cf-val" id="cf-risk-v">—</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div><!-- /lessons-wrap -->
+
+<script>
+/* ════════════════════════════════════════════
+   LESSON SWITCHING
+════════════════════════════════════════════ */
+const lessons = document.querySelectorAll('.lesson');
+function showLesson(i, btn){
+  lessons.forEach(l=>l.classList.remove('active'));
+  document.querySelectorAll('.lesson-btn').forEach(b=>b.classList.remove('active'));
+  lessons[i].classList.add('active');
+  btn.classList.add('active');
+  // Init lesson if needed
+  if(i===0) setTimeout(initFactory,50);
+  if(i===1) setTimeout(initBullwhip,50);
+  if(i===2) updateSilentTax();
+  if(i===3) initABCXYZ();
+  if(i===4) {initFlywheel(); updateFlywheel();}
+  if(i===5) initBootstrap();
+}
+setTimeout(()=>{ initFactory(); updateSilentTax(); initABCXYZ(); initBootstrap(); }, 100);
+
+/* ════════════════════════════════════════════
+   LESSON 1: THE CHANGEOVER FACTORY
+   Animated canvas: factory, products, inventory pile
+════════════════════════════════════════════ */
+let factoryRAF = null, factoryState = {
+  inventory: 50, batch: 50, cycle: 0, phase: 'producing', // producing | changeover
+  changeoverProgress: 0, changeoverMax: 80,
+  productA: { color:'#4a90d9', name:'A' },
+  productB: { color:'#e67e22', name:'B' },
+  current: 'A', particles: [],
+  coTime: 80, demand: 10
+};
+
+function updateFactory(){
+  const co = parseInt(document.getElementById('co-time').value);
+  const d  = parseInt(document.getElementById('co-demand').value);
+  factoryState.coTime = co;
+  factoryState.demand = d;
+
+  // EOQ calculation: Q* = sqrt(2*D*S/H), approximate S ∝ coTime
+  const S = co * 100; // changeover cost proxy
+  const H = 25; // $25/unit/yr holding cost
+  const D = d * 300; // annual demand
+  const Q = Math.max(1, Math.round(Math.sqrt(2*D*S/H)));
+  const avgInv = Q/2;
+  const cycleLen = Math.round(Q/d);
+  const holdCost = Math.round(avgInv * 40 * 0.25 / 1000); // $40/unit
+
+  factoryState.batch = Math.min(Q, 200);
+  factoryState.changeoverMax = co;
+
+  document.getElementById('co-time-v').textContent = co===0?'Instant':Math.round(co/10)+' hours';
+  document.getElementById('co-demand-v').textContent = d+' units/day';
+  document.getElementById('sp-batch').textContent = Q>999?Math.round(Q/100)*100+'+':(Q)+' units';
+  document.getElementById('sp-inv').textContent = Math.round(avgInv>999?avgInv/1000+'K':avgInv)+' units';
+  document.getElementById('sp-cycle').textContent = cycleLen>30?Math.round(cycleLen/7)+' weeks':cycleLen+' days';
+  document.getElementById('sp-holdcost').textContent = holdCost>999?'$'+Math.round(holdCost/100)/10+'M/yr':'$'+holdCost+'K/yr';
+
+  const coReduction = Math.round((1 - co/100)*100);
+  if(co === 0){
+    document.getElementById('factory-insight').innerHTML = '🎉 <strong>Zero changeover cost!</strong> The EOQ-optimal batch size approaches 1 unit. The factory produces exactly what customers want, exactly when they want it. No inventory accumulates.';
+  } else if(co < 30){
+    document.getElementById('factory-insight').innerHTML = '<strong>Very short changeover.</strong> Batches are small, inventory stays lean. This is what robotic cells achieve — switching products in minutes, not hours.';
+  } else if(co > 70){
+    document.getElementById('factory-insight').innerHTML = '⚠️ <strong>Long changeover = large batches = big inventory pile.</strong> The factory must overproduce to amortize the setup cost. This is the problem IAR solves.';
+  } else {
+    document.getElementById('factory-insight').innerHTML = 'Notice how reducing changeover time shrinks the pile. Each <strong>10% reduction in changeover cost reduces batch size by ~5%</strong> (square root relationship). The inventory pile falls proportionally.';
+  }
+}
+
+function initFactory(){
+  const canvas = document.getElementById('factory-canvas');
+  if(!canvas) return;
+  if(factoryRAF) cancelAnimationFrame(factoryRAF);
+  updateFactory();
+
+  const ctx = canvas.getContext('2d');
+  function resize(){
+    canvas.width = canvas.offsetWidth * devicePixelRatio;
+    canvas.height = canvas.offsetHeight * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  let simInventory = 50;
+  let simPhase = 'producing';
+  let simProgress = 0;
+  let simBatch = 0;
+  let simBoxes = [];
+  let lastTime = 0;
+
+  function drawFactory(ts){
+    const dt = Math.min((ts-lastTime)/1000, 0.05);
+    lastTime = ts;
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    ctx.clearRect(0,0,W,H);
+
+    const co = factoryState.coTime;
+    const demand = factoryState.demand;
+    const maxBatch = factoryState.batch;
+    const changeoverDuration = co * 2; // seconds sim
+    const prodRate = 3; // boxes/second
+
+    // Background
+    ctx.fillStyle = '#f4f1ec';
+    ctx.fillRect(0,0,W,H);
+
+    // FACTORY BUILDING (left side)
+    const factX = 60, factY = H*0.25, factW = 200, factH = H*0.45;
+    ctx.fillStyle = '#e8e2d8';
+    ctx.strokeStyle = '#c8bfb0';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(factX, factY, factW, factH, 8);
+    ctx.fill(); ctx.stroke();
+
+    // Factory roof
+    ctx.fillStyle = '#3d352c';
+    ctx.beginPath();
+    ctx.moveTo(factX-10, factY);
+    ctx.lineTo(factX+factW/2, factY-40);
+    ctx.lineTo(factX+factW+10, factY);
+    ctx.fill();
+
+    // Chimney / animation
+    ctx.fillStyle = '#5a4e42';
+    ctx.fillRect(factX+factW*0.6, factY-60, 18, 28);
+
+    // Smoke if working
+    if(simPhase==='producing'){
+      for(let i=0;i<3;i++){
+        const sy = factY-60-i*20 + Math.sin(t*2+i)*6;
+        const sx = factX+factW*0.6+9 + Math.sin(t*1.5+i)*4;
+        const alpha = 0.3 - i*0.08;
+        ctx.fillStyle = `rgba(120,110,100,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 10+i*5, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // Factory label
+    ctx.fillStyle = '#7a6e62';
+    ctx.font = `bold 14px 'Outfit'`;
+    ctx.textAlign = 'center';
+    ctx.fillText('FACTORY', factX+factW/2, factY+factH/2+5);
+
+    // Phase indicator
+    const phaseColor = simPhase==='producing' ? '#1a6040' : '#b83020';
+    const phaseText = simPhase==='producing' ? '▶ PRODUCING' : `⚙ CHANGEOVER ${Math.round(simProgress/changeoverDuration*100)}%`;
+    ctx.fillStyle = phaseColor;
+    ctx.font = `600 12px 'DM Mono'`;
+    ctx.fillText(phaseText, factX+factW/2, factY+factH/2+25);
+
+    // Progress bar for changeover
+    if(simPhase==='changeover'){
+      const bw = factW-40;
+      ctx.fillStyle = '#e8e2d8';
+      ctx.fillRect(factX+20, factY+factH/2+35, bw, 6);
+      ctx.fillStyle = '#b83020';
+      ctx.fillRect(factX+20, factY+factH/2+35, bw*(simProgress/changeoverDuration), 6);
+    }
+
+    // CONVEYOR BELT
+    const beltY = factY+factH*0.7;
+    const beltX1 = factX+factW;
+    const beltX2 = W*0.55;
+    ctx.strokeStyle = '#c8bfb0';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(beltX1, beltY);
+    ctx.lineTo(beltX2, beltY);
+    ctx.stroke();
+    // Belt stripes
+    for(let x=beltX1; x<beltX2; x+=20){
+      const offset = (t*30)%20;
+      ctx.strokeStyle = 'rgba(180,170,155,0.5)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.moveTo(x+offset, beltY-6);
+      ctx.lineTo(x+offset, beltY+6);
+      ctx.stroke();
+    }
+
+    // WAREHOUSE (right side)
+    const whX = W*0.55, whY = H*0.15, whW = W*0.38, whH = H*0.6;
+    ctx.fillStyle = '#e8e2d8';
+    ctx.strokeStyle = '#c8bfb0';
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.roundRect(whX, whY, whW, whH, 8);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#7a6e62';
+    ctx.font = `bold 13px 'Outfit'`;
+    ctx.textAlign = 'center';
+    ctx.fillText('WAREHOUSE INVENTORY', whX+whW/2, whY+22);
+
+    // Inventory boxes stacked
+    const boxSize = 28;
+    const maxRows = Math.floor((whH-50)/boxSize);
+    const boxesPerRow = Math.floor((whW-20)/boxSize);
+    const totalBoxCapacity = maxRows*boxesPerRow;
+    const displayBoxes = Math.min(simInventory, totalBoxCapacity);
+    const boxFill = Math.min(simInventory/maxBatch, 1);
+
+    // Fill level bar
+    const fillBarH = whH-50;
+    ctx.fillStyle = 'rgba(200,120,32,0.1)';
+    ctx.fillRect(whX+10, whY+30, whW-20, fillBarH);
+    const fillH = fillBarH * boxFill;
+    const fillGrad = ctx.createLinearGradient(0,whY+30+fillBarH-fillH,0,whY+30+fillBarH);
+    fillGrad.addColorStop(0,'rgba(200,120,32,0.25)');
+    fillGrad.addColorStop(1,'rgba(200,120,32,0.5)');
+    ctx.fillStyle = fillGrad;
+    ctx.fillRect(whX+10, whY+30+fillBarH-fillH, whW-20, fillH);
+
+    // Draw actual boxes
+    let boxCount = 0;
+    for(let row=maxRows-1; row>=0 && boxCount<displayBoxes; row--){
+      for(let col=0; col<boxesPerRow && boxCount<displayBoxes; col++){
+        const bx = whX+12+col*boxSize;
+        const by = whY+30+row*boxSize;
+        const colorIdx = (row*boxesPerRow+col)%2;
+        ctx.fillStyle = colorIdx===0 ? '#4a90d9' : '#e67e22';
+        ctx.globalAlpha = 0.75;
+        ctx.beginPath();
+        ctx.roundRect(bx+1,by+1,boxSize-4,boxSize-4,3);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        boxCount++;
+      }
+    }
+
+    // Level label
+    ctx.fillStyle = '#3d352c';
+    ctx.font = `bold 18px 'Fraunces'`;
+    ctx.textAlign = 'right';
+    ctx.fillText(`${Math.round(simInventory)} units`, whX+whW-14, whY+whH-12);
+
+    // Optimal line
+    const optLine = whY+30+fillBarH*(1-0.5); // avg = batch/2
+    ctx.strokeStyle = 'rgba(26,96,64,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5,4]);
+    ctx.beginPath();
+    ctx.moveTo(whX+10, optLine);
+    ctx.lineTo(whX+whW-10, optLine);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(26,96,64,0.6)';
+    ctx.font = `10px 'DM Mono'`;
+    ctx.textAlign = 'left';
+    ctx.fillText('avg inventory level', whX+14, optLine-4);
+
+    // CUSTOMER (bottom)
+    const custX = W*0.68, custY = whY+whH+20;
+    ctx.fillStyle = '#3d352c';
+    ctx.font = `13px 'Outfit'`;
+    ctx.textAlign = 'center';
+    ctx.fillText(`👤 Customer demand: ${demand}/day`, custX, custY+20);
+
+    // Demand arrow
+    ctx.strokeStyle = 'rgba(184,48,32,0.5)';
+    ctx.lineWidth=1.5;
+    ctx.setLineDash([4,3]);
+    ctx.beginPath();
+    ctx.moveTo(custX, whY+whH-5);
+    ctx.lineTo(custX, custY+5);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // EOQ label
+    ctx.fillStyle = '#3d352c';
+    ctx.font = `11px 'DM Mono'`;
+    ctx.textAlign = 'left';
+    ctx.fillText(`Q* = ${Math.round(factoryState.batch)} units`, factX+10, factY+factH+20);
+    ctx.fillText(`Avg inventory = ${Math.round(factoryState.batch/2)} units`, factX+10, factY+factH+36);
+
+    // SIMULATION
+    if(simPhase==='producing'){
+      simInventory = Math.min(simInventory + prodRate*dt, maxBatch);
+      simInventory = Math.max(simInventory - demand*0.3*dt, 0);
+      if(simInventory >= maxBatch*0.98){
+        simPhase='changeover';
+        simProgress=0;
+      }
+    } else {
+      simProgress += dt;
+      simInventory = Math.max(simInventory - demand*0.3*dt, 0);
+      if(simProgress >= changeoverDuration){
+        simPhase='producing';
+        simProgress=0;
+      }
+    }
+
+    t += dt;
+    factoryRAF = requestAnimationFrame(drawFactory);
+  }
+  factoryRAF = requestAnimationFrame(drawFactory);
+}
+
+/* ════════════════════════════════════════════
+   LESSON 2: BULLWHIP
+════════════════════════════════════════════ */
+let bullwhipRAF=null, bullwhipT=0, bullwhipLastT=0;
+function initBullwhip(){
+  if(bullwhipRAF){ cancelAnimationFrame(bullwhipRAF); bullwhipRAF=null; }
+  const canvas = document.getElementById('bullwhip-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function sizeCanvas(){
+    const parent = canvas.parentElement;
+    const W = parent ? parent.offsetWidth : 600;
+    const H = parent ? parent.offsetHeight : 400;
+    if(W < 10 || H < 10) return false;
+    canvas.width  = Math.round(W * devicePixelRatio);
+    canvas.height = Math.round(H * devicePixelRatio);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    return true;
+  }
+
+  if(!sizeCanvas()){
+    // Lesson was hidden — retry after a frame
+    requestAnimationFrame(()=>{ sizeCanvas(); startBullwhipLoop(); });
+  } else {
+    startBullwhipLoop();
+  }
+
+  window.addEventListener('resize', ()=>{ sizeCanvas(); });
+  updateBullwhip();
+
+  function startBullwhipLoop(){
+    bullwhipT=0; bullwhipLastT=0;
+    const levels=[
+      {label:'Consumer Demand',      color:'#2d7dd2', y:0.16},
+      {label:'Retailer Orders',       color:'#7b68ee', y:0.38},
+      {label:'Distributor Orders',    color:'#e67e22', y:0.60},
+      {label:'Manufacturer Production',color:'#c0392b',y:0.82}
+    ];
+
+    function draw(ts){
+      if(!document.getElementById('l1').classList.contains('active')){
+        bullwhipRAF = null; return;
+      }
+      const dt = Math.min((ts - bullwhipLastT)/1000, 0.05);
+      bullwhipLastT = ts;
+      bullwhipT += dt * 0.45;
+
+      const W = canvas.offsetWidth, H = canvas.offsetHeight;
+      if(W < 10 || H < 10){ bullwhipRAF = requestAnimationFrame(draw); return; }
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#f4f1ec';
+      ctx.fillRect(0, 0, W, H);
+
+      const cycleWeeks = parseInt(document.getElementById('bw-cycle').value) || 8;
+      const variability = parseInt(document.getElementById('bw-var').value) || 20;
+
+      // Amplification grows non-linearly with cycle length — key teaching point
+      const ampFactors = [1, 1 + cycleWeeks*0.10, 1 + cycleWeeks*0.22, 1 + cycleWeeks*0.38];
+      const amplitudes = ampFactors.map(f => variability * f);
+
+      const pts = 200;
+      const marginL = 150, marginR = 32, marginT = 18, marginB = 40;
+      const plotW = W - marginL - marginR;
+      const slotH = (H - marginT - marginB) / levels.length;
+
+      levels.forEach((lv, idx) => {
+        const centerY = marginT + slotH * idx + slotH * 0.5;
+        const amp = (amplitudes[idx] / 100) * slotH * 0.40;
+        // Each upstream level lags slightly and has lower frequency (longer response cycles)
+        const freqMult = 1.0 - idx * 0.06;
+        const phase = bullwhipT * freqMult + idx * 1.1;
+
+        // Slot BG
+        if(idx % 2 === 0){
+          ctx.fillStyle = 'rgba(0,0,0,0.018)';
+          ctx.fillRect(marginL, marginT + slotH*idx, plotW, slotH);
+        }
+
+        // Filled band
+        ctx.fillStyle = lv.color + '22';
+        ctx.beginPath();
+        for(let i = 0; i <= pts; i++){
+          const x = marginL + plotW * (i/pts);
+          const v = amp * Math.sin((2*Math.PI/pts)*i*3.5 + phase);
+          if(i===0) ctx.moveTo(x, centerY - v); else ctx.lineTo(x, centerY - v);
+        }
+        for(let i = pts; i >= 0; i--){
+          const x = marginL + plotW * (i/pts);
+          const v = amp * Math.sin((2*Math.PI/pts)*i*3.5 + phase);
+          ctx.lineTo(x, centerY + v);
+        }
+        ctx.closePath(); ctx.fill();
+
+        // Centre dashed line
+        ctx.strokeStyle = 'rgba(0,0,0,0.07)';
+        ctx.lineWidth = 1; ctx.setLineDash([4,5]);
+        ctx.beginPath(); ctx.moveTo(marginL, centerY); ctx.lineTo(marginL+plotW, centerY);
+        ctx.stroke(); ctx.setLineDash([]);
+
+        // Amplitude envelope dashes
+        ctx.strokeStyle = lv.color + '45';
+        ctx.lineWidth = 1; ctx.setLineDash([3,5]);
+        ctx.beginPath(); ctx.moveTo(marginL, centerY-amp); ctx.lineTo(marginL+plotW, centerY-amp); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(marginL, centerY+amp); ctx.lineTo(marginL+plotW, centerY+amp); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Wave
+        ctx.strokeStyle = lv.color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for(let i = 0; i <= pts; i++){
+          const x = marginL + plotW * (i/pts);
+          const v = amp * Math.sin((2*Math.PI/pts)*i*3.5 + phase);
+          if(i===0) ctx.moveTo(x, centerY-v); else ctx.lineTo(x, centerY-v);
+        }
+        ctx.stroke();
+
+        // Row separator
+        if(idx > 0){
+          ctx.strokeStyle = 'rgba(0,0,0,0.07)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, marginT + slotH*idx);
+          ctx.lineTo(W, marginT + slotH*idx);
+          ctx.stroke();
+        }
+
+        // Left label
+        const lx = 6, ly = marginT + slotH*idx;
+        ctx.fillStyle = 'rgba(250,248,244,0.92)';
+        ctx.fillRect(lx, ly + 3, marginL-10, slotH-6);
+        ctx.fillStyle = lv.color;
+        ctx.font = `bold 11.5px 'Outfit'`;
+        ctx.textAlign = 'left';
+        ctx.fillText(lv.label, lx+6, centerY - 5);
+        const pct = Math.round(amplitudes[idx]);
+        const isAmplified = pct > variability * 1.1;
+        ctx.fillStyle = isAmplified ? '#b83020' : '#7a6e62';
+        ctx.font = `12px 'DM Mono'`;
+        ctx.fillText(`± ${pct}%`, lx+6, centerY + 12);
+
+        // Right amplitude dot
+        const dotR = Math.min(amp * 0.55, 18);
+        ctx.fillStyle = lv.color + '80';
+        ctx.beginPath();
+        ctx.arc(marginL + plotW + 18, centerY, dotR, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      // Time axis
+      ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(marginL, H - marginB + 8);
+      ctx.lineTo(marginL + plotW, H - marginB + 8);
+      ctx.stroke();
+      ctx.fillStyle = '#7a6e62';
+      ctx.font = `10px 'DM Mono'`; ctx.textAlign = 'center';
+      ctx.fillText('← Time (production cycles) →  Upstream amplification grows with cycle length', marginL + plotW/2, H - marginB + 26);
+
+      // Upstream/downstream labels
+      ctx.save();
+      ctx.translate(W - 12, H/2);
+      ctx.rotate(-Math.PI/2);
+      ctx.fillStyle = 'rgba(0,0,0,0.2)';
+      ctx.font = `10px 'DM Mono'`; ctx.textAlign = 'center';
+      ctx.fillText('↑ UPSTREAM  ·  DOWNSTREAM ↓', 0, 0);
+      ctx.restore();
+
+      bullwhipRAF = requestAnimationFrame(draw);
+    }
+    bullwhipRAF = requestAnimationFrame(draw);
+  }
+}
+
+function updateBullwhip(){
+  const cycle=parseInt(document.getElementById('bw-cycle')?.value||8);
+  const varPct=parseInt(document.getElementById('bw-var')?.value||20);
+  document.getElementById('bw-cycle-v').textContent=cycle+'-week cycle';
+  document.getElementById('bw-var-v').textContent='±'+varPct+'%';
+  const retailAmp=varPct;
+  const distAmp=Math.round(varPct*(1+cycle*0.18));
+  const mfgAmp=Math.round(varPct*(1+cycle*0.32));
+  const safetyWks=Math.round(cycle*0.6+varPct*0.15);
+  document.getElementById('bw-retailamp').textContent='±'+retailAmp+'%';
+  document.getElementById('bw-distamp').textContent='±'+distAmp+'%';
+  document.getElementById('bw-mfgamp').textContent='±'+mfgAmp+'%';
+  document.getElementById('bw-safety').textContent=safetyWks+' weeks';
+  const el=document.getElementById('bullwhip-insight');
+  if(el){
+    if(cycle<=2) el.innerHTML='✅ <strong>Robotics agility achieved!</strong> Short production cycles mean the manufacturer responds to actual demand. The bullwhip barely forms. Safety stock drops to '+safetyWks+' weeks — minimal inventory required.';
+    else if(cycle>=8) el.innerHTML='⚠️ <strong>Long cycles amplify everything.</strong> A ±'+varPct+'% consumer ripple becomes ±'+mfgAmp+'% at the factory. The manufacturer must carry '+safetyWks+' weeks of safety stock just to avoid stockouts. This is purely a changeover-cost artifact.';
+    else el.innerHTML='Notice how the wave amplitude grows as it moves upstream. A '+cycle+'-week production cycle turns ±'+varPct+'% consumer variability into ±'+mfgAmp+'% factory swings.';
+  }
+  if(!bullwhipRAF) initBullwhip();
+}
+
+/* ════════════════════════════════════════════
+   LESSON 3: SILENT TAX
+════════════════════════════════════════════ */
+let taxInterval=null;
+function updateSilentTax(){
+  const inv=parseInt(document.getElementById('st-inv')?.value||120);
+  const rate=parseInt(document.getElementById('st-rate')?.value||25)/100;
+  const iar=parseInt(document.getElementById('st-iar')?.value||38)/100;
+
+  document.getElementById('st-inv-v').textContent='$'+inv+'M';
+  document.getElementById('st-rate-v').textContent=Math.round(rate*100)+'%';
+  document.getElementById('st-iar-v').textContent=Math.round(iar*100)+'%';
+
+  const annualTotal=inv*rate;
+  const dailyTotal=annualTotal/365;
+  const iarVal=inv*iar;
+  const iarAnnual=iarVal*rate;
+
+  document.getElementById('st-daily').textContent='$'+dailyTotal.toFixed(0)+'K/day';
+  document.getElementById('st-annual').textContent='$'+(annualTotal).toFixed(1)+'M/yr';
+  document.getElementById('st-excess').textContent='$'+(iarVal).toFixed(1)+'M';
+  document.getElementById('st-waste').textContent='$'+(iarAnnual).toFixed(1)+'M/yr';
+  document.getElementById('mb-daily').textContent='$'+dailyTotal.toFixed(0)+'K';
+  document.getElementById('mb-annual').textContent='$'+annualTotal.toFixed(1)+'M / year';
+
+  // Cost breakdown
+  const breakdown={capital:rate*0.4,storage:rate*0.25,insure:rate*0.15,obsol:rate*0.2};
+  document.getElementById('ci-capital').textContent='$'+(inv*breakdown.capital).toFixed(1)+'M';
+  document.getElementById('ci-storage').textContent='$'+(inv*breakdown.storage).toFixed(1)+'M';
+  document.getElementById('ci-insure').textContent='$'+(inv*breakdown.insure).toFixed(1)+'M';
+  document.getElementById('ci-obsol').textContent='$'+(inv*breakdown.obsol).toFixed(1)+'M';
+
+  // Bar
+  const genuinePct=1-iar;
+  const iarPct=iar;
+  document.getElementById('bar-genuine').style.flex=genuinePct.toString();
+  document.getElementById('bar-genuine').textContent=genuinePct>0.15?Math.round(genuinePct*100)+'%':'';
+  document.getElementById('bar-iar').style.flex=iarPct.toString();
+  document.getElementById('bar-iar').textContent=iarPct>0.1?Math.round(iarPct*100)+'%':'';
+
+  document.getElementById('st-insight-text').innerHTML=
+    `Of your <strong>$${inv}M</strong> inventory, an estimated <strong>$${iarVal.toFixed(1)}M</strong> (${Math.round(iar*100)}%) is agility-addressable — held because changeovers are expensive, not because demand is uncertain. That excess costs you <strong>$${iarAnnual.toFixed(1)}M every year</strong>. That is your first-year robot budget, already sitting on your shelves.`;
+
+  // Fire animation based on burn rate
+  const particles=document.getElementById('fire-particles');
+  if(particles){
+    particles.innerHTML='';
+    const numDots=Math.min(Math.round(annualTotal*0.5),40);
+    for(let i=0;i<numDots;i++){
+      const dot=document.createElement('div');
+      dot.className='fire-dot';
+      dot.style.left=20+Math.random()*60+'%';
+      dot.style.top=20+Math.random()*60+'%';
+      dot.style.animationDelay=Math.random()*2+'s';
+      dot.style.animationDuration=(1.5+Math.random())+'s';
+      const warmth=Math.random();
+      dot.style.background=warmth>0.5?'#e09030':'#c87820';
+      particles.appendChild(dot);
+    }
+  }
+}
+
+/* ════════════════════════════════════════════
+   LESSON 4: ABC-XYZ
+════════════════════════════════════════════ */
+const matrixCells=[
+  {id:'AX',label:'AX',iar:'HIGH',cls:'mc-high',iarcls:'iar-high',
+   desc:'<strong>High-value, predictable demand.</strong> This is your IAR gold mine. Large batches held purely because changeover is expensive. Deploy robots here first — a 70% changeover reduction yields 50% smaller batches, 50% less inventory. ROI is fastest here.',
+   action:'Strategy: Cobot cells or mobile manipulators on this production line first. Expect 8–10% total facility inventory reduction from AX alone.'},
+  {id:'AY',label:'AY',iar:'MEDIUM',cls:'mc-med',iarcls:'iar-med',
+   desc:'<strong>High-value, moderate variability.</strong> Some safety stock is genuinely warranted, but the batch-size component is still IAR-addressable. Separate cycle stock (EOQ-driven) from safety stock (risk-driven) before targeting.',
+   action:'Strategy: Apply EOQ model to isolate cycle stock component. Deploy robots to reduce batch size. Safety stock: review after Phase 2 demand-sensing improvement.'},
+  {id:'AZ',label:'AZ',iar:'LOW',cls:'mc-bad',iarcls:'iar-none',
+   desc:'<strong>High-value, volatile demand.</strong> Inventory here is genuinely required — demand uncertainty, not changeover cost, is the root cause. IAR framework does not apply. The buffer is economically justified.',
+   action:'Strategy: Focus on supply flexibility and supplier agreements. Consider scenario-based inventory positioning. Do not apply IAR lens here.'},
+  {id:'BX',label:'BX',iar:'MEDIUM',cls:'mc-med',iarcls:'iar-med',
+   desc:'<strong>Mid-value, predictable demand.</strong> Good candidates for lean replenishment after AX phase proves out. Lower financial priority but often high volume — aggregate savings can be material.',
+   action:'Strategy: Phase 2 target. Extend robot cell to BX product families after AX deployment succeeds. Same changeover improvement = proportional inventory reduction.'},
+  {id:'BY',label:'BY',iar:'LOW-MED',cls:'mc-low',iarcls:'iar-low',
+   desc:'<strong>Mid-value, moderate variability.</strong> Standard inventory management applies. Some IAR opportunity in the cycle stock component, but moderate variability means safety stock is genuine.',
+   action:'Strategy: Conservative IAR model. Expect 15–25% batch-size reduction. Include in Phase 2 scope alongside BX items.'},
+  {id:'BZ',label:'BZ',iar:'MINIMAL',cls:'mc-bad',iarcls:'iar-none',
+   desc:'<strong>Mid-value, volatile demand.</strong> Some genuine buffer needed. IAR applicability is limited to the cycle-stock component, which is likely smaller than safety stock here.',
+   action:'Strategy: Improve demand sensing in Phase 2. Some inventory reduction may follow from better forecasting even without changeover changes.'},
+  {id:'CX',label:'CX',iar:'NONE',cls:'mc-low',iarcls:'iar-none',
+   desc:'<strong>Low-value, predictable demand.</strong> Low holding cost impact. Not worth targeted IAR investment unless these items create significant physical space or handling cost.',
+   action:'Strategy: Vendor-managed inventory or simple min/max rules. Not an IAR priority.'},
+  {id:'CY',label:'CY',iar:'NONE',cls:'mc-low',iarcls:'iar-none',
+   desc:'<strong>Low-value, moderate variability.</strong> Minimal IAR relevance. Automate replenishment in ERP.',
+   action:'Strategy: Standard inventory management. Not an IAR target.'},
+  {id:'CZ',label:'CZ',iar:'NONE',cls:'mc-bad',iarcls:'iar-none',
+   desc:'<strong>Low-value, volatile demand.</strong> Highest obsolescence risk. IAR does not apply here — consider SKU rationalization and discontinuation review.',
+   action:'Strategy: SKU rationalization review. Do not apply IAR framework. Question whether these items should remain in the product portfolio.'},
+];
+
+const sampleItems=[
+  {id:'i1',name:'Bearing #A','emoji':'⚙️',desc:'High-value precision bearing, stable weekly demand, large batches',abc:'A',xyz:'X'},
+  {id:'i2',name:'Motor Kit','emoji':'🔧',desc:'High-value assembly kit, quarterly demand peaks',abc:'A',xyz:'Y'},
+  {id:'i3',name:'Seasonal Display','emoji':'🎁',desc:'Promotional item, high value, unpredictable demand',abc:'A',xyz:'Z'},
+  {id:'i4',name:'Gasket Pack','emoji':'📦',desc:'Mid-value standard part, steady consumption',abc:'B',xyz:'X'},
+  {id:'i5',name:'Circuit Board','emoji':'💻',desc:'Mid-value electronics, moderate demand variation',abc:'B',xyz:'Y'},
+  {id:'i6',name:'Custom Bracket','emoji':'🔩',desc:'Mid-value specialty part, volatile project demand',abc:'B',xyz:'Z'},
+  {id:'i7',name:'Std Bolt Box','emoji':'🔄',desc:'Low-value fastener, very predictable usage',abc:'C',xyz:'X'},
+  {id:'i8',name:'Cleaning Supply','emoji':'🧹',desc:'Low-value consumable, fairly regular usage',abc:'C',xyz:'Y'},
+  {id:'i9',name:'Legacy Spare','emoji':'🗃️',desc:'Low-value old part, rarely needed, unpredictable',abc:'C',xyz:'Z'},
+];
+
+let draggedItem=null;
+const placedItems={};
+
+function initABCXYZ(){
+  const matrix=document.getElementById('abcxyz-matrix');
+  if(!matrix||matrix.dataset.inited) return;
+  matrix.dataset.inited='1';
+
+  // Build header row
+  ['','X Predictable','Y Variable','Z Volatile'].forEach(h=>{
+    const hdr=document.createElement('div');
+    hdr.className='mhdr';
+    hdr.innerHTML=h?h.replace(' ','<br><span style="font-size:0.82em;color:var(--muted);">')+' </span>':'';;
+    if(h){
+      const parts=h.split(' ');
+      hdr.innerHTML=`<strong>${parts[0]}</strong><span style="font-size:0.8em;color:var(--muted);">${parts[1]}</span>`;
+    }
+    matrix.appendChild(hdr);
+  });
+
+  const rows=['A','B','C'];
+  const cols=['X','Y','Z'];
+  const rowLabels={'A':'A<br><span style="font-size:0.8em;">High</span>','B':'B<br><span style="font-size:0.8em;">Mid</span>','C':'C<br><span style="font-size:0.8em;">Low</span>'};
+
+  rows.forEach(r=>{
+    const rowLbl=document.createElement('div');
+    rowLbl.className='mrow-lbl';
+    rowLbl.innerHTML=rowLabels[r];
+    matrix.appendChild(rowLbl);
+
+    cols.forEach(c=>{
+      const cellId=r+c;
+      const cd=matrixCells.find(m=>m.id===cellId);
+      const cell=document.createElement('div');
+      cell.className='mcell '+cd.cls;
+      cell.dataset.cell=cellId;
+      const iarColor=cd.cls==='mc-high'?'#1a6040':cd.cls==='mc-med'?'#c87820':cd.cls==='mc-bad'?'#b83020':'#7a6e62';
+      cell.innerHTML=`
+        <span class="mcell-label">${cellId}</span>
+        <span class="mcell-iar" style="color:${iarColor};">${cd.iar}</span>
+        <div class="mcell-items" id="items-${cellId}"></div>
+      `;
+      cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('drag-over');});
+      cell.addEventListener('dragleave',()=>cell.classList.remove('drag-over'));
+      cell.addEventListener('drop',e=>{
+        e.preventDefault();
+        cell.classList.remove('drag-over');
+        if(!draggedItem) return;
+        const iid=draggedItem.dataset.item;
+        const item=sampleItems.find(i=>i.id===iid);
+        if(!item) return;
+        document.querySelectorAll('.placed-chip[data-item="'+iid+'"]').forEach(c=>c.remove());
+        // Remove from pool if still there
+        const poolChip=document.querySelector('#item-pool-items .item-chip[data-item="'+iid+'"]');
+        if(poolChip) poolChip.style.display='none';
+        delete placedItems[iid];
+        placedItems[iid]=cellId;
+        const chip=document.createElement('div');
+        chip.className='placed-chip';
+        chip.dataset.item=iid;
+        chip.textContent=item.emoji;
+        chip.title=item.name;
+        document.getElementById('items-'+cellId).appendChild(chip);
+        const isCorrect=(item.abc+item.xyz)===cellId;
+        const info=document.getElementById('abcxyz-info');
+        const correctCell=item.abc+item.xyz;
+        info.innerHTML=`<strong>${item.emoji} ${item.name}</strong> → placed in <strong>${cellId}</strong> &nbsp;${isCorrect?'<span style="color:#1a6040;font-weight:600;">✓ Correct!</span>':'<span style="color:#b83020;">✗ This item belongs in <strong>'+correctCell+'</strong></span>'}<br>${cd.desc}<br><em style="color:var(--amber);">${cd.action}</em>`;
+      });
+      matrix.appendChild(cell);
+    });
+  });
+
+  resetMatrix();
+}
+
+function resetMatrix(){
+  // Clear all placed chips from matrix cells
+  Object.keys(placedItems).forEach(id=>{
+    document.querySelectorAll('.placed-chip[data-item="'+id+'"]').forEach(c=>c.remove());
+  });
+  for(const k in placedItems) delete placedItems[k];
+
+  // Rebuild pool
+  const pool=document.getElementById('item-pool-items');
+  if(!pool) return;
+  pool.innerHTML='';
+  sampleItems.forEach(item=>{
+    const chip=document.createElement('div');
+    chip.className='item-chip';
+    chip.dataset.item=item.id;
+    chip.draggable=true;
+    chip.title=item.desc+' ('+item.abc+item.xyz+')';
+    chip.innerHTML=`${item.emoji} ${item.name}`;
+    chip.addEventListener('dragstart',()=>{draggedItem=chip;chip.classList.add('dragging');});
+    chip.addEventListener('dragend',()=>{draggedItem=null;chip.classList.remove('dragging');});
+    pool.appendChild(chip);
+  });
+  const info=document.getElementById('abcxyz-info');
+  if(info) info.textContent='Drag items into the matrix. Green cells = IAR opportunity. Red cells = genuine safety stock (not IAR-addressable). Hover items to read their description.';
+}
+
+/* ════════════════════════════════════════════
+   LESSON 5: IAR FLYWHEEL
+════════════════════════════════════════════ */
+let flywheelRAF=null, flywheelRunning=false, flywheelStep=0, flywheelT=0;
+
+const fwNodes=[
+  {label:'Excess\nInventory',icon:'📦',color:'#4a90d9',angle:270},
+  {label:'IAR Zone\nIdentified',icon:'🔍',color:'#7b68ee',angle:330},
+  {label:'Robot\nFleet',icon:'🤖',color:'#e67e22',angle:30},
+  {label:'Changeover\nReduced',icon:'⚡',color:'#c87820',angle:90},
+  {label:'Smaller\nBatches',icon:'📉',color:'#2ecc71',angle:150},
+  {label:'Capital\nReleased',icon:'💰',color:'#27ae60',angle:210},
+];
+
+const fwDescs=[
+  'Start: Your factory holds excess inventory — not from genuine demand uncertainty, but because changing a production line is expensive. This is frozen working capital.',
+  'Step 1: The ABC-XYZ diagnostic identifies which inventory is held due to changeover cost (IAR zone = 38% on average). This is your agility-addressable capital.',
+  'Step 2: The IAR-zone capital funds a robot fleet. Cobots and AMRs are deployed on the highest-priority changeover bottlenecks identified by the diagnostic.',
+  'Step 3: Robots reduce changeover time by 50–80%. The EOQ-optimal batch size shrinks proportionally. The factory switches products in minutes, not hours.',
+  'Step 4: Smaller, more frequent batches match production to real demand. The inventory buffer required by the EOQ model contracts mathematically.',
+  'Step 5: The holding cost savings ($2–10M/year) are reinvested in fleet expansion. No new external capital required. The loop closes — and accelerates.',
+];
+
+function updateFlywheel(){
+  const inv=parseInt(document.getElementById('fl-inv')?.value||120);
+  const rob=parseInt(document.getElementById('fl-rob')?.value||10);
+  const co=parseInt(document.getElementById('fl-co')?.value||60)/100;
+  document.getElementById('fl-inv-v').textContent='$'+inv+'M';
+  document.getElementById('fl-rob-v').textContent='$'+rob+'M';
+  document.getElementById('fl-co-v').textContent=Math.round(co*100)+'%';
+
+  const iarZone=0.38;
+  const batchReduction=1-Math.sqrt(1-co);
+  const invReduction=inv*iarZone*batchReduction*0.7;
+  const invAfter=inv-invReduction;
+  const annSave=invReduction*0.25;
+  const pb=rob/annSave;
+
+  document.getElementById('fl-inventoryaftr').textContent='$'+invAfter.toFixed(0)+'M';
+  document.getElementById('fl-released').textContent='$'+invReduction.toFixed(1)+'M';
+  document.getElementById('fl-annualsave').textContent='$'+annSave.toFixed(1)+'M/yr';
+  document.getElementById('fl-payback').textContent=pb.toFixed(1)+' years';
+}
+
+function initFlywheel(){
+  const canvas=document.getElementById('iar-loop-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  function resize(){
+    canvas.width=canvas.offsetWidth*devicePixelRatio;
+    canvas.height=canvas.offsetHeight*devicePixelRatio;
+    ctx.scale(devicePixelRatio,devicePixelRatio);
+  }
+  resize();
+  if(flywheelRAF) cancelAnimationFrame(flywheelRAF);
+
+  let t=0,lastT=0,activeNode=0,animT=0;
+
+  function drawWheel(ts){
+    const dt=Math.min((ts-lastT)/1000,0.05); lastT=ts;
+    t+=dt; animT+=dt;
+    const W=canvas.offsetWidth,H=canvas.offsetHeight;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#f4f1ec';
+    ctx.fillRect(0,0,W,H);
+
+    const cx=W/2,cy=H/2-30,R=Math.min(W,H)*0.32;
+
+    // Draw circular arrows between nodes
+    fwNodes.forEach((n,i)=>{
+      const nextNode=fwNodes[(i+1)%fwNodes.length];
+      const a1=(n.angle/180)*Math.PI;
+      const a2=(nextNode.angle/180)*Math.PI;
+      const midA=(a1+a2)/2;
+
+      const x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);
+      const x2=cx+R*Math.cos(a2),y2=cy+R*Math.sin(a2);
+      const mx=cx+R*1.15*Math.cos(midA),my=cy+R*1.15*Math.sin(midA);
+
+      const isActive=flywheelRunning&&i===activeNode;
+      ctx.strokeStyle=isActive?fwNodes[i].color:'rgba(0,0,0,0.08)';
+      ctx.lineWidth=isActive?3:1.5;
+      ctx.setLineDash(isActive?[]:[5,4]);
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.quadraticCurveTo(mx,my,x2,y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Arrow head
+      if(isActive){
+        const dx=x2-mx,dy=y2-my;
+        const len=Math.sqrt(dx*dx+dy*dy);
+        const nx=dx/len,ny=dy/len;
+        const arrowLen=12;
+        ctx.fillStyle=fwNodes[i].color;
+        ctx.beginPath();
+        ctx.moveTo(x2,y2);
+        ctx.lineTo(x2-arrowLen*nx+arrowLen*0.4*(-ny),y2-arrowLen*ny+arrowLen*0.4*nx);
+        ctx.lineTo(x2-arrowLen*nx-arrowLen*0.4*(-ny),y2-arrowLen*ny-arrowLen*0.4*nx);
+        ctx.closePath();
+        ctx.fill();
+      }
+    });
+
+    // Center circle
+    const pulse=flywheelRunning?(0.95+0.05*Math.sin(t*4)):1;
+    ctx.fillStyle=flywheelRunning?'rgba(200,120,32,0.12)':'rgba(0,0,0,0.04)';
+    ctx.beginPath();
+    ctx.arc(cx,cy,R*0.28*pulse,0,Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle=flywheelRunning?'rgba(200,120,32,0.4)':'rgba(0,0,0,0.1)';
+    ctx.lineWidth=2;
+    ctx.stroke();
+    ctx.fillStyle=flywheelRunning?'#c87820':'#7a6e62';
+    ctx.font=`bold 14px 'Fraunces'`;
+    ctx.textAlign='center';
+    ctx.fillText('IAR', cx, cy-4);
+    ctx.font=`600 11px 'Outfit'`;
+    ctx.fillText('Flywheel', cx, cy+12);
+
+    // Draw nodes
+    fwNodes.forEach((n,i)=>{
+      const a=(n.angle/180)*Math.PI;
+      const nx=cx+R*Math.cos(a),ny=cy+R*Math.sin(a);
+      const isActive2=flywheelRunning&&i<=activeNode;
+      const r=38;
+
+      // Glow if active
+      if(isActive2){
+        const grd=ctx.createRadialGradient(nx,ny,0,nx,ny,r*1.6);
+        grd.addColorStop(0,n.color+'40');
+        grd.addColorStop(1,'transparent');
+        ctx.fillStyle=grd;
+        ctx.beginPath();
+        ctx.arc(nx,ny,r*1.6,0,Math.PI*2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle=isActive2?n.color:'#e8e2d8';
+      ctx.strokeStyle=isActive2?n.color:'#c8bfb0';
+      ctx.lineWidth=isActive2?3:1.5;
+      ctx.beginPath();
+      ctx.arc(nx,ny,r,0,Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Icon
+      ctx.font=`22px sans-serif`;
+      ctx.fillStyle='transparent';
+      ctx.textAlign='center';
+      ctx.fillText(n.icon,nx,ny+4);
+      // Use actual text for icon
+      ctx.font=`20px sans-serif`;
+      ctx.fillText(n.icon,nx,ny+6);
+
+      // Label
+      const lines=n.label.split('\n');
+      ctx.font=`bold 10px 'Outfit'`;
+      ctx.fillStyle=isActive2?'#1a1612':'#7a6e62';
+      // Position label outside circle
+      const labelR=R+r+8;
+      const lx=cx+labelR*Math.cos(a);
+      const ly=cy+labelR*Math.sin(a);
+      lines.forEach((line,li)=>ctx.fillText(line,lx,ly+(li-lines.length/2+0.5)*14));
+    });
+
+    // Description box
+    if(flywheelRunning){
+      const desc=fwDescs[activeNode];
+      ctx.fillStyle='rgba(255,255,255,0.95)';
+      ctx.strokeStyle='rgba(200,120,32,0.3)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.roundRect(40,H-110,W-80,65,8);
+      ctx.fill();ctx.stroke();
+      ctx.fillStyle='#3d352c';
+      ctx.font=`13px 'Outfit'`;
+      ctx.textAlign='left';
+      // Wrap text
+      const words=desc.split(' ');
+      let line='',y=H-88;
+      words.forEach(w=>{
+        const test=line+w+' ';
+        if(ctx.measureText(test).width>W-100&&line){
+          ctx.fillText(line,56,y);
+          line=w+' ';y+=18;
+        } else line=test;
+      });
+      if(line) ctx.fillText(line,56,y);
+    }
+
+    // Auto advance
+    if(flywheelRunning){
+      if(animT>2.5){
+        animT=0;
+        activeNode=(activeNode+1)%fwNodes.length;
+        const el=document.getElementById('flywheel-insight');
+        if(el) el.innerHTML=fwDescs[activeNode];
+      }
+    }
+
+    flywheelRAF=requestAnimationFrame(drawWheel);
+  }
+  flywheelRAF=requestAnimationFrame(drawWheel);
+}
+
+function startFlywheel(){
+  flywheelRunning=true;
+  flywheelStep=0;
+  document.getElementById('flywheel-insight').innerHTML=fwDescs[0];
+}
+function resetFlywheel(){
+  flywheelRunning=false;
+  flywheelStep=0;
+  document.getElementById('flywheel-insight').textContent='Press "Invest in Robots" to start the flywheel. Watch each step activate in sequence.';
+}
+
+/* ════════════════════════════════════════════
+   LESSON 6: BOOTSTRAP
+════════════════════════════════════════════ */
+const bootstrapSteps=[
+  {icon:'🔬',title:'Single-Cell Pilot',range:'$60–120K',
+   body:'Deploy one cobot cell on the highest-IAR line from your diagnostic. One narrow, measurable hypothesis: "This cell will reduce changeover time 60%, releasing $Y in inventory within 6 months." Fund from maintenance or CapEx budget. The pilot generates data — not just savings — for the larger board case.',
+   upfront:150,monthly:5,tax:25,risk:10},
+  {icon:'📋',title:'RaaS — Zero CapEx',range:'$0 upfront · $30–80K/mo',
+   body:'Robotics-as-a-Service providers offer full fleets on subscription. Zero capital outlay. Fully OpEx. A $50K/month subscription for 20 AMRs eliminates the board CapEx hurdle. If inventory releases $2M in 3 months, the annual $600K cost is covered 3×. Providers: Locus Robotics, Geek+, Berkshire Grey.',
+   upfront:0,monthly:80,tax:0,risk:20},
+  {icon:'💰',title:'Equipment Lease',range:'$1–3K/unit/month',
+   body:'Standard 3–7 year equipment lease spreads cost across time. The IAR innovation: covenant the lease against the inventory reduction — DIO must fall X days within 18 months, or lease terms reset. This aligns the financing instrument with the investment thesis and creates measurable accountability.',
+   upfront:80,monthly:30,tax:15,risk:30},
+  {icon:'🏛️',title:'Tax Incentives',range:'20–26% effective saving',
+   body:'US: 100% bonus depreciation on equipment through 2029, Section 179 deduction up to $2.5M. A $500K robot investment → $130K tax benefit in Year 1 at 26% rate. Germany: 25% R&D tax credit. EU Horizon: €100M+ for industrial automation. Australia SME grants: up to $5M. These are not speculative — apply now.',
+   upfront:20,monthly:0,tax:100,risk:5},
+  {icon:'♻️',title:'Inventory-Funded CapEx',range:'$0 external · Pure IAR',
+   body:'Run a 60–90 day planned inventory reduction on the highest-velocity AX/BX items. The cash released — typically $2–10M for a mid-size facility — funds the robot fleet directly. This requires strong ERP visibility, reliable safety stock data, and a stable order backlog. Highest capital efficiency; highest execution discipline.',
+   upfront:0,monthly:0,tax:20,risk:85},
+];
+let activeBootstep=0;
+
+function initBootstrap(){
+  const tl=document.getElementById('bs-timeline');
+  if(!tl||tl.dataset.inited) return;
+  tl.dataset.inited='1';
+  bootstrapSteps.forEach((s,i)=>{
+    const step=document.createElement('div');
+    step.className='bs-step'+(i===0?' active':'');
+    step.innerHTML=`
+      <div class="bs-dot" style="font-size:1.1em;">${s.icon}</div>
+      <div class="bs-title">${s.title}</div>
+    `;
+    step.onclick=()=>selectBootstrap(i);
+    tl.appendChild(step);
+  });
+  selectBootstrap(0);
+}
+
+function selectBootstrap(i){
+  activeBootstep=i;
+  document.querySelectorAll('.bs-step').forEach((s,si)=>s.classList.toggle('active',si===i));
+  const s=bootstrapSteps[i];
+  document.getElementById('bs-range').textContent=s.range;
+  document.getElementById('bs-body').textContent=s.body;
+  const maxW=180;
+  function animBar(id,val,valId,label){
+    const el=document.getElementById(id); const vel=document.getElementById(valId);
+    if(!el||!vel) return;
+    el.style.width=Math.round(val/100*maxW)+'px';
+    vel.textContent=label;
+  }
+  animBar('cf-upfront',s.upfront,'cf-upfront-v',s.upfront===0?'None':'$'+s.upfront+'K');
+  animBar('cf-monthly',s.monthly,'cf-monthly-v',s.monthly===0?'None':'$'+s.monthly+'K/mo');
+  animBar('cf-tax',s.tax,'cf-tax-v',s.tax===0?'None':'+$'+Math.round(s.tax*500/100)+'K');
+  animBar('cf-risk',s.risk,'cf-risk-v',s.risk<20?'Low':s.risk<50?'Medium':'High');
+}
+</script>
+</body>
+</html>
