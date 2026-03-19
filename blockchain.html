@@ -1,0 +1,134 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Interactive Learning</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-dark: #F4EEFF;
+            --secondary-dark: #DCD6F7;
+            --accent-color: #A6B1E1;
+            --text-color: #424874;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: var(--secondary-dark);
+        }
+
+        .card {
+            background-color: var(--secondary-dark);
+            border: 1px solid var(--accent-color);
+            margin: 1rem 0;
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Blockchain Learning Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Select Topic
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#hashing">Hashing</a></li>
+                            <li><a class="dropdown-item" href="#blocks">Blockchain Blocks</a></li>
+                            <li><a class="dropdown-item" href="#mining">Mining Process</a></li>
+                            <li><a class="dropdown-item" href="#branches">Blockchain Branches</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Hashing Section -->
+        <section id="hashing" class="mb-5">
+            <h2 class="section-title">Understanding Hashing</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Input Data</h5>
+                            <textarea id="hashInput" class="form-control mb-3" rows="3" placeholder="Enter text to hash"></textarea>
+                            <button id="hashButton" class="btn btn-primary">Generate Hash</button>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Hash Output</h5>
+                            <div id="hashOutput" class="p-3 border rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blockchain Blocks Section -->
+        <section id="blocks" class="mb-5">
+            <h2 class="section-title">Blockchain Blocks</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div id="blockDemo" class="row">
+                        <!-- Blocks will be added here dynamically -->
+                    </div>
+                    <button id="addBlockButton" class="btn btn-primary mt-3">Add New Block</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mining Process Section -->
+        <section id="mining" class="mb-5">
+            <h2 class="section-title">Mining Visualization</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="miningStats">
+                                <p>Difficulty: <span id="difficulty">0000</span></p>
+                                <p>Nonce: <span id="nonce">0</span></p>
+                                <p>Hash Rate: <span id="hashRate">0</span> h/s</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <canvas id="miningVisual" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <button id="startMining" class="btn btn-primary">Start Mining</button>
+                    <button id="stopMining" class="btn btn-danger">Stop Mining</button>
+                </div>
+            </div>
+        </section>
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Crypto-JS for hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Custom JS -->
+    <script src="blockchain.js"></script>
+</body>
+</html>
