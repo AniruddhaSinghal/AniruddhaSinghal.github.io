@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Teaching Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #181a20;
+        }
+        header {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #fff;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.85;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+        .tool-card {
+            background: #23272f;
+            border-radius: 10px;
+            padding: 32px 28px 28px 28px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: #e0e0e0;
+            border: 1px solid #2d313a;
+        }
+        .tool-card:hover {
+            transform: translateY(-7px) scale(1.02);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.32);
+            border-color: #00adb5;
+        }
+        .tool-card h3 {
+            color: #00adb5;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .tool-card p {
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+        .tool-card a {
+            display: inline-block;
+            background: linear-gradient(90deg, #00adb5 0%, #393e46 100%);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: background 0.3s, color 0.3s;
+            box-shadow: 0 2px 8px rgba(0,173,181,0.08);
+        }
+        .tool-card a:hover {
+            background: linear-gradient(90deg, #393e46 0%, #00adb5 100%);
+            color: #00adb5;
+        }
+        footer {
+            background: #23272f;
+            color: #b0b0b0;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            border-top: 1px solid #232526;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Educational Teaching Tools</h1>
+        <p>Interactive learning resources for effective education</p>
+    </header>
+    
+    <div class="container">
+        <div class="tools-grid">
+            <div class="tool-card">
+                <h3>Blockchain Interactive Learning</h3>
+                <p>Explore blockchain concepts interactively: hashing, blocks, mining, and more. Visual demos and hands-on activities for foundational understanding.</p>
+                <a href="./blockchain.html">Open Blockchain Tool</a>
+            </div>
+            <div class="tool-card">
+                <h3>IAR Framework — Interactive Teaching Tool</h3>
+                <p>Learn and experiment with the IAR (Inventory Analysis & Replenishment) framework. Includes animated lessons, ABC-XYZ diagnostics, and supply chain simulations.</p>
+                <a href="./IAR_teaching_tool.html">Open IAR Tool</a>
+            </div>
+            <div class="tool-card">
+                <h3>Why Machines Learn</h3>
+                <p>Visualize the curse of dimensionality, SVMs, and kernel methods. Interactive 2D/3D plots and point cloud demos for machine learning concepts.</p>
+                <a href="./whymachineslearn.html">Open ML Visualization</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 Educational Tools. All rights reserved.</p>
+    </footer>
+</body>
+</html>
