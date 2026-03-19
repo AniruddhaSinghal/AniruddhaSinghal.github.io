@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization of Curse of Dimensionality</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background-color: #222831;
+            color: #EEEEEE;
+        }
+        .chart { 
+            background-color: #393E46;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #00ADB5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <h1 class="text-center mb-4">Visualization of Curse of Dimensionality</h1>
+        
+        <div class="row">
+            <div class="col-12 chart">
+                <div id="dimensionInfo" class="w-100"></div>
+            </div>
+            <div class="col-12 col-md-6 chart">
+                <div id="ratioChart" class="w-100"></div>
+            </div>
+            <div class="col-12 col-md-6 chart">
+                <div id="distanceChart" class="w-100"></div>
+            </div>
+            <div class="col-12 chart">
+                <div id="visualizations">
+                    <h2>2D and 3D Visualizations</h2>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div id="visualization2D" class="w-100"></div>
+                        </div>
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div id="visualization3D" class="w-100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Calculate volumes and ratios
+        function sphereVolume(n, r = 1) {
+            return Math.pow(Math.PI, n/2) / math.gamma(n/2 + 1) * Math.pow(r, n);
+        }
+
+        function cubeVolume(n, side = 2) {
+            return Math.pow(side, n);
+        }
+
+        function cornerDistance(n) {
+            return Math.sqrt(n);
+        }
+
+        const dimensions = Array.from({length: 20}, (_, i) => i + 1);
+        const ratios = dimensions.map(d => sphereVolume(d) / cubeVolume(d));
+        const distances = dimensions.map(cornerDistance);
+
+        // Make plots responsive
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            displaylogo: false
+        };
+
+        // Display dimension info using Plotly table
+        const tableData = [{
+            type: 'table',
+            header: {
+                values: ['Dimension', 'Sphere Volume', 'Cube Volume', 'Ratio', 'Corner Distance'],
+                align: 'center',
+                line: {width: 1, color: '#EEEEEE'},
+                fill: {color: '#00ADB5'},
+                font: {family: 'Arial', size: 12, color: '#EEEEEE'}
+            },
+            cells: {
+                values: [
+                    dimensions,
+                    dimensions.map(d => sphereVolume(d).toFixed(4)),
+                    dimensions.map(d => cubeVolume(d).toFixed(4)),
+                    dimensions.map(d => (sphereVolume(d) / cubeVolume(d)).toFixed(4)),
+                    dimensions.map(d => cornerDistance(d).toFixed(4))
+                ],
+                align: 'center',
+                line: {color: '#EEEEEE', width: 1},
+                fill: {color: ['#393E46', '#222831']},
+                font: {family: 'Arial', size: 11, color: ['#EEEEEE']}
+            }
+        }];
+
+        const tableLayout = {
+            title: 'Dimension Information',
+            autosize: true,
+            margin: {
+                l: 20,
+                r: 20,
+                t: 40,
+                b: 20
+            },
+            paper_bgcolor: '#393E46',
+            plot_bgcolor: '#393E46',
+            font: {
+                color: '#EEEEEE'
+            }
+        };
+
+        Plotly.newPlot('dimensionInfo', tableData, tableLayout, config);
+
+        // Plot ratio change
+        const ratioTrace = {
+            x: dimensions,
+            y: ratios,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Ratio',
+            line: {color: '#00ADB5'}
+        };
+
+        const ratioLayout = {
+            title: 'Ratio vs Dimension',
+            xaxis: {title: 'Dimension', color: '#EEEEEE'},
+            yaxis: {title: 'Ratio', type: 'log', color: '#EEEEEE'},
+            autosize: true,
+            margin: {
+                l: 50,
+                r: 20,
+                t: 40,
+                b: 40
+            },
+            paper_bgcolor: '#393E46',
+            plot_bgcolor: '#393E46',
+            font: {
+                color: '#EEEEEE'
+            }
+        };
+
+        Plotly.newPlot('ratioChart', [ratioTrace], ratioLayout, config);
+
+        // Plot corner distance change
+        const distanceTrace = {
+            x: dimensions,
+            y: distances,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Corner Distance',
+            line: {color: '#00ADB5'}
+        };
+
+        const distanceLayout = {
+            title: 'Corner Distance vs Dimension',
+            xaxis: {title: 'Dimension', color: '#EEEEEE'},
+            yaxis: {title: 'Corner Distance', color: '#EEEEEE'},
+            autosize: true,
+            margin: {
+                l: 50,
+                r: 20,
+                t: 40,
+                b: 40
+            },
+            paper_bgcolor: '#393E46',
+            plot_bgcolor: '#393E46',
+            font: {
+                color: '#EEEEEE'
+            }
+        };
+
+        Plotly.newPlot('distanceChart', [distanceTrace], distanceLayout, config);
+
+        // 2D visualization using Plotly
+        const circle2D = {
+            type: 'circle',
+            xref: 'x',
+            yref: 'y',
+            x0: -1,
+            y0: -1,
+            x1: 1,
+            y1: 1,
+            line: {
+                color: '#00ADB5'
+            }
+        };
+
+        const square2D = {
+            type: 'rect',
+            xref: 'x',
+            yref: 'y',
+            x0: -1,
+            y0: -1,
+            x1: 1,
+            y1: 1,
+            line: {
+                color: '#EEEEEE'
+            }
+        };
+
+        const layout2D = {
+            title: '2D: Circle in Square',
+            xaxis: {range: [-1.1, 1.1], scaleanchor: "y", scaleratio: 1, color: '#EEEEEE'},
+            yaxis: {range: [-1.1, 1.1], color: '#EEEEEE'},
+            autosize: true,
+            margin: {
+                l: 40,
+                r: 20,
+                t: 40,
+                b: 40
+            },
+            shapes: [circle2D, square2D],
+            paper_bgcolor: '#393E46',
+            plot_bgcolor: '#393E46',
+            font: {
+                color: '#EEEEEE'
+            }
+        };
+
+        Plotly.newPlot('visualization2D', [], layout2D, config);
+
+        // 3D visualization using Plotly
+        const sphere3D = {
+            type: 'mesh3d',
+            x: [],
+            y: [],
+            z: [],
+            alphahull: 0,
+            opacity: 0.8,
+            color: '#00ADB5'
+        };
+
+        const cube3D = {
+            type: 'scatter3d',
+            mode: 'lines',
+            x: [-1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, 1],
+            y: [-1, 1, 1, -1, -1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, -1, -1],
+            z: [-1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, -1, 1, 1],
+            opacity: 1,
+            line: {
+                color: '#EEEEEE',
+                width: 2
+            },
+            showlegend: true
+        };
+        
+        // Generate sphere points
+        const phi = math.range(0, Math.PI, Math.PI / 20);
+        const theta = math.range(0, 2 * Math.PI, Math.PI / 20);
+
+        phi.forEach(p => {
+            theta.forEach(t => {
+                sphere3D.x.push(Math.sin(p) * Math.cos(t));
+                sphere3D.y.push(Math.sin(p) * Math.sin(t));
+                sphere3D.z.push(Math.cos(p));
+            });
+        });
+
+        const layout3D = {
+            title: '3D: Sphere in Cube',
+            scene: {
+                xaxis: {range: [-1.1, 1.1], color: '#EEEEEE'},
+                yaxis: {range: [-1.1, 1.1], color: '#EEEEEE'},
+                zaxis: {range: [-1.1, 1.1], color: '#EEEEEE'},
+                aspectmode: 'cube',
+                bgcolor: '#393E46'
+            },
+            autosize: true,
+            margin: {
+                l: 20,
+                r: 20,
+                t: 40,
+                b: 20
+            },
+            paper_bgcolor: '#393E46',
+            font: {
+                color: '#EEEEEE'
+            }
+        };
+
+        Plotly.newPlot('visualization3D', [sphere3D, cube3D], layout3D, config);
+
+        // Add window resize event listener
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('dimensionInfo');
+            Plotly.Plots.resize('ratioChart');
+            Plotly.Plots.resize('distanceChart');
+            Plotly.Plots.resize('visualization2D');
+            Plotly.Plots.resize('visualization3D');
+        });
+    </script>
+</body>
+</html>    <div class="container-fluid py-4">
+        <div class="row">
+            <h1 class="text-center">Visualization of 3D Point Clouds with Separating Plane</h1>
+            <div class="col-12 chart">
+                <div id="pointCloud3D" class="w-100"></div>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="showPlaneToggle" checked>
+                    <label class="form-check-label" for="showPlaneToggle">
+                        Show Separating Plane
+                    </label>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label">Plane Rotation X</label>
+                    <input type="range" id="planeRotationX" min="-180" max="180" value="0" class="form-range">
+                </div>
+                <div class="mt-3">
+                    <label class="form-label">Plane Rotation Y</label>
+                    <input type="range" id="planeRotationY" min="-180" max="180" value="0" class="form-range">
+                </div>
+                <div class="mt-3">
+                    <label class="form-label">Plane Position</label>
+                    <input type="range" id="planePosition" min="-5" max="5" value="0" step="0.1" class="form-range">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function generatePointClouds() {
+            const points1 = [];
+            const points2 = [];
+            const numPoints = 1000;
+            
+            for(let i = 0; i < numPoints; i++) {
+                points1.push({
+                    x: (Math.random() - 0.5) * 4*Math.random(),
+                    y: (Math.random() - 0.5) * 4*Math.random(),
+                    z: (Math.random() - 0.5) * 4 - 2
+                });
+            }
+            
+            for(let i = 0; i < numPoints; i++) {
+                if (i < numPoints * 0.2) {
+                    points2.push({
+                        x: (Math.random() - 0.5) * 7*Math.random(),
+                        y: (Math.random() - 0.5) * 7*Math.random(),
+                        z: (Math.random() - 0.5) * 1*Math.random()
+                    });
+                } else {
+                    points2.push({
+                        x: (Math.random() - 0.5) * 4,
+                        y: (Math.random() - 0.5) * 4,
+                        z: (Math.random() - 0.5) * 4 + 2
+                    });
+                }
+            }
+            
+            return { cloud1: points1, cloud2: points2 };
+        }
+
+        function generatePlane(rotationX, rotationY, position) {
+            const size = 5;
+            const resolution = 10;
+            const step = size * 2 / resolution;
+            
+            const x = [];
+            const y = [];
+            const z = [];
+            
+            for(let i = -size; i <= size; i += step) {
+                const row = [];
+                for(let j = -size; j <= size; j += step) {
+                    const rotX = rotationX * Math.PI / 180;
+                    const rotY = rotationY * Math.PI / 180;
+                    
+                    const point = {
+                        x: j,
+                        y: i,
+                        z: position
+                    };
+                    
+                    const rotatedY = point.y * Math.cos(rotX) - point.z * Math.sin(rotX);
+                    const rotatedZ = point.y * Math.sin(rotX) + point.z * Math.cos(rotX);
+                    point.y = rotatedY;
+                    point.z = rotatedZ;
+                    
+                    const rotatedX = point.x * Math.cos(rotY) + point.z * Math.sin(rotY);
+                    const finalZ = -point.x * Math.sin(rotY) + point.z * Math.cos(rotY);
+                    point.x = rotatedX;
+                    point.z = finalZ;
+                    
+                    row.push(point.z);
+                }
+                z.push(row);
+            }
+            
+            return {
+                x: Array(resolution + 1).fill().map((_, i) => -size + i * step),
+                y: Array(resolution + 1).fill().map((_, i) => -size + i * step),
+                z: z
+            };
+        }
+
+        const pointClouds = generatePointClouds();
+
+        function updateVisualization() {
+            const showPlane = document.getElementById('showPlaneToggle').checked;
+            const rotationX = parseFloat(document.getElementById('planeRotationX').value);
+            const rotationY = parseFloat(document.getElementById('planeRotationY').value);
+            const position = parseFloat(document.getElementById('planePosition').value);
+            
+            const data = [
+                {
+                    type: 'scatter3d',
+                    mode: 'markers',
+                    x: pointClouds.cloud1.map(p => p.x),
+                    y: pointClouds.cloud1.map(p => p.y),
+                    z: pointClouds.cloud1.map(p => p.z),
+                    marker: {
+                        size: 4,
+                        color: '#00ADB5',
+                        opacity: 0.8
+                    },
+                    name: 'Cloud 1'
+                },
+                {
+                    type: 'scatter3d',
+                    mode: 'markers',
+                    x: pointClouds.cloud2.map(p => p.x),
+                    y: pointClouds.cloud2.map(p => p.y),
+                    z: pointClouds.cloud2.map(p => p.z),
+                    marker: {
+                        size: 4,
+                        color: '#EEEEEE',
+                        opacity: 0.8
+                    },
+                    name: 'Cloud 2'
+                }
+            ];
+
+            if (showPlane) {
+                const plane = generatePlane(rotationX, rotationY, position);
+                data.push({
+                    type: 'surface',
+                    x: plane.x,
+                    y: plane.y,
+                    z: plane.z,
+                    opacity: 0.3,
+                    showscale: false,
+                    colorscale: [[0, '#393E46'], [1, '#393E46']],
+                    name: 'Separating Plane'
+                });
+            }
+
+            const layout = {
+                paper_bgcolor: '#222831',
+                plot_bgcolor: '#222831',
+                scene: {
+                    xaxis: {range: [-5, 5], gridcolor: '#393E46', color: '#EEEEEE'},
+                    yaxis: {range: [-5, 5], gridcolor: '#393E46', color: '#EEEEEE'},
+                    zaxis: {range: [-5, 5], gridcolor: '#393E46', color: '#EEEEEE'},
+                    aspectmode: 'cube',
+                    camera: {
+                        eye: {x: 0, y: 0, z: 1},
+                        up: {x: 0, y: 1, z: 0},
+                        center: {x: 0, y: 0, z: 0}
+                    },
+                    bgcolor: '#222831'
+                },
+                autosize: true,
+                margin: {
+                    l: 0,
+                    r: 0,
+                    t: 0,
+                    b: 0,
+                    pad: 0
+                },
+                responsive: true
+            };
+
+            const currentPlot = document.getElementById('pointCloud3D');
+            if (currentPlot && currentPlot._fullLayout && currentPlot._fullLayout.scene) {
+                const camera = currentPlot._fullLayout.scene.camera;
+                if (camera) {
+                    layout.scene.camera = camera;
+                }
+            }
+
+            Plotly.newPlot('pointCloud3D', data, layout, {responsive: true});
+        }
+
+        updateVisualization();
+
+        // Add resize event listener
+        window.addEventListener('resize', updateVisualization);
+
+        document.getElementById('showPlaneToggle').addEventListener('change', updateVisualization);
+        document.getElementById('planeRotationX').addEventListener('input', updateVisualization);
+        document.getElementById('planeRotationY').addEventListener('input', updateVisualization);
+        document.getElementById('planePosition').addEventListener('input', updateVisualization);
+    </script><div class="container-fluid py-4">
+    <div class="row">
+        <h1 class="text-center">Visulization of separation of data in higher dimensions (SVM and Kernels)</h1>
+        <div class="col-12 col-md-10 col-lg-8 mx-auto chart">
+            <div id="concentricCircles3D" class="w-100"></div>
+            <input type="range" id="zSlider" min="0" max="100" value="50" class="form-range mt-3">
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="showZPlaneToggle">
+                <label class="form-check-label" for="showZPlaneToggle">
+                    Show z=2 Plane
+                </label>
+            </div>
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="showLineToggle">
+                <label class="form-check-label" for="showLineToggle">
+                    Show XY Line
+                </label>
+            </div>
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="showFormulaToggle">
+                <label class="form-check-label" for="showFormulaToggle">
+                    Show Coordinate Formula
+                </label>
+            </div>
+            <div id="formulaDisplay" class="formula" style="display: none;">
+                z = (x² + y²) × scale
+            </div>
+            <input type="range" id="lineAngleSlider" min="0" max="360" value="0" class="form-range mt-3">
+            <label class="form-label">Line Angle (degrees)</label>
+            <input type="range" id="linePositionSlider" min="-2" max="2" value="0" step="0.1" class="form-range mt-3">
+            <label class="form-label">Line Position</label>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Generate points once when page loads
+    const initialPoints = generateRandomPoints(0);
+
+    function generateRandomPoints(zScale) {
+        const numPoints = 200;  // Number of points to generate
+        const innerRadius = 1;
+        const outerRadius = 2;
+        
+        const innerPoints = [];
+        const outerPoints = [];
+        
+        // Generate points near inner circle
+        for(let i = 0; i < numPoints; i++) {
+            const theta = Math.random() * 2 * Math.PI;
+            const noise = (Math.random() - 0.5) * 0.2;  // Random noise between -0.1 and 0.1
+            const radius = innerRadius + noise;
+            
+            const x = radius * Math.cos(theta);
+            const y = radius * Math.sin(theta);
+            innerPoints.push({
+                x: x,
+                y: y,
+                z: (x*x + y*y) * zScale/100
+            });
+        }
+        
+        // Generate points near outer circle
+        for(let i = 0; i < numPoints; i++) {
+            const theta = Math.random() * 2 * Math.PI;
+            const noise = (Math.random() - 0.5) * 0.2;
+            const radius = outerRadius + noise;
+            
+            const x = radius * Math.cos(theta);
+            const y = radius * Math.sin(theta);
+            outerPoints.push({
+                x: x,
+                y: y,
+                z: (x*x + y*y) * zScale/100
+            });
+        }
+        
+        return {
+            inner: innerPoints,
+            outer: outerPoints
+        };
+    }
+
+    function generateLine(angle, position) {
+        const length = 5; // Length of the line
+        const angleRad = angle * Math.PI / 180;
+        const dx = Math.cos(angleRad);
+        const dy = Math.sin(angleRad);
+        const perpX = -dy;
+        const perpY = dx;
+        const startX = -length * dx + position * perpX;
+        const startY = -length * dy + position * perpY;
+        const endX = length * dx + position * perpX;
+        const endY = length * dy + position * perpY;
+        return {
+            x: [startX, endX],
+            y: [startY, endY],
+            z: [0, 0]
+        };
+    }
+    function updateVisualization(zScale) {
+        const showZPlane = document.getElementById('showZPlaneToggle').checked;
+        const showLine = document.getElementById('showLineToggle').checked;
+        const lineAngle = document.getElementById('lineAngleSlider').value;
+        const linePosition = document.getElementById('linePositionSlider').value;
+        
+        const data = [
+            {
+                type: 'scatter3d',
+                mode: 'markers',
+                x: initialPoints.inner.map(p => p.x),
+                y: initialPoints.inner.map(p => p.y),
+                z: initialPoints.inner.map(p => ((p.x*p.x + p.y*p.y) * zScale/100)),
+                marker: {
+                    size: 4,
+                    color: '#00ADB5',
+                    opacity: 0.8
+                },
+                name: 'Inner Region Points'
+            },
+            {
+                type: 'scatter3d',
+                mode: 'markers',
+                x: initialPoints.outer.map(p => p.x),
+                y: initialPoints.outer.map(p => p.y),
+                z: initialPoints.outer.map(p => ((p.x*p.x + p.y*p.y) * zScale/100)),
+                marker: {
+                    size: 4,
+                    color: '#EEEEEE',
+                    opacity: 0.8
+                },
+                name: 'Outer Region Points'
+            }
+        ];
+
+        if (showZPlane) {
+            data.push({
+                type: 'surface',
+                x: [-2.5, 2.5],
+                y: [-2.5, 2.5],
+                z: [[2, 2], [2, 2]],
+                opacity: 0.3,
+                showscale: false,
+                name: 'z=2 Plane',
+                surfacecolor: '#393E46'
+            });
+        }
+
+        if (showLine) {
+            const line = generateLine(lineAngle, linePosition);
+            data.push({
+                type: 'scatter3d',
+                mode: 'lines',
+                x: line.x,
+                y: line.y,
+                z: line.z,
+                line: {
+                    width: 4,
+                    color: '#00ADB5'
+                },
+                name: 'XY Line'
+            });
+        }
+
+        const layout = {
+            title: {
+                text: 'Random Points Distribution in 3D',
+                font: {
+                    color: '#EEEEEE'
+                }
+            },
+            paper_bgcolor: '#222831',
+            plot_bgcolor: '#222831',
+            scene: {
+                xaxis: {
+                    range: [-2.5, 2.5],
+                    gridcolor: '#393E46',
+                    color: '#EEEEEE'
+                },
+                yaxis: {
+                    range: [-2.5, 2.5],
+                    gridcolor: '#393E46',
+                    color: '#EEEEEE'
+                },
+                zaxis: {
+                    range: [0, 10],
+                    gridcolor: '#393E46',
+                    color: '#EEEEEE'
+                },
+                aspectmode: 'cube',
+                bgcolor: '#222831'
+            },
+            autosize: true,
+            margin: {
+                l: 0,
+                r: 0,
+                t: 50,
+                b: 0,
+                pad: 0
+            },
+            responsive: true
+        };
+
+        // Get current camera position
+        const currentPlot = document.getElementById('concentricCircles3D');
+        if (currentPlot && currentPlot._fullLayout && currentPlot._fullLayout.scene) {
+            const camera = currentPlot._fullLayout.scene.camera;
+            if (camera) {
+                layout.scene.camera = camera;
+            }
+        }
+
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            displaylogo: false
+        };
+
+        Plotly.newPlot('concentricCircles3D', data, layout, config);
+    }
+
+    // Initial plot
+    updateVisualization(0);
+
+    // Add resize event listener
+    window.addEventListener('resize', function() {
+        updateVisualization(document.getElementById('zSlider').value);
+    });
+
+    // Slider event listener
+    document.getElementById('zSlider').addEventListener('input', function(e) {
+        updateVisualization(e.target.value);
+    });
+
+    // Plane toggle event listener
+    document.getElementById('showZPlaneToggle').addEventListener('change', function(e) {
+        updateVisualization(document.getElementById('zSlider').value);
+    });
+
+    // Line toggle event listener
+    document.getElementById('showLineToggle').addEventListener('change', function(e) {
+        updateVisualization(document.getElementById('zSlider').value);
+    });
+
+    // Formula toggle event listener
+    document.getElementById('showFormulaToggle').addEventListener('change', function(e) {
+        document.getElementById('formulaDisplay').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Line angle slider event listener
+    document.getElementById('lineAngleSlider').addEventListener('input', function(e) {
+        updateVisualization(document.getElementById('zSlider').value);
+    });
+
+    // Line position slider event listener
+    document.getElementById('linePositionSlider').addEventListener('input', function(e) {
+        updateVisualization(document.getElementById('zSlider').value);
+    });    
+</script>
+</body>
+</html>
