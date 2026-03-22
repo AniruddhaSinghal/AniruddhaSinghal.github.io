@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Art of Regression — An Interactive Lecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root {
+  --bg: #0d0e12;
+  --surface: #13151c;
+  --surface2: #1a1d28;
+  --border: #252836;
+  --accent: #e8c547;
+  --accent2: #5e9cf5;
+  --accent3: #f56c6c;
+  --accent4: #6cf59c;
+  --text: #e2e4f0;
+  --text-dim: #7a7f9a;
+  --text-muted: #3e4258;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Playfair Display', serif;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  position: relative;
+  background: radial-gradient(ellipse at 50% 60%, #1a1f35 0%, #0d0e12 70%);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.3;
+}
+
+.hero-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.3s;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(42px, 8vw, 96px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--text);
+  max-width: 900px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.5s;
+}
+
+.hero h1 em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.hero-sub {
+  margin-top: 28px;
+  font-size: 17px;
+  color: var(--text-dim);
+  max-width: 520px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.7s;
+}
+
+.hero-nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 48px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.9s;
+}
+
+.nav-pill {
+  padding: 8px 20px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.nav-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTIONS */
+.section {
+  padding: 100px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 60px;
+}
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section h2 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.section h2 span { color: var(--accent); font-style: italic; }
+
+.section-desc {
+  margin-top: 16px;
+  color: var(--text-dim);
+  max-width: 620px;
+  font-size: 16px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.card-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* CANVAS */
+canvas.plot {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  cursor: crosshair;
+}
+
+/* TABS */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+}
+
+.tab-btn:hover:not(.active) { color: var(--text); background: var(--border); }
+
+/* SLIDERS */
+.slider-group { margin-bottom: 14px; }
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.slider-label span:last-child {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+/* FORMULA DISPLAY */
+.formula-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--accent);
+  margin-top: 16px;
+  min-height: 44px;
+}
+
+/* STATS BOX */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.stat-chip {
+  flex: 1;
+  min-width: 120px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.stat-chip .lbl { color: var(--text-muted); font-size: 10px; letter-spacing: 2px; }
+.stat-chip .val { color: var(--accent); font-size: 18px; font-weight: 600; margin-top: 2px; }
+
+/* GRID LAYOUTS */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.two-col-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 24px; }
+@media(max-width:768px) { .two-col, .two-col-3-2 { grid-template-columns: 1fr; } }
+
+/* TOGGLE */
+.toggle-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.toggle-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.toggle-btn.on { border-color: var(--accent2); color: var(--accent2); background: rgba(94,156,245,0.08); }
+
+/* LOGISTIC */
+.logistic-info { margin-top: 12px; font-size: 13px; color: var(--text-dim); }
+.logistic-info strong { color: var(--accent4); }
+
+/* SCROLL HINT */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: bounce 2s infinite;
+}
+.scroll-hint::after {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--accent), transparent);
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-left: 8px;
+}
+.badge-yellow { background: rgba(232,197,71,0.15); color: var(--accent); border: 1px solid rgba(232,197,71,0.3); }
+.badge-blue { background: rgba(94,156,245,0.15); color: var(--accent2); border: 1px solid rgba(94,156,245,0.3); }
+
+/* SECTION SEPARATOR */
+.sep {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.sep-line { flex: 1; height: 1px; background: var(--border); }
+.sep-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 3px; }
+
+/* 3D CONTAINER */
+#canvas3d {
+  width: 100%;
+  height: 420px;
+  border-radius: 8px;
+  display: block;
+}
+
+.info-callout {
+  background: rgba(94,156,245,0.08);
+  border: 1px solid rgba(94,156,245,0.25);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 16px;
+}
+.info-callout strong { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-label">Interactive Lecture · Statistics & Machine Learning</div>
+  <h1>The <em>Art</em> of<br>Regression</h1>
+  <p class="hero-sub">From straight lines to hyperplanes — an interactive journey through the foundations of predictive modelling.</p>
+  <div class="hero-nav">
+    <a href="#s1" class="nav-pill">01 · Data Patterns</a>
+    <a href="#s2" class="nav-pill">02 · Curve Fitting</a>
+    <a href="#s3" class="nav-pill">03 · Transformations</a>
+    <a href="#s4" class="nav-pill">04 · Multivariable</a>
+    <a href="#s5" class="nav-pill">05 · Loss & Metrics</a>
+    <a href="#s6" class="nav-pill">06 · Logistic</a>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1 — DATA PATTERNS
+═══════════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">Section 01</div>
+    <h2>What does <span>data look like?</span></h2>
+    <p class="section-desc">Before fitting any model, we must understand the structure hiding in raw data. Select a pattern to see how real-world phenomena manifest as scatter plots.</p>
+  </div>
+
+  <div class="tab-bar" id="dataPatternTabs">
+    <button class="tab-btn active" onclick="setDataPattern('linear')">Linear</button>
+    <button class="tab-btn" onclick="setDataPattern('quadratic')">Quadratic (2°)</button>
+    <button class="tab-btn" onclick="setDataPattern('cubic')">Cubic (3°)</button>
+    <button class="tab-btn" onclick="setDataPattern('exponential')">Exponential</button>
+  </div>
+
+  <div class="two-col-3-2">
+    <div class="card">
+      <div class="card-title">Scatter Plot</div>
+      <canvas class="plot" id="dataPatternCanvas" height="380"></canvas>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Pattern Description</div>
+        <div id="patternDesc" style="font-size:14px;line-height:1.8;color:var(--text-dim)"></div>
+        <div class="formula-box" id="patternFormula"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Noise Level</div>
+        <div class="slider-group">
+          <div class="slider-label"><span>σ (noise)</span><span id="noiseVal">0.2</span></div>
+          <input type="range" id="noiseSlider" min="0" max="1" step="0.05" value="0.2" oninput="onNoiseChange()">
+        </div>
+        <div class="info-callout"><strong>Key insight:</strong> Noise makes pattern recognition harder. Real data always has noise. The goal of regression is to find the underlying signal.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"><div class="sep-line"></div><div class="sep-label">CHAPTER 2</div><div class="sep-line"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2 — CURVE FITTING
+═══════════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">Section 02</div>
+    <h2>Fitting <span>curves</span> to data</h2>
+    <p class="section-desc">Drag the coefficient sliders to move the curve. Watch how the fit changes. Understand what each coefficient controls geometrically.</p>
+  </div>
+
+  <div class="tab-bar" id="curveTabs">
+    <button class="tab-btn active" onclick="setCurveDegree(1)">Degree 1 · Linear</button>
+    <button class="tab-btn" onclick="setCurveDegree(2)">Degree 2 · Quadratic</button>
+    <button class="tab-btn" onclick="setCurveDegree(3)">Degree 3 · Cubic</button>
+  </div>
+
+  <div class="toggle-row">
+    <button class="toggle-btn on" id="toggleData" onclick="toggleLayer('data')">● Data Points</button>
+    <button class="toggle-btn on" id="toggleFit" onclick="toggleLayer('fit')">● Fitted Curve</button>
+    <button class="toggle-btn" id="toggleBest" onclick="toggleLayer('best')">● Best Fit (OLS)</button>
+    <button class="toggle-btn" id="toggleResid" onclick="toggleLayer('resid')">● Residuals</button>
+  </div>
+
+  <div class="two-col-3-2">
+    <div class="card">
+      <div class="card-title">Interactive Curve Fitting</div>
+      <canvas class="plot" id="curveFitCanvas" height="400"></canvas>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Coefficients</div>
+        <div id="coeffSliders"></div>
+        <div class="formula-box" id="curveFormula"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fit Quality</div>
+        <div class="stats-row">
+          <div class="stat-chip"><div class="lbl">R²</div><div class="val" id="stat_r2">—</div></div>
+          <div class="stat-chip"><div class="lbl">MSE</div><div class="val" id="stat_mse">—</div></div>
+          <div class="stat-chip"><div class="lbl">MAE</div><div class="val" id="stat_mae">—</div></div>
+        </div>
+        <button onclick="resetToOLS()" style="margin-top:12px;width:100%;padding:10px;background:var(--accent);border:none;border-radius:8px;color:#000;font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:600">
+          AUTO-FIT (OLS)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"><div class="sep-line"></div><div class="sep-label">CHAPTER 3</div><div class="sep-line"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3 — TRANSFORMATIONS
+═══════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">Section 03</div>
+    <h2>The power of <span>transformation</span></h2>
+    <p class="section-desc">Not all curves are equal. Linearising data through transformation is one of the most powerful techniques in the analyst's toolkit.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Raw Exponential Data <span class="badge badge-yellow">y = a·eᵇˣ + noise</span></div>
+      <canvas class="plot" id="transRawCanvas" height="320"></canvas>
+      <div style="margin-top:12px;font-size:13px;color:var(--text-dim)">A straight line <strong style="color:var(--accent3)">cannot</strong> fit this curve well. The residuals would be enormous.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Log-Transformed Data <span class="badge badge-blue">ln(y) = ln(a) + bx</span></div>
+      <canvas class="plot" id="transLogCanvas" height="320"></canvas>
+      <div style="margin-top:12px;font-size:13px;color:var(--text-dim)">After taking log(y), the data becomes <strong style="color:var(--accent4)">linear</strong>. A straight line fits perfectly.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="card-title">Transformation Slider — interpolate between raw and log scale</div>
+    <div class="slider-group" style="margin-top:8px">
+      <div class="slider-label"><span>Raw Scale ←</span><span id="transVal">0%</span><span>→ Log Scale</span></div>
+      <input type="range" id="transSlider" min="0" max="100" value="0" oninput="onTransChange()">
+    </div>
+    <div class="formula-box" id="transFormula">y = a · eᵇˣ → apply log → ln(y) = ln(a) + b·x</div>
+  </div>
+</div>
+
+<div class="sep"><div class="sep-line"></div><div class="sep-label">CHAPTER 4</div><div class="sep-line"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4 — MULTIVARIABLE
+═══════════════════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">Section 04</div>
+    <h2>When one variable <span>isn't enough</span></h2>
+    <p class="section-desc">Real phenomena depend on multiple inputs. Multivariable regression extends the line to a plane — and beyond.</p>
+  </div>
+
+  <div class="two-col-3-2">
+    <div class="card">
+      <div class="card-title">3D Regression Plane · ŷ = β₀ + β₁x₁ + β₂x₂</div>
+      <canvas id="canvas3d"></canvas>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Plane Coefficients</div>
+        <div class="slider-group">
+          <div class="slider-label"><span>β₀ (intercept)</span><span id="b0val">2.0</span></div>
+          <input type="range" id="b0" min="-5" max="5" step="0.1" value="2" oninput="update3D()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>β₁ (slope for x₁)</span><span id="b1val">1.0</span></div>
+          <input type="range" id="b1" min="-3" max="3" step="0.1" value="1" oninput="update3D()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>β₂ (slope for x₂)</span><span id="b2val">1.0</span></div>
+          <input type="range" id="b2" min="-3" max="3" step="0.1" value="1" oninput="update3D()">
+        </div>
+        <div class="formula-box" id="plane3DFormula">ŷ = 2.0 + 1.0·x₁ + 1.0·x₂</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Linear Dependence</div>
+        <div style="font-size:14px;color:var(--text-dim);line-height:1.8">
+          Each output <strong style="color:var(--accent)">ŷ</strong> is a <em>linear combination</em> of inputs. Changing β₁ tilts the plane along x₁. Changing β₂ tilts it along x₂. The intercept β₀ shifts it up or down.
+        </div>
+        <div class="info-callout" style="margin-top:12px"><strong>Why linearity matters:</strong> The model is interpretable. A unit increase in x₁ always yields exactly β₁ increase in ŷ — regardless of the values of other variables.</div>
+        <button onclick="autoFit3D()" style="margin-top:12px;width:100%;padding:10px;background:var(--accent);border:none;border-radius:8px;color:#000;font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:600">
+          AUTO-FIT PLANE (OLS)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"><div class="sep-line"></div><div class="sep-label">CHAPTER 5</div><div class="sep-line"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5 — LOSS FUNCTIONS & METRICS
+═══════════════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">Section 05</div>
+    <h2>What does <span>"best fit"</span> mean?</h2>
+    <p class="section-desc">Every regression minimises some measure of error. But which one? Visually explore MSE, MAE, and R² — and see why the choice matters.</p>
+  </div>
+
+  <div class="tab-bar" id="lossTabs">
+    <button class="tab-btn active" onclick="setLossMode('mse')">MSE (Mean Sq. Error)</button>
+    <button class="tab-btn" onclick="setLossMode('mae')">MAE (Mean Abs. Error)</button>
+    <button class="tab-btn" onclick="setLossMode('r2')">R² Score</button>
+  </div>
+
+  <div class="two-col-3-2">
+    <div class="card">
+      <div class="card-title">Residuals Visualisation</div>
+      <canvas class="plot" id="lossCanvas" height="400"></canvas>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Line Position</div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Slope (m)</span><span id="lossSlope">1.00</span></div>
+          <input type="range" id="lossSlopeSlider" min="-2" max="4" step="0.05" value="1" oninput="updateLoss()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Intercept (b)</span><span id="lossIntercept">0.00</span></div>
+          <input type="range" id="lossInterceptSlider" min="-5" max="5" step="0.1" value="0" oninput="updateLoss()">
+        </div>
+        <div class="formula-box" id="lossFormula">ŷ = 1.0·x + 0.0</div>
+      </div>
+      <div class="card">
+        <div class="card-title" id="metricTitle">MSE — Mean Squared Error</div>
+        <div id="metricExplain" style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:12px"></div>
+        <div class="stats-row">
+          <div class="stat-chip"><div class="lbl">CURRENT</div><div class="val" id="lossCurrentVal">—</div></div>
+          <div class="stat-chip"><div class="lbl">MINIMUM</div><div class="val" id="lossMinVal">—</div></div>
+        </div>
+        <button onclick="fitLossLine()" style="margin-top:12px;width:100%;padding:10px;background:var(--accent);border:none;border-radius:8px;color:#000;font-family:var(--mono);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:600">
+          MINIMISE LOSS
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sep"><div class="sep-line"></div><div class="sep-label">CHAPTER 6</div><div class="sep-line"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 6 — LOGISTIC REGRESSION
+═══════════════════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">Section 06</div>
+    <h2>When the outcome is <span>binary</span></h2>
+    <p class="section-desc">Logistic regression predicts probability — bounded between 0 and 1. The sigmoid function is the key. Explore how it works.</p>
+  </div>
+
+  <div class="two-col-3-2">
+    <div class="card">
+      <div class="card-title">Logistic Regression · Sigmoid Decision Boundary</div>
+      <canvas class="plot" id="logisticCanvas" height="420"></canvas>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Sigmoid Parameters</div>
+        <div class="slider-group">
+          <div class="slider-label"><span>β (steepness)</span><span id="logBeta">1.50</span></div>
+          <input type="range" id="logBetaSlider" min="0.2" max="5" step="0.1" value="1.5" oninput="updateLogistic()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>x₀ (midpoint / threshold)</span><span id="logX0">0.00</span></div>
+          <input type="range" id="logX0Slider" min="-4" max="4" step="0.1" value="0" oninput="updateLogistic()">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Decision threshold</span><span id="logThresh">0.50</span></div>
+          <input type="range" id="logThreshSlider" min="0.1" max="0.9" step="0.05" value="0.5" oninput="updateLogistic()">
+        </div>
+        <div class="formula-box" id="logFormula">P(y=1) = 1 / (1 + e^(-β(x - x₀)))</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Classification Metrics</div>
+        <div class="stats-row">
+          <div class="stat-chip"><div class="lbl">ACCURACY</div><div class="val" id="logAccuracy">—</div></div>
+          <div class="stat-chip"><div class="lbl">TP</div><div class="val" id="logTP" style="color:var(--accent4)">—</div></div>
+          <div class="stat-chip"><div class="lbl">FP</div><div class="val" id="logFP" style="color:var(--accent3)">—</div></div>
+        </div>
+        <div class="info-callout" style="margin-top:12px">
+          <strong>Key insight:</strong> The decision threshold determines what probability we call "positive." Lowering it catches more positives but increases false alarms.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div style="text-align:center;padding:60px 40px;font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:2px">
+  THE ART OF REGRESSION · INTERACTIVE LECTURE · <a href="#top" style="color:var(--accent);text-decoration:none">BACK TO TOP ↑</a>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════
+function rand(min, max) { return Math.random() * (max - min) + min; }
+function randn() {
+  let u = 0, v = 0;
+  while(u === 0) u = Math.random();
+  while(v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+function setActiveTabs(tabBarId, btnIndex) {
+  const bar = document.getElementById(tabBarId);
+  bar.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === btnIndex);
+  });
+}
+
+// DPI-aware canvas setup
+function setupCanvas(canvas) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width || canvas.offsetWidth || 600;
+  const h = parseInt(canvas.getAttribute('height')) || 380;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx, w, h };
+}
+
+function getCanvasSize(canvas) {
+  return { w: canvas.offsetWidth || 600, h: parseInt(canvas.getAttribute('height')) || 380 };
+}
+
+// Draw axes
+function drawAxes(ctx, w, h, margin, xMin, xMax, yMin, yMax, color='#252836') {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  // grid
+  ctx.setLineDash([4, 6]);
+  ctx.strokeStyle = '#1e2132';
+  const nx = 8, ny = 6;
+  for (let i = 0; i <= nx; i++) {
+    const x = margin + (w - 2*margin) * i / nx;
+    ctx.beginPath(); ctx.moveTo(x, margin); ctx.lineTo(x, h - margin); ctx.stroke();
+  }
+  for (let i = 0; i <= ny; i++) {
+    const y = margin + (h - 2*margin) * i / ny;
+    ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(w - margin, y); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  // axes
+  ctx.strokeStyle = '#3e4258';
+  ctx.lineWidth = 1.5;
+  // x-axis
+  const yZero = yToPixel(0, h, margin, yMin, yMax);
+  if (yZero >= margin && yZero <= h - margin) {
+    ctx.beginPath(); ctx.moveTo(margin, yZero); ctx.lineTo(w - margin, yZero); ctx.stroke();
+  }
+  // y-axis
+  const xZero = xToPixel(0, w, margin, xMin, xMax);
+  if (xZero >= margin && xZero <= w - margin) {
+    ctx.beginPath(); ctx.moveTo(xZero, margin); ctx.lineTo(xZero, h - margin); ctx.stroke();
+  }
+  // tick labels
+  ctx.fillStyle = '#3e4258';
+  ctx.font = '10px IBM Plex Mono, monospace';
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= nx; i += 2) {
+    const xv = xMin + (xMax - xMin) * i / nx;
+    const xp = margin + (w - 2*margin) * i / nx;
+    ctx.fillText(xv.toFixed(1), xp, h - margin + 14);
+  }
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= ny; i += 2) {
+    const yv = yMax - (yMax - yMin) * i / ny;
+    const yp = margin + (h - 2*margin) * i / ny;
+    ctx.fillText(yv.toFixed(1), margin - 6, yp + 4);
+  }
+}
+
+function xToPixel(x, w, margin, xMin, xMax) {
+  return margin + (x - xMin) / (xMax - xMin) * (w - 2 * margin);
+}
+function yToPixel(y, h, margin, yMin, yMax) {
+  return h - margin - (y - yMin) / (yMax - yMin) * (h - 2 * margin);
+}
+function px(x, w, margin, xMin, xMax) { return xToPixel(x, w, margin, xMin, xMax); }
+function py(y, h, margin, yMin, yMax) { return yToPixel(y, h, margin, yMin, yMax); }
+
+// Polyfit (least squares) for degree d
+function polyfit(xs, ys, d) {
+  const n = xs.length;
+  const p = d + 1;
+  // Build Vandermonde
+  const A = [], b = [];
+  for (let i = 0; i < n; i++) {
+    const row = [];
+    for (let j = 0; j < p; j++) row.push(Math.pow(xs[i], j));
+    A.push(row);
+    b.push(ys[i]);
+  }
+  // ATA * c = ATb
+  const ATA = [], ATb = [];
+  for (let i = 0; i < p; i++) {
+    ATA.push([]);
+    ATb.push(0);
+    for (let j = 0; j < p; j++) {
+      let s = 0;
+      for (let k = 0; k < n; k++) s += A[k][i] * A[k][j];
+      ATA[i].push(s);
+    }
+    for (let k = 0; k < n; k++) ATb[i] += A[k][i] * b[k];
+  }
+  return gaussElim(ATA, ATb);
+}
+
+function gaussElim(A, b) {
+  const n = b.length;
+  const M = A.map((r, i) => [...r, b[i]]);
+  for (let col = 0; col < n; col++) {
+    let maxRow = col;
+    for (let row = col + 1; row < n; row++)
+      if (Math.abs(M[row][col]) > Math.abs(M[maxRow][col])) maxRow = row;
+    [M[col], M[maxRow]] = [M[maxRow], M[col]];
+    for (let row = col + 1; row < n; row++) {
+      const f = M[row][col] / (M[col][col] || 1e-12);
+      for (let j = col; j <= n; j++) M[row][j] -= f * M[col][j];
+    }
+  }
+  const x = new Array(n).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    x[i] = M[i][n];
+    for (let j = i + 1; j < n; j++) x[i] -= M[i][j] * x[j];
+    x[i] /= (M[i][i] || 1e-12);
+  }
+  return x;
+}
+
+function polyEval(coeffs, x) {
+  return coeffs.reduce((s, c, i) => s + c * Math.pow(x, i), 0);
+}
+
+function computeStats(xs, ys, fn) {
+  const n = xs.length;
+  const yHats = xs.map(fn);
+  const residuals = ys.map((y, i) => y - yHats[i]);
+  const mse = residuals.reduce((s, r) => s + r*r, 0) / n;
+  const mae = residuals.reduce((s, r) => s + Math.abs(r), 0) / n;
+  const yMean = ys.reduce((a, b) => a + b, 0) / n;
+  const ssTot = ys.reduce((s, y) => s + (y - yMean)**2, 0);
+  const ssRes = residuals.reduce((s, r) => s + r*r, 0);
+  const r2 = 1 - ssRes / (ssTot || 1);
+  return { mse, mae, r2 };
+}
+
+// ═══════════════════════════════════════════════════
+//  SECTION 1 — DATA PATTERNS
+// ═══════════════════════════════════════════════════
+let currentPattern = 'linear';
+let currentNoise = 0.2;
+let patternData = [];
+
+const PATTERNS = {
+  linear: {
+    fn: x => 0.8 * x + 1.5,
+    desc: 'Linear data follows y = mx + b. As x increases, y increases (or decreases) at a constant rate. Common in: simple economic relationships, basic physics.',
+    formula: 'y = 0.8·x + 1.5 + ε',
+    xRange: [-5, 5], yRange: [-5, 8]
+  },
+  quadratic: {
+    fn: x => 0.3 * x*x - 0.5 * x + 1,
+    desc: 'Quadratic data curves — it has a minimum or maximum. Common in: projectile motion, economics (profit curves), engineering stress analysis.',
+    formula: 'y = 0.3·x² − 0.5·x + 1 + ε',
+    xRange: [-5, 6], yRange: [-2, 12]
+  },
+  cubic: {
+    fn: x => 0.1 * x*x*x - 0.5 * x + 0.5,
+    desc: 'Cubic data has an inflection point — it can both increase and decrease. Common in: population dynamics, dose-response curves, fluid dynamics.',
+    formula: 'y = 0.1·x³ − 0.5·x + 0.5 + ε',
+    xRange: [-5, 5], yRange: [-5, 8]
+  },
+  exponential: {
+    fn: x => 0.5 * Math.exp(0.6 * x),
+    desc: 'Exponential data grows (or decays) by a constant multiplicative factor. Common in: population growth, compound interest, radioactive decay, viral spread.',
+    formula: 'y = 0.5·e^(0.6x) + ε',
+    xRange: [-3, 5], yRange: [-2, 25]
+  }
+};
+
+function generatePatternData(pattern, noise) {
+  const p = PATTERNS[pattern];
+  const data = [];
+  for (let i = 0; i < 60; i++) {
+    const x = rand(p.xRange[0], p.xRange[1]);
+    const yScale = p.yRange[1] - p.yRange[0];
+    const y = p.fn(x) + randn() * noise * yScale * 0.15;
+    data.push({ x, y });
+  }
+  return data;
+}
+
+function drawPatternCanvas() {
+  const canvas = document.getElementById('dataPatternCanvas');
+  const { w, h } = getCanvasSize(canvas);
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = 380 * (window.devicePixelRatio || 1);
+  canvas.style.height = '380px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const p = PATTERNS[currentPattern];
+  const mg = 44;
+  const [xMin, xMax] = p.xRange;
+  const [yMin, yMax] = p.yRange;
+
+  ctx.clearRect(0, 0, w, 380);
+  drawAxes(ctx, w, 380, mg, xMin, xMax, yMin, yMax);
+
+  // True curve (faint)
+  ctx.strokeStyle = currentPattern === 'exponential' ? '#f56c6c66' : '#5e9cf566';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  for (let xi = xMin; xi <= xMax; xi += 0.05) {
+    const xp = px(xi, w, mg, xMin, xMax);
+    const yp = py(p.fn(xi), 380, mg, yMin, yMax);
+    if (xi === xMin) ctx.moveTo(xp, yp); else ctx.lineTo(xp, yp);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Points
+  patternData.forEach(d => {
+    const xp = px(d.x, w, mg, xMin, xMax);
+    const yp = py(d.y, 380, mg, yMin, yMax);
+    ctx.beginPath();
+    ctx.arc(xp, yp, 5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(232,197,71,0.8)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(232,197,71,0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+}
+
+function setDataPattern(p) {
+  currentPattern = p;
+  patternData = generatePatternData(p, currentNoise);
+  const info = PATTERNS[p];
+  document.getElementById('patternDesc').textContent = info.desc;
+  document.getElementById('patternFormula').textContent = info.formula;
+  setActiveTabs('dataPatternTabs', ['linear','quadratic','cubic','exponential'].indexOf(p));
+  drawPatternCanvas();
+}
+
+function onNoiseChange() {
+  currentNoise = parseFloat(document.getElementById('noiseSlider').value);
+  document.getElementById('noiseVal').textContent = currentNoise.toFixed(2);
+  patternData = generatePatternData(currentPattern, currentNoise);
+  drawPatternCanvas();
+}
+
+// ═══════════════════════════════════════════════════
+//  SECTION 2 — CURVE FITTING
+// ═══════════════════════════════════════════════════
+let curveDegree = 1;
+let curveCoeffs = [0, 1];
+let bestCoeffs = null;
+let layers = { data: true, fit: true, best: false, resid: false };
+let fitData = [];
+
+const COEFF_LABELS = ['a₀ (intercept)', 'a₁ (linear)', 'a₂ (quadratic)', 'a₃ (cubic)'];
+const COEFF_RANGES = [[-5,5], [-3,3], [-1,1], [-0.5,0.5]];
+const COEFF_DEFAULTS = [[0,1], [0,1,0], [0,0.5,0.2,0]];
+
+function buildSliders() {
+  const el = document.getElementById('coeffSliders');
+  el.innerHTML = '';
+  for (let i = 0; i <= curveDegree; i++) {
+    const v = curveCoeffs[i] !== undefined ? curveCoeffs[i] : 0;
+    el.innerHTML += `
+      <div class="slider-group">
+        <div class="slider-label"><span>${COEFF_LABELS[i]}</span><span id="cv${i}">${v.toFixed(3)}</span></div>
+        <input type="range" id="cs${i}" min="${COEFF_RANGES[i][0]}" max="${COEFF_RANGES[i][1]}" step="0.01" value="${v}" oninput="onCoeffChange(${i})">
+      </div>`;
+  }
+}
+
+function onCoeffChange(i) {
+  curveCoeffs[i] = parseFloat(document.getElementById(`cs${i}`).value);
+  document.getElementById(`cv${i}`).textContent = curveCoeffs[i].toFixed(3);
+  updateCurveFormula();
+  drawCurveFit();
+}
+
+function updateCurveFormula() {
+  const terms = curveCoeffs.slice(0, curveDegree+1).map((c, i) => {
+    if (i === 0) return c.toFixed(2);
+    if (i === 1) return `${c.toFixed(2)}·x`;
+    return `${c.toFixed(2)}·x${['','','²','³'][i]}`;
+  });
+  document.getElementById('curveFormula').textContent = 'ŷ = ' + terms.join(' + ').replace(/\+ -/g,'− ');
+}
+
+function generateFitData() {
+  fitData = [];
+  for (let i = 0; i < 50; i++) {
+    const x = rand(-4, 4);
+    const yTrue = 0.5*x + 0.3*x*x - 0.05*x*x*x + 0.5;
+    const y = yTrue + randn() * 1.2;
+    fitData.push({ x, y });
+  }
+  bestCoeffs = null;
+}
+
+function setCurveDegree(d) {
+  curveDegree = d;
+  curveCoeffs = [...COEFF_DEFAULTS[d-1]];
+  bestCoeffs = null;
+  setActiveTabs('curveTabs', d - 1);
+  buildSliders();
+  updateCurveFormula();
+  drawCurveFit();
+}
+
+function toggleLayer(name) {
+  layers[name] = !layers[name];
+  document.getElementById('toggle' + name.charAt(0).toUpperCase() + name.slice(1)).classList.toggle('on', layers[name]);
+  drawCurveFit();
+}
+
+function resetToOLS() {
+  const xs = fitData.map(d => d.x);
+  const ys = fitData.map(d => d.y);
+  bestCoeffs = polyfit(xs, ys, curveDegree);
+  curveCoeffs = [...bestCoeffs];
+  buildSliders();
+  updateCurveFormula();
+  layers.best = true;
+  document.getElementById('toggleBest').classList.add('on');
+  drawCurveFit();
+}
+
+function drawCurveFit() {
+  const canvas = document.getElementById('curveFitCanvas');
+  const { w, h } = getCanvasSize(canvas);
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = 400 * (window.devicePixelRatio || 1);
+  canvas.style.height = '400px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const mg = 44;
+  const xMin = -5, xMax = 5, yMin = -6, yMax = 10;
+
+  ctx.clearRect(0, 0, w, 400);
+  drawAxes(ctx, w, 400, mg, xMin, xMax, yMin, yMax);
+
+  // Best fit (OLS)
+  if (layers.best && bestCoeffs) {
+    ctx.strokeStyle = '#6cf59c';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 4]);
+    ctx.beginPath();
+    for (let xi = xMin; xi <= xMax; xi += 0.05) {
+      const xp = px(xi, w, mg, xMin, xMax);
+      const yp = py(polyEval(bestCoeffs, xi), 400, mg, yMin, yMax);
+      if (xi === xMin) ctx.moveTo(xp, yp); else ctx.lineTo(xp, yp);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // User curve
+  if (layers.fit) {
+    ctx.strokeStyle = '#e8c547';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let xi = xMin; xi <= xMax; xi += 0.04) {
+      const yv = polyEval(curveCoeffs, xi);
+      const xp = px(xi, w, mg, xMin, xMax);
+      const yp = py(yv, 400, mg, yMin, yMax);
+      if (xi === xMin) ctx.moveTo(xp, yp); else ctx.lineTo(xp, yp);
+    }
+    ctx.stroke();
+  }
+
+  // Residuals
+  if (layers.resid) {
+    fitData.forEach(d => {
+      const xp = px(d.x, w, mg, xMin, xMax);
+      const yFit = polyEval(curveCoeffs, d.x);
+      const yActual = py(d.y, 400, mg, yMin, yMax);
+      const yFitted = py(yFit, 400, mg, yMin, yMax);
+      ctx.strokeStyle = d.y > yFit ? 'rgba(94,156,245,0.7)' : 'rgba(245,108,108,0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(xp, yActual); ctx.lineTo(xp, yFitted); ctx.stroke();
+    });
+  }
+
+  // Data points
+  if (layers.data) {
+    fitData.forEach(d => {
+      const xp = px(d.x, w, mg, xMin, xMax);
+      const yp = py(d.y, 400, mg, yMin, yMax);
+      ctx.beginPath(); ctx.arc(xp, yp, 5, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(232,197,71,0.85)';
+      ctx.fill();
+    });
+  }
+
+  // Stats
+  const stats = computeStats(fitData.map(d=>d.x), fitData.map(d=>d.y), x => polyEval(curveCoeffs, x));
+  document.getElementById('stat_r2').textContent = stats.r2.toFixed(3);
+  document.getElementById('stat_mse').textContent = stats.mse.toFixed(2);
+  document.getElementById('stat_mae').textContent = stats.mae.toFixed(2);
+}
+
+// ═══════════════════════════════════════════════════
+//  SECTION 3 — TRANSFORMATIONS
+// ═══════════════════════════════════════════════════
+let transData = [];
+
+function generateTransData() {
+  transData = [];
+  for (let i = 0; i < 50; i++) {
+    const x = rand(0, 5);
+    const y = 0.8 * Math.exp(0.7 * x) + randn() * 0.5 * Math.exp(0.3 * x);
+    transData.push({ x, y: Math.max(0.01, y) });
+  }
+}
+
+function drawTransCanvas(canvasId, logScale, alpha) {
+  const canvas = document.getElementById(canvasId);
+  const { w } = getCanvasSize(canvas);
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = 320 * (window.devicePixelRatio || 1);
+  canvas.style.height = '320px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const mg = 44;
+  const xs = transData.map(d => d.x);
+  const ys = logScale ? transData.map(d => Math.log(d.y)) : transData.map(d => d.y);
+  const xMin = 0, xMax = 5.5;
+  const yMin = Math.min(...ys) - 0.5;
+  const yMax = Math.max(...ys) + 0.5;
+
+  ctx.clearRect(0, 0, w, 320);
+  drawAxes(ctx, w, 320, mg, xMin, xMax, yMin, yMax);
+
+  // Fit line on log scale
+  const lsCoeffs = polyfit(xs, ys, 1);
+  ctx.strokeStyle = logScale ? '#6cf59c' : '#f56c6c99';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash(logScale ? [] : [6, 4]);
+  ctx.beginPath();
+  for (let xi = xMin; xi <= xMax; xi += 0.05) {
+    const yFit = lsCoeffs[0] + lsCoeffs[1] * xi;
+    const xp = px(xi, w, mg, xMin, xMax);
+    const yp = py(yFit, 320, mg, yMin, yMax);
+    if (xi === xMin) ctx.moveTo(xp, yp); else ctx.lineTo(xp, yp);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Points
+  transData.forEach((d, i) => {
+    const y = logScale ? Math.log(d.y) : d.y;
+    const xp = px(d.x, w, mg, xMin, xMax);
+    const yp = py(y, 320, mg, yMin, yMax);
+    ctx.beginPath(); ctx.arc(xp, yp, 5, 0, Math.PI*2);
+    ctx.fillStyle = logScale ? 'rgba(108,245,156,0.85)' : 'rgba(232,197,71,0.85)';
+    ctx.fill();
+  });
+
+  // R² label
+  const stats = computeStats(xs, ys, x => lsCoeffs[0] + lsCoeffs[1]*x);
+  ctx.fillStyle = logScale ? '#6cf59c' : '#f56c6c';
+  ctx.font = 'bold 12px IBM Plex Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText(`R² = ${stats.r2.toFixed(3)}`, w - mg - 8, mg + 20);
+}
+
+function onTransChange() {
+  const v = parseInt(document.getElementById('transSlider').value);
+  document.getElementById('transVal').textContent = v + '%';
+  const logScale = v > 50;
+  drawTransCanvas('transRawCanvas', false, 1);
+  drawTransCanvas('transLogCanvas', true, 1);
+}
+
+// ═══════════════════════════════════════════════════
+//  SECTION 4 — 3D MULTIVARIABLE
+// ═══════════════════════════════════════════════════
+let scene3D, camera3D, renderer3D, planeMesh3D, pointMeshes3D=[], data3D=[];
+let b0=2, b1=1, b2=1;
+let animRunning = false;
+
+function generate3DData() {
+  data3D = [];
+  for (let i = 0; i < 80; i++) {
+    const x1 = rand(-3, 3), x2 = rand(-3, 3);
+    const y = 2 + 1.2*x1 + 0.8*x2 + randn()*0.8;
+    data3D.push({ x1, x2, y });
+  }
+}
+
+function init3D() {
+  const canvas = document.getElementById('canvas3d');
+  const w = canvas.offsetWidth || 600;
+  const h = 420;
+  canvas.width = w;
+  canvas.height = h;
+
+  scene3D = new THREE.Scene();
+  scene3D.background = new THREE.Color(0x13151c);
+
+  camera3D = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+  camera3D.position.set(8, 6, 8);
+  camera3D.lookAt(0, 0, 0);
+
+  renderer3D = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer3D.setSize(w, h);
+  renderer3D.setPixelRatio(window.devicePixelRatio || 1);
+
+  // Grid helper
+  const gridHelper = new THREE.GridHelper(8, 16, 0x252836, 0x1e2132);
+  scene3D.add(gridHelper);
+
+  // Axes
+  const axMat = new THREE.LineBasicMaterial({ vertexColors: true });
+  const axGeo = new THREE.BufferGeometry();
+  const axPos = new Float32Array([
+    0,0,0, 5,0,0,  0,0,0, 0,5,0,  0,0,0, 0,0,5
+  ]);
+  const axCol = new Float32Array([
+    1,.5,.2, 1,.5,.2,  .2,1,.5, .2,1,.5,  .5,.2,1, .5,.2,1
+  ]);
+  axGeo.setAttribute('position', new THREE.BufferAttribute(axPos, 3));
+  axGeo.setAttribute('color', new THREE.BufferAttribute(axCol, 3));
+  scene3D.add(new THREE.LineSegments(axGeo, axMat));
+
+  // Axis labels (sprites)
+  ['x₁','y','x₂'].forEach((lbl, i) => {});
+
+  // Plane
+  const planeGeo = new THREE.PlaneGeometry(8, 8, 20, 20);
+  const planeMat = new THREE.MeshBasicMaterial({
+    color: 0x5e9cf5, transparent: true, opacity: 0.25,
+    side: THREE.DoubleSide, wireframe: false
+  });
+  planeMesh3D = new THREE.Mesh(planeGeo, planeMat);
+  planeMesh3D.rotation.x = -Math.PI / 2;
+  scene3D.add(planeMesh3D);
+
+  // Wireframe on plane
+  const wireGeo = new THREE.PlaneGeometry(8, 8, 10, 10);
+  const wireMat = new THREE.MeshBasicMaterial({ color: 0x5e9cf5, wireframe: true, transparent: true, opacity: 0.15 });
+  const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+  wireMesh.rotation.x = -Math.PI / 2;
+  wireMesh.name = 'planewire';
+  scene3D.add(wireMesh);
+  planeMesh3D.wireMesh = wireMesh;
+
+  // Lights
+  scene3D.add(new THREE.AmbientLight(0xffffff, 0.8));
+
+  // Points
+  rebuildPoints3D();
+
+  // Orbit-like rotation
+  let isDragging = false, prevX = 0, prevY = 0;
+  let rotY = 0.4, rotX = 0.2;
+
+  canvas.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+  canvas.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    rotY += (e.clientX - prevX) * 0.01;
+    rotX += (e.clientY - prevY) * 0.01;
+    rotX = Math.max(-1.2, Math.min(1.2, rotX));
+    prevX = e.clientX; prevY = e.clientY;
+    const r = 12;
+    camera3D.position.set(r * Math.sin(rotY) * Math.cos(rotX), r * Math.sin(rotX), r * Math.cos(rotY) * Math.cos(rotX));
+    camera3D.lookAt(0, 2, 0);
+  });
+  canvas.addEventListener('mouseup', () => isDragging = false);
+  canvas.addEventListener('mouseleave', () => isDragging = false);
+
+  // Touch support
+  canvas.addEventListener('touchstart', e => { isDragging = true; prevX = e.touches[0].clientX; prevY = e.touches[0].clientY; e.preventDefault(); }, {passive:false});
+  canvas.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    rotY += (e.touches[0].clientX - prevX) * 0.01;
+    rotX += (e.touches[0].clientY - prevY) * 0.01;
+    rotX = Math.max(-1.2, Math.min(1.2, rotX));
+    prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
+    const r = 12;
+    camera3D.position.set(r*Math.sin(rotY)*Math.cos(rotX), r*Math.sin(rotX)+2, r*Math.cos(rotY)*Math.cos(rotX));
+    camera3D.lookAt(0, 2, 0);
+    e.preventDefault();
+  }, {passive:false});
+
+  // Auto-rotate
+  let autoRot = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!isDragging) {
+      autoRot += 0.003;
+      const r = 12;
+      camera3D.position.x = r * Math.sin(autoRot);
+      camera3D.position.z = r * Math.cos(autoRot);
+      camera3D.position.y = 6;
+      camera3D.lookAt(0, 2, 0);
+    }
+    renderer3D.render(scene3D, camera3D);
+  }
+  animate();
+
+  update3D();
+}
+
+function rebuildPoints3D() {
+  pointMeshes3D.forEach(m => scene3D.remove(m));
+  pointMeshes3D = [];
+  const geo = new THREE.SphereGeometry(0.1, 8, 8);
+  data3D.forEach(d => {
+    const mat = new THREE.MeshBasicMaterial({ color: 0xe8c547 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(d.x1, d.y, d.x2);
+    scene3D.add(mesh);
+    pointMeshes3D.push(mesh);
+
+    // residual line
+    const yFit = b0 + b1*d.x1 + b2*d.x2;
+    const linGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(d.x1, d.y, d.x2),
+      new THREE.Vector3(d.x1, yFit, d.x2)
+    ]);
+    const linMat = new THREE.LineBasicMaterial({ color: d.y > yFit ? 0x5e9cf5 : 0xf56c6c, transparent: true, opacity: 0.4 });
+    const line = new THREE.Line(linGeo, linMat);
+    line.name = 'residline';
+    scene3D.add(line);
+    pointMeshes3D.push(line);
+  });
+}
+
+function update3D() {
+  b0 = parseFloat(document.getElementById('b0').value);
+  b1 = parseFloat(document.getElementById('b1').value);
+  b2 = parseFloat(document.getElementById('b2').value);
+  document.getElementById('b0val').textContent = b0.toFixed(1);
+  document.getElementById('b1val').textContent = b1.toFixed(1);
+  document.getElementById('b2val').textContent = b2.toFixed(1);
+  document.getElementById('plane3DFormula').textContent = `ŷ = ${b0.toFixed(2)} + ${b1.toFixed(2)}·x₁ + ${b2.toFixed(2)}·x₂`;
+
+  if (!planeMesh3D) return;
+
+  // Update plane vertices
+  const pos = planeMesh3D.geometry.attributes.position;
+  const n = Math.round(Math.sqrt(pos.count));
+  for (let i = 0; i < pos.count; i++) {
+    const x1 = pos.getX(i);
+    const x2 = pos.getY(i);
+    const y = b0 + b1*x1 + b2*x2;
+    pos.setZ(i, 0);
+    // THREE PlaneGeometry in XY, rotated, so x->x, y->z
+  }
+  // Manually set plane by rebuilding
+  const seg = 20;
+  const vertices = planeMesh3D.geometry.attributes.position;
+  let idx = 0;
+  for (let i = 0; i <= seg; i++) {
+    for (let j = 0; j <= seg; j++) {
+      const x1 = -4 + 8*j/seg;
+      const x2 = -4 + 8*i/seg;
+      const yv = b0 + b1*x1 + b2*x2;
+      vertices.setXYZ(idx, x1, yv, x2);
+      idx++;
+    }
+  }
+  vertices.needsUpdate = true;
+  planeMesh3D.geometry.computeVertexNormals();
+
+  // Update wireframe
+  if (planeMesh3D.wireMesh) {
+    scene3D.remove(planeMesh3D.wireMesh);
+  }
+  const newWireGeo = planeMesh3D.geometry.clone();
+  const wireMat = new THREE.MeshBasicMaterial({ color: 0x5e9cf5, wireframe: true, transparent: true, opacity: 0.15 });
+  const newWire = new THREE.Mesh(newWireGeo, wireMat);
+  planeMesh3D.wireMesh = newWire;
+  scene3D.add(newWire);
+
+  rebuildPoints3D();
+}
+
+function autoFit3D() {
+  // Multivariate OLS: [1, x1, x2] -> y
+  const n = data3D.length;
+  const X = data3D.map(d => [1, d.x1, d.x2]);
+  const Y = data3D.map(d => d.y);
+  // Normal equations: (X'X)β = X'Y
+  const XtX = [[0,0,0],[0,0,0],[0,0,0]];
+  const XtY = [0,0,0];
+  for (let i = 0; i < n; i++) {
+    for (let r = 0; r < 3; r++) {
+      XtY[r] += X[i][r] * Y[i];
+      for (let c = 0; c < 3; c++) XtX[r][c] += X[i][r] * X[i][c];
+    }
+  }
+  const coeffs = gaussElim(XtX, XtY);
+  document.getElementById('b0').value = coeffs[0];
+  document.getElementById('b1').value = coeffs[1];
+  document.getElementById('b2').value = coeffs[2];
+  update3D();
+}
+
+// ═══════════════════════════════════════════════════
+//  SECTION 5 — LOSS FUNCTIONS
+// ═══════════════════════════════════════════════════
+let lossMode = 'mse';
+let lossData = [];
+let optSlope, optIntercept;
+
+const LOSS_INFO = {
+  mse: {
+    title: 'MSE — Mean Squared Error',
+    explain: 'Squares each residual (vertical distance from point to line). Larger errors are penalised MORE heavily due to squaring. The minimum is the OLS solution. Sensitive to outliers.'
+  },
+  mae: {
+    title: 'MAE — Mean Absolute Error',
+    explain: 'Takes the absolute value of each residual. Penalises all errors equally — less sensitive to outliers than MSE. Gives the median regression line.'
+  },
+  r2: {
+    title: 'R² — Coefficient of Determination',
+    explain: 'Measures what fraction of variance in y is explained by the model. R²=1 is perfect fit. R²=0 means the model does no better than predicting the mean. R² can be negative for very poor fits.'
+  }
+};
+
+function generateLossData() {
+  lossData = [];
+  for (let i = 0; i < 30; i++) {
+    const x = rand(-4, 4);
+    const y = 1.2*x + 0.5 + randn() * 1.5;
+    lossData.push({ x, y });
+  }
+  // Optimal OLS
+  const xs = lossData.map(d=>d.x), ys = lossData.map(d=>d.y);
+  const c = polyfit(xs, ys, 1);
+  optSlope = c[1]; optIntercept = c[0];
+}
+
+function setLossMode(m) {
+  lossMode = m;
+  setActiveTabs('lossTabs', ['mse','mae','r2'].indexOf(m));
+  document.getElementById('metricTitle').textContent = LOSS_INFO[m].title;
+  document.getElementById('metricExplain').textContent = LOSS_INFO[m].explain;
+  updateLoss();
+}
+
+function updateLoss() {
+  const slope = parseFloat(document.getElementById('lossSlopeSlider').value);
+  const intercept = parseFloat(document.getElementById('lossInterceptSlider').value);
+  document.getElementById('lossSlope').textContent = slope.toFixed(2);
+  document.getElementById('lossIntercept').textContent = intercept.toFixed(2);
+  document.getElementById('lossFormula').textContent = `ŷ = ${slope.toFixed(2)}·x + ${intercept.toFixed(2)}`;
+
+  const canvas = document.getElementById('lossCanvas');
+  const { w, h } = getCanvasSize(canvas);
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = 400 * (window.devicePixelRatio || 1);
+  canvas.style.height = '400px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const mg = 44;
+  const xMin=-5, xMax=5, yMin=-8, yMax=8;
+  ctx.clearRect(0, 0, w, 400);
+  drawAxes(ctx, w, 400, mg, xMin, xMax, yMin, yMax);
+
+  const yMean = lossData.reduce((s,d) => s+d.y, 0) / lossData.length;
+
+  // Mean line (for R²)
+  if (lossMode === 'r2') {
+    ctx.strokeStyle = '#3e4258';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(px(xMin,w,mg,xMin,xMax), py(yMean,400,mg,yMin,yMax));
+    ctx.lineTo(px(xMax,w,mg,xMin,xMax), py(yMean,400,mg,yMin,yMax));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#3e4258'; ctx.font='11px IBM Plex Mono,monospace'; ctx.textAlign='left';
+    ctx.fillText('ȳ (mean)', px(xMin,w,mg,xMin,xMax)+4, py(yMean,400,mg,yMin,yMax)-6);
+  }
+
+  // Fitted line
+  ctx.strokeStyle='#e8c547'; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(px(xMin,w,mg,xMin,xMax), py(slope*xMin+intercept,400,mg,yMin,yMax));
+  ctx.lineTo(px(xMax,w,mg,xMin,xMax), py(slope*xMax+intercept,400,mg,yMin,yMax));
+  ctx.stroke();
+
+  // Residuals
+  lossData.forEach(d => {
+    const xp = px(d.x,w,mg,xMin,xMax);
+    const yFit = slope*d.x + intercept;
+    const resid = d.y - yFit;
+
+    if (lossMode === 'mse') {
+      // Squares
+      const sz = Math.abs(yToPixel(0,400,mg,yMin,yMax) - yToPixel(resid,400,mg,yMin,yMax));
+      const x0 = xp - sz/2, y0 = Math.min(py(d.y,400,mg,yMin,yMax), py(yFit,400,mg,yMin,yMax));
+      ctx.fillStyle = resid > 0 ? 'rgba(94,156,245,0.15)' : 'rgba(245,108,108,0.15)';
+      ctx.strokeStyle = resid > 0 ? 'rgba(94,156,245,0.5)' : 'rgba(245,108,108,0.5)';
+      ctx.lineWidth = 1;
+      ctx.fillRect(x0, y0, sz, sz);
+      ctx.strokeRect(x0, y0, sz, sz);
+    } else if (lossMode === 'mae') {
+      // Vertical lines, uniform thickness
+      ctx.strokeStyle = resid > 0 ? 'rgba(94,156,245,0.8)' : 'rgba(245,108,108,0.8)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(xp, py(d.y,400,mg,yMin,yMax));
+      ctx.lineTo(xp, py(yFit,400,mg,yMin,yMax));
+      ctx.stroke();
+    } else if (lossMode === 'r2') {
+      // Two lines: total deviation and explained
+      const yp = py(d.y,400,mg,yMin,yMax);
+      const yfp = py(yFit,400,mg,yMin,yMax);
+      const ymp = py(yMean,400,mg,yMin,yMax);
+      ctx.strokeStyle = 'rgba(108,245,156,0.6)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(xp, yfp); ctx.lineTo(xp, ymp); ctx.stroke();
+      ctx.strokeStyle = 'rgba(245,108,108,0.6)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(xp, yp); ctx.lineTo(xp, yfp); ctx.stroke();
+    }
+  });
+
+  // Points
+  lossData.forEach(d => {
+    ctx.beginPath(); ctx.arc(px(d.x,w,mg,xMin,xMax), py(d.y,400,mg,yMin,yMax), 5, 0, Math.PI*2);
+    ctx.fillStyle='rgba(232,197,71,0.9)'; ctx.fill();
+  });
+
+  // Compute metric
+  const stats = computeStats(lossData.map(d=>d.x), lossData.map(d=>d.y), x => slope*x+intercept);
+  const optStats = computeStats(lossData.map(d=>d.x), lossData.map(d=>d.y), x => optSlope*x+optIntercept);
+  let current, minimum;
+  if (lossMode === 'mse') { current = stats.mse; minimum = optStats.mse; }
+  else if (lossMode === 'mae') { current = stats.mae; minimum = optStats.mae; }
+  else { current = stats.r2; minimum = optStats.r2; }
+
+  document.getElementById('lossCurrentVal').textContent = current.toFixed(3);
+  document.getElementById('lossMinVal').textContent = minimum.toFixed(3);
+
+  // Legend for R²
+  if (lossMode === 'r2') {
+    ctx.font='11px IBM Plex Mono,monospace'; ctx.textAlign='left';
+    ctx.fillStyle='#6cf59c'; ctx.fillRect(mg+8, mg+8, 12,4); ctx.fillText('Explained (SS_reg)', mg+24, mg+14);
+    ctx.fillStyle='#f56c6c'; ctx.fillRect(mg+8, mg+24, 12,4); ctx.fillText('Residual (SS_res)', mg+24, mg+30);
+  }
+}
+
+function fitLossLine() {
+  document.getElementById('lossSlopeSlider').value = optSlope;
+  document.getElementById('lossInterceptSlider').value = optIntercept;
+  updateLoss();
+}
+
+// ═══════════════════════════════════════════════════
+//  SECTION 6 — LOGISTIC REGRESSION
+// ═══════════════════════════════════════════════════
+let logData = [];
+
+function generateLogData() {
+  logData = [];
+  for (let i = 0; i < 60; i++) {
+    const x = rand(-5, 5);
+    const p = 1 / (1 + Math.exp(-1.8*(x - 0.5)));
+    const y = Math.random() < p ? 1 : 0;
+    logData.push({ x, y });
+  }
+}
+
+function sigmoid(x, beta, x0) {
+  return 1 / (1 + Math.exp(-beta * (x - x0)));
+}
+
+function updateLogistic() {
+  const beta = parseFloat(document.getElementById('logBetaSlider').value);
+  const x0 = parseFloat(document.getElementById('logX0Slider').value);
+  const thresh = parseFloat(document.getElementById('logThreshSlider').value);
+
+  document.getElementById('logBeta').textContent = beta.toFixed(2);
+  document.getElementById('logX0').textContent = x0.toFixed(2);
+  document.getElementById('logThresh').textContent = thresh.toFixed(2);
+  document.getElementById('logFormula').textContent = `P(y=1) = 1 / (1 + e^(-${beta.toFixed(1)}(x − ${x0.toFixed(1)})))`;
+
+  const canvas = document.getElementById('logisticCanvas');
+  const { w, h } = getCanvasSize(canvas);
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = 420 * (window.devicePixelRatio || 1);
+  canvas.style.height = '420px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const mg = 44;
+  const xMin=-6, xMax=6, yMin=-0.15, yMax=1.2;
+  ctx.clearRect(0, 0, w, 420);
+  drawAxes(ctx, w, 420, mg, xMin, xMax, yMin, yMax);
+
+  // Threshold region
+  const threshX = x0 + Math.log(thresh/(1-thresh))/beta;
+  ctx.fillStyle = 'rgba(108,245,156,0.06)';
+  ctx.fillRect(px(threshX,w,mg,xMin,xMax), mg, w-mg-px(threshX,w,mg,xMin,xMax), 420-2*mg);
+  ctx.fillStyle = 'rgba(245,108,108,0.06)';
+  ctx.fillRect(mg, mg, px(threshX,w,mg,xMin,xMax)-mg, 420-2*mg);
+
+  // Threshold line
+  ctx.strokeStyle='#7a7f9a'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+  ctx.beginPath(); ctx.moveTo(px(threshX,w,mg,xMin,xMax), mg); ctx.lineTo(px(threshX,w,mg,xMin,xMax), 420-mg); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#7a7f9a'; ctx.font='11px IBM Plex Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('threshold', px(threshX,w,mg,xMin,xMax), mg+16);
+
+  // Sigmoid curve
+  const grad = ctx.createLinearGradient(mg, 0, w-mg, 0);
+  grad.addColorStop(0, '#f56c6c');
+  grad.addColorStop(0.5, '#e8c547');
+  grad.addColorStop(1, '#6cf59c');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let xi = xMin; xi <= xMax; xi += 0.05) {
+    const p = sigmoid(xi, beta, x0);
+    const xp2 = px(xi,w,mg,xMin,xMax);
+    const yp2 = py(p,420,mg,yMin,yMax);
+    if (xi === xMin) ctx.moveTo(xp2, yp2); else ctx.lineTo(xp2, yp2);
+  }
+  ctx.stroke();
+
+  // Threshold probability line
+  ctx.strokeStyle='rgba(232,197,71,0.4)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(mg, py(thresh,420,mg,yMin,yMax)); ctx.lineTo(w-mg, py(thresh,420,mg,yMin,yMax)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Points
+  let tp=0, fp=0, tn=0, fn=0;
+  logData.forEach(d => {
+    const pHat = sigmoid(d.x, beta, x0);
+    const pred = pHat >= thresh ? 1 : 0;
+    if (pred===1 && d.y===1) tp++;
+    else if (pred===1 && d.y===0) fp++;
+    else if (pred===0 && d.y===1) fn++;
+    else tn++;
+
+    const xp2 = px(d.x,w,mg,xMin,xMax);
+    const jitter = randn()*6;
+    const yp2 = py(d.y === 1 ? 1.05 : -0.05, 420, mg, yMin, yMax) + jitter;
+    ctx.beginPath(); ctx.arc(xp2, yp2, 5, 0, Math.PI*2);
+    const correct = pred===d.y;
+    ctx.fillStyle = d.y===1 ? 'rgba(108,245,156,0.8)' : 'rgba(245,108,108,0.8)';
+    ctx.fill();
+    if (!correct) {
+      ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+  });
+
+  // Labels
+  ctx.fillStyle='#6cf59c'; ctx.font='11px IBM Plex Mono,monospace'; ctx.textAlign='left';
+  ctx.fillText('Class 1 (positive)', mg+8, py(1.05,420,mg,yMin,yMax)+20);
+  ctx.fillStyle='#f56c6c';
+  ctx.fillText('Class 0 (negative)', mg+8, py(-0.05,420,mg,yMin,yMax)-8);
+
+  const total = logData.length;
+  document.getElementById('logAccuracy').textContent = ((tp+tn)/total*100).toFixed(1)+'%';
+  document.getElementById('logTP').textContent = tp;
+  document.getElementById('logFP').textContent = fp;
+}
+
+// ═══════════════════════════════════════════════════
+//  RESIZE HANDLER
+// ═══════════════════════════════════════════════════
+function redrawAll() {
+  drawPatternCanvas();
+  drawCurveFit();
+  drawTransCanvas('transRawCanvas', false, 1);
+  drawTransCanvas('transLogCanvas', true, 1);
+  updateLoss();
+  updateLogistic();
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  // Section 1
+  setDataPattern('linear');
+
+  // Section 2
+  generateFitData();
+  setCurveDegree(1);
+
+  // Section 3
+  generateTransData();
+  drawTransCanvas('transRawCanvas', false, 1);
+  drawTransCanvas('transLogCanvas', true, 1);
+
+  // Section 4
+  generate3DData();
+  setTimeout(init3D, 100);
+
+  // Section 5
+  generateLossData();
+  setLossMode('mse');
+  document.getElementById('metricTitle').textContent = LOSS_INFO.mse.title;
+  document.getElementById('metricExplain').textContent = LOSS_INFO.mse.explain;
+
+  // Section 6
+  generateLogData();
+  updateLogistic();
+
+  window.addEventListener('resize', () => setTimeout(redrawAll, 200));
+});
+</script>
+</body>
+</html>

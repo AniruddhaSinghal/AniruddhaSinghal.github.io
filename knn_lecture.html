@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Nearest Neighbours — An Interactive Lecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #040d14;
+  --surface: #081520;
+  --surface2: #0c1e2e;
+  --surface3: #102438;
+  --border: #1a3347;
+  --border2: #234562;
+  --cyan: #00d4ff;
+  --cyan-dim: rgba(0,212,255,0.15);
+  --cyan-glow: rgba(0,212,255,0.4);
+  --orange: #ff7f3e;
+  --orange-dim: rgba(255,127,62,0.15);
+  --green: #39e8a0;
+  --green-dim: rgba(57,232,160,0.12);
+  --red: #ff4d6a;
+  --red-dim: rgba(255,77,106,0.12);
+  --yellow: #f5d55a;
+  --text: #d4e8f5;
+  --text-dim: #5c8aaa;
+  --text-muted: #2a4a60;
+  --mono: 'DM Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.012) 2px, rgba(0,212,255,0.012) 4px);
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,60,90,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,212,255,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 80% 20%, rgba(255,127,62,0.05) 0%, transparent 60%);
+}
+
+/* Radar rings */
+.radar {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vmin; height: 100vmin;
+}
+
+.radar-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(0,212,255,0.07);
+  animation: radarPulse 4s ease-in-out infinite;
+}
+
+.radar-ring:nth-child(1) { width: 20%; height: 20%; animation-delay: 0s; }
+.radar-ring:nth-child(2) { width: 40%; height: 40%; animation-delay: 0.5s; }
+.radar-ring:nth-child(3) { width: 60%; height: 60%; animation-delay: 1s; }
+.radar-ring:nth-child(4) { width: 80%; height: 80%; animation-delay: 1.5s; }
+.radar-ring:nth-child(5) { width: 100%; height: 100%; animation-delay: 2s; }
+
+@keyframes radarPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; border-color: rgba(0,212,255,0.15); }
+}
+
+.hero-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+  position: relative;
+}
+
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(48px, 9vw, 110px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.6s;
+}
+
+.hero h1 .k { color: var(--cyan); }
+.hero h1 .nn { color: var(--text); }
+.hero h1 sub {
+  font-size: 0.35em;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  vertical-align: middle;
+  font-weight: 400;
+  font-family: var(--mono);
+}
+
+.hero-tagline {
+  margin-top: 28px;
+  font-size: 17px;
+  color: var(--text-dim);
+  max-width: 520px;
+  line-height: 1.7;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 0.8s;
+}
+
+.hero-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 52px;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards 1s;
+}
+
+.nav-chip {
+  padding: 8px 18px;
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(0,212,255,0.03);
+}
+.nav-chip:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+
+.scroll-cue {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.4s;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(var(--cyan), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine { 0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.3)} }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* ─── SECTION SHELL ─── */
+.section {
+  padding: 100px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-tag::after { content:''; flex:1; height:1px; background: linear-gradient(var(--border2), transparent); max-width:120px; }
+
+.section h2 {
+  font-family: var(--display);
+  font-size: clamp(28px, 4.5vw, 50px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+}
+.section h2 .hl { color: var(--cyan); }
+.section h2 .hlo { color: var(--orange); }
+
+.section-desc {
+  margin-top: 14px;
+  color: var(--text-dim);
+  max-width: 580px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* ─── DIVIDER ─── */
+.chapter-div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.chapter-div .line { flex:1; height:1px; background: var(--border); }
+.chapter-div .tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+}
+
+/* ─── CARD ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+}
+
+.card-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+/* ─── LAYOUTS ─── */
+.col-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.col-32 { display:grid; grid-template-columns:3fr 2fr; gap:24px; }
+.col-23 { display:grid; grid-template-columns:2fr 3fr; gap:24px; }
+@media(max-width:800px) { .col-2,.col-32,.col-23 { grid-template-columns:1fr; } }
+
+/* ─── CANVAS ─── */
+canvas { display:block; width:100%; border-radius:8px; }
+
+/* ─── SLIDERS ─── */
+.sl-group { margin-bottom: 16px; }
+.sl-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.sl-row .val { color: var(--cyan); font-weight: 500; }
+
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 3px;
+  background: var(--border2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: var(--cyan);
+  border-radius: 50%;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.4); box-shadow:0 0 14px var(--cyan-glow); }
+
+/* ─── FORMULA BOX ─── */
+.formula {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--cyan);
+  margin-top: 14px;
+}
+
+/* ─── STAT CHIPS ─── */
+.chips { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.chip {
+  flex:1; min-width:90px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: var(--mono);
+}
+.chip .cl { font-size:9px; letter-spacing:2px; color:var(--text-muted); }
+.chip .cv { font-size:20px; font-weight:500; margin-top:2px; color:var(--cyan); }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+.btn.primary { background: var(--cyan); color: #000; border-color: var(--cyan); font-weight: 500; }
+.btn.primary:hover { box-shadow: 0 0 24px var(--cyan-glow); transform: translateY(-1px); }
+
+/* ─── STEP CARD ─── */
+.step-card {
+  border-left: 2px solid var(--border);
+  padding: 14px 20px;
+  margin-bottom: 10px;
+  background: var(--surface2);
+  border-radius: 0 8px 8px 0;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.step-card.active {
+  border-left-color: var(--cyan);
+  background: rgba(0,212,255,0.06);
+}
+.step-card.done { border-left-color: var(--green); }
+.step-card .step-num {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.step-card.active .step-num { color: var(--cyan); }
+.step-card.done .step-num { color: var(--green); }
+.step-card .step-title {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.step-card.active .step-title { color: var(--text); }
+.step-card .step-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  display: none;
+}
+.step-card.active .step-desc { display: block; color: var(--text-dim); }
+
+/* ─── CALLOUT ─── */
+.callout {
+  border: 1px solid rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.04);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-top: 14px;
+}
+.callout strong { color: var(--cyan); }
+.callout.warn { border-color: rgba(255,127,62,0.25); background: rgba(255,127,62,0.04); }
+.callout.warn strong { color: var(--orange); }
+.callout.good { border-color: rgba(57,232,160,0.2); background: rgba(57,232,160,0.04); }
+.callout.good strong { color: var(--green); }
+
+/* ─── K SELECTOR ─── */
+.k-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.k-btn {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.k-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); font-weight:600; box-shadow:0 0 16px var(--cyan-glow); }
+.k-btn:hover:not(.active) { border-color: var(--cyan); color: var(--cyan); }
+
+/* ─── LEGEND ─── */
+.legend { display:flex; gap:20px; flex-wrap:wrap; margin: 12px 0; }
+.legend-item { display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; color:var(--text-dim); }
+.legend-dot { width:10px; height:10px; border-radius:50%; }
+
+/* ─── TABS ─── */
+.tab-row { display:flex; gap:4px; background:var(--surface2); padding:4px; border-radius:10px; margin-bottom:20px; }
+.tab { flex:1; padding:8px 12px; border:none; background:transparent; color:var(--text-dim); font-family:var(--mono); font-size:11px; letter-spacing:1px; border-radius:7px; cursor:pointer; transition:all 0.2s; }
+.tab.active { background:var(--cyan); color:#000; font-weight:500; }
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar { height:3px; background:var(--border); border-radius:3px; margin-top:16px; overflow:hidden; }
+.progress-fill { height:100%; background: linear-gradient(90deg, var(--cyan), var(--green)); border-radius:3px; transition:width 0.4s ease; }
+
+/* ─── BADGE ─── */
+.badge { display:inline-block; padding:2px 10px; border-radius:100px; font-family:var(--mono); font-size:10px; letter-spacing:1px; }
+.badge-c { background:rgba(0,212,255,0.12); color:var(--cyan); border:1px solid rgba(0,212,255,0.25); }
+.badge-o { background:rgba(255,127,62,0.12); color:var(--orange); border:1px solid rgba(255,127,62,0.25); }
+.badge-g { background:rgba(57,232,160,0.1); color:var(--green); border:1px solid rgba(57,232,160,0.2); }
+
+/* ─── COMPARISON TABLE ─── */
+.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:16px; }
+.cg-head { background:var(--surface3); padding:10px 14px; font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--text-dim); }
+.cg-cell { background:var(--surface2); padding:10px 14px; font-size:12px; color:var(--text-dim); line-height:1.6; }
+.cg-head.cyan { color:var(--cyan); }
+.cg-head.orange { color:var(--orange); }
+
+/* ─── MISCLASSIFICATION INDICATOR ─── */
+.misclass-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  margin-top: 10px;
+  overflow: hidden;
+}
+.misclass-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--green), var(--orange), var(--red));
+  transition: width 0.3s ease;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="radar">
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+    <div class="radar-ring"></div>
+  </div>
+
+  <div class="hero-label">Interactive Lecture · Classification Algorithms</div>
+  <h1>
+    <span class="k">K</span><span class="nn">-Nearest</span><br>
+    <span class="nn">Neighbours</span>
+    <sub>KNN</sub>
+  </h1>
+  <p class="hero-tagline">The simplest idea in machine learning — and one of the most powerful. Learning by proximity, classification by consensus.</p>
+  <div class="hero-nav">
+    <a href="#s1" class="nav-chip">01 · The Separation Problem</a>
+    <a href="#s2" class="nav-chip">02 · The KNN Algorithm</a>
+    <a href="#s3" class="nav-chip">03 · Step-by-Step Walk</a>
+    <a href="#s4" class="nav-chip">04 · Decision Boundary</a>
+    <a href="#s5" class="nav-chip">05 · Choosing K</a>
+  </div>
+  <div class="scroll-cue">SCROLL</div>
+</div>
+
+<div class="chapter-div"><div class="line"></div><div class="tag">CHAPTER 1</div><div class="line"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 1 — THE PROBLEM
+══════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-tag">Section 01 · The Problem</div>
+  <h2>Why a line <span class="hlo">fails</span></h2>
+  <p class="section-desc">Before learning KNN, we must understand the problem it solves. Try separating the two classes with a straight line — then see why it's impossible.</p>
+
+  <div style="margin-top:48px;" class="col-32">
+    <div class="card">
+      <div class="card-label">Interactive Separator — drag sliders to move the line</div>
+      <canvas id="sepCanvas" height="420"></canvas>
+      <div class="legend" style="margin-top:14px">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Class A</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Class B</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red);border:2px solid #fff"></div>Misclassified</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-label">Separator Line Controls</div>
+        <div class="sl-group">
+          <div class="sl-row"><span>Slope (angle)</span><span class="val" id="sepSlopeVal">0.00</span></div>
+          <input type="range" id="sepSlope" min="-3" max="3" step="0.05" value="0" oninput="updateSeparator()">
+        </div>
+        <div class="sl-group">
+          <div class="sl-row"><span>Intercept (shift)</span><span class="val" id="sepIntVal">0.00</span></div>
+          <input type="range" id="sepInt" min="-5" max="5" step="0.1" value="0" oninput="updateSeparator()">
+        </div>
+        <div class="formula" id="sepFormula">y = 0.00 · x + 0.00</div>
+        <div class="chips">
+          <div class="chip"><div class="cl">MISCLASSIFIED</div><div class="cv" id="misclassCount" style="color:var(--red)">—</div></div>
+          <div class="chip"><div class="cl">ACCURACY</div><div class="cv" id="sepAccuracy">—</div></div>
+        </div>
+        <div class="misclass-bar"><div class="misclass-fill" id="misclassFill" style="width:50%"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Key Observations</div>
+        <div class="callout warn" style="margin-top:0">
+          <strong>The core problem:</strong> These two classes are not linearly separable. No matter how you rotate or shift the line, some points will always be on the wrong side.
+        </div>
+        <div class="callout" style="margin-top:10px">
+          <strong>What we need:</strong> An algorithm that doesn't force a global boundary — one that makes local decisions based on nearby examples. That's exactly what KNN does.
+        </div>
+        <button class="btn primary" style="margin-top:14px;width:100%" onclick="generateSepData()">↻ REGENERATE DATA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-div"><div class="line"></div><div class="tag">CHAPTER 2</div><div class="line"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 2 — THE ALGORITHM
+══════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-tag">Section 02 · Core Idea</div>
+  <h2>How <span class="hl">KNN</span> thinks</h2>
+  <p class="section-desc">KNN doesn't learn a model — it memorises the data. Classification is entirely based on proximity at prediction time.</p>
+
+  <div style="margin-top:48px" class="col-2">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-label">The Fundamental Idea</div>
+        <div style="font-size:14px;color:var(--text-dim);line-height:1.9">
+          KNN rests on a beautifully simple assumption: <strong style="color:var(--cyan)">things that are close to each other tend to belong to the same category.</strong>
+          <br><br>
+          To classify a new point, we ask: <em>"Who are your K nearest neighbours? What are they?"</em> — and we let the majority vote decide.
+        </div>
+        <div class="formula">Class(x) = majority vote of K nearest training points</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Algorithm Steps</div>
+        <div id="algoStepList">
+          <div class="step-card done" onclick="highlightStep(0)">
+            <div class="step-num">STEP 01</div>
+            <div class="step-title">Store all training data</div>
+            <div class="step-desc">Unlike most algorithms, KNN has no "training" phase. It simply stores all labelled data points in memory. This is why KNN is called a <em>lazy learner</em>.</div>
+          </div>
+          <div class="step-card" onclick="highlightStep(1)">
+            <div class="step-num">STEP 02</div>
+            <div class="step-title">Receive a new query point</div>
+            <div class="step-desc">A new, unlabelled point arrives. We need to decide which class it belongs to. We have no prior model — only the stored training data.</div>
+          </div>
+          <div class="step-card" onclick="highlightStep(2)">
+            <div class="step-num">STEP 03</div>
+            <div class="step-title">Compute distances to all points</div>
+            <div class="step-desc">Calculate the distance from the query point to every single training point. Most commonly: <strong>Euclidean distance</strong> d = √((x₂-x₁)² + (y₂-y₁)²)</div>
+          </div>
+          <div class="step-card" onclick="highlightStep(3)">
+            <div class="step-num">STEP 04</div>
+            <div class="step-title">Select the K nearest neighbours</div>
+            <div class="step-desc">Sort all training points by distance. Select the top K closest ones. These become the "voters" for classification. K is a hyperparameter you choose.</div>
+          </div>
+          <div class="step-card" onclick="highlightStep(4)">
+            <div class="step-num">STEP 05</div>
+            <div class="step-title">Majority vote → assign class</div>
+            <div class="step-desc">Count how many of the K neighbours belong to each class. The class with the most votes wins. Ties are broken by choosing the closest neighbour's class.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="height:100%;display:flex;flex-direction:column;gap:16px">
+        <div class="card-label">Conceptual Illustration</div>
+        <canvas id="conceptCanvas" height="380"></canvas>
+        <div class="k-selector" id="conceptK">
+          <button class="k-btn" onclick="setConceptK(1)">1</button>
+          <button class="k-btn active" onclick="setConceptK(3)">3</button>
+          <button class="k-btn" onclick="setConceptK(5)">5</button>
+          <button class="k-btn" onclick="setConceptK(7)">7</button>
+        </div>
+        <div id="conceptVoteResult" class="formula" style="margin-top:0;text-align:center;font-size:15px">Select K above to see the vote</div>
+        <div class="callout" style="margin-top:0;font-size:12px">
+          <strong>Click anywhere</strong> on the canvas to place a new query point, then change K to see how the neighbourhood changes.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-div"><div class="line"></div><div class="tag">CHAPTER 3</div><div class="line"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 3 — STEP BY STEP ANIMATION
+══════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-tag">Section 03 · Animated Walk-Through</div>
+  <h2>Watch KNN <span class="hl">work</span>, step by step</h2>
+  <p class="section-desc">Click "Next Step" to walk through each phase of the algorithm. Every computation is visualised. You can also click the canvas to place the query point yourself.</p>
+
+  <div style="margin-top:48px" class="col-32">
+    <div class="card">
+      <div class="card-label" id="walkStepLabel">Step 0 — Training Data</div>
+      <canvas id="walkCanvas" height="480"></canvas>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+        <button class="btn primary" id="btnNext" onclick="walkNext()">NEXT STEP →</button>
+        <button class="btn" onclick="walkReset()">↺ RESET</button>
+        <button class="btn" onclick="walkGenerate()">↻ NEW DATA</button>
+      </div>
+      <div class="progress-bar" style="margin-top:12px">
+        <div class="progress-fill" id="walkProgress" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Active step explanation -->
+      <div class="card" style="margin-bottom:16px" id="walkExplainCard">
+        <div class="card-label">Current Step</div>
+        <div id="walkStepNum" style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:8px">STEP 0 OF 5</div>
+        <div id="walkStepTitle" style="font-family:var(--display);font-size:20px;font-weight:800;margin-bottom:10px">Training Data Loaded</div>
+        <div id="walkStepBody" style="font-size:13px;color:var(--text-dim);line-height:1.85"></div>
+        <div id="walkMathBox" class="formula" style="display:none;margin-top:12px;font-size:12px;line-height:1.7"></div>
+      </div>
+
+      <!-- K control for walk -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-label">K Value</div>
+        <div class="k-selector" id="walkK">
+          <button class="k-btn" onclick="setWalkK(1)">1</button>
+          <button class="k-btn active" onclick="setWalkK(3)">3</button>
+          <button class="k-btn" onclick="setWalkK(5)">5</button>
+          <button class="k-btn" onclick="setWalkK(7)">7</button>
+          <button class="k-btn" onclick="setWalkK(9)">9</button>
+        </div>
+        <div class="formula" id="walkKFormula" style="margin-top:0">K = 3 neighbours will vote</div>
+      </div>
+
+      <!-- Distance table -->
+      <div class="card" id="walkDistCard" style="display:none">
+        <div class="card-label">Nearest Neighbours (sorted by distance)</div>
+        <div id="walkDistTable" style="font-family:var(--mono);font-size:11px;line-height:2;color:var(--text-dim)"></div>
+      </div>
+
+      <!-- Vote result -->
+      <div class="card" id="walkVoteCard" style="display:none">
+        <div class="card-label">Vote Tally</div>
+        <canvas id="voteChart" height="100" style="max-width:300px;margin:0 auto"></canvas>
+        <div id="walkVerdict" style="text-align:center;font-family:var(--display);font-size:22px;font-weight:800;margin-top:12px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-div"><div class="line"></div><div class="tag">CHAPTER 4</div><div class="line"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 4 — DECISION BOUNDARY
+══════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-tag">Section 04 · Decision Boundary</div>
+  <h2>The <span class="hl">boundary</span> KNN draws</h2>
+  <p class="section-desc">Unlike a straight line, KNN carves an organic, data-driven boundary through the space. Change K to see how it affects the shape.</p>
+
+  <div style="margin-top:48px" class="col-32">
+    <div class="card">
+      <div class="card-label">Decision Boundary — coloured regions show predicted class</div>
+      <canvas id="boundaryCanvas" height="460"></canvas>
+      <div class="legend" style="margin-top:14px">
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(0,212,255,0.6)"></div>Predicted Class A</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(255,127,62,0.6)"></div>Predicted Class B</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-label">K Value</div>
+        <div class="k-selector" id="boundaryK">
+          <button class="k-btn active" onclick="setBoundaryK(1)">1</button>
+          <button class="k-btn" onclick="setBoundaryK(3)">3</button>
+          <button class="k-btn" onclick="setBoundaryK(5)">5</button>
+          <button class="k-btn" onclick="setBoundaryK(7)">7</button>
+          <button class="k-btn" onclick="setBoundaryK(11)">11</button>
+          <button class="k-btn" onclick="setBoundaryK(15)">15</button>
+        </div>
+        <div class="formula" id="boundaryKLabel">K = 1 · Voronoi boundary</div>
+        <div id="boundaryDesc" class="callout" style="margin-top:12px;font-size:12px"></div>
+        <div class="chips">
+          <div class="chip"><div class="cl">TRAIN ACC</div><div class="cv" id="bTrainAcc">—</div></div>
+          <div class="chip"><div class="cl">SMOOTHNESS</div><div class="cv" id="bSmooth">—</div></div>
+        </div>
+        <button class="btn" style="margin-top:12px;width:100%" onclick="generateBoundaryData()">↻ NEW DATASET</button>
+      </div>
+      <div class="card">
+        <div class="card-label">What does K control?</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.9">
+          K is the only knob in KNN. It controls the <strong style="color:var(--cyan)">smoothness</strong> of the decision boundary:
+        </div>
+        <div class="compare-grid" style="margin-top:12px;border-radius:8px;overflow:hidden">
+          <div class="cg-head cyan">Small K (1–3)</div>
+          <div class="cg-head orange">Large K (11–21)</div>
+          <div class="cg-cell">Very jagged boundary. Fits training data perfectly. Likely to overfit — noise becomes pattern.</div>
+          <div class="cg-cell">Smooth boundary. Ignores individual anomalies. May underfit if K is too large.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-div"><div class="line"></div><div class="tag">CHAPTER 5</div><div class="line"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 5 — CHOOSING K
+══════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-tag">Section 05 · Hyperparameter Tuning</div>
+  <h2>The art of <span class="hl">choosing K</span></h2>
+  <p class="section-desc">K is a hyperparameter — it's not learned from data, it's chosen by you. Too small and you overfit. Too large and you lose precision.</p>
+
+  <div style="margin-top:48px" class="col-2">
+    <div class="card">
+      <div class="card-label">Accuracy vs K — training vs test</div>
+      <canvas id="kCurveCanvas" height="340"></canvas>
+      <div class="callout" style="margin-top:14px;font-size:12px">
+        <strong>The sweet spot:</strong> Look for the K where test accuracy is highest. This is typically where the model generalises best — not memorising noise (small K) nor being too coarse (large K).
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-label">KNN Properties Summary</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:2">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div class="callout good" style="margin-top:0;font-size:12px"><strong>✓ Strengths</strong><br>No training phase<br>Naturally handles multi-class<br>Non-linear boundaries<br>Simple to understand</div>
+            <div class="callout warn" style="margin-top:0;font-size:12px"><strong>✗ Weaknesses</strong><br>Slow at prediction time<br>High memory usage<br>Sensitive to scale<br>Curse of dimensionality</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-label">Distance Metrics</div>
+        <div class="tab-row" id="distTabs">
+          <button class="tab active" onclick="setDistTab(0)">Euclidean</button>
+          <button class="tab" onclick="setDistTab(1)">Manhattan</button>
+          <button class="tab" onclick="setDistTab(2)">Minkowski</button>
+        </div>
+        <div id="distExplain" style="font-size:13px;color:var(--text-dim);line-height:1.85"></div>
+        <div class="formula" id="distFormula"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Golden Rules</div>
+        <div style="font-size:12px;color:var(--text-dim);line-height:2.1;font-family:var(--mono)">
+          <div>① Always normalise / scale your features</div>
+          <div>② Try odd K values to avoid ties</div>
+          <div>③ Use cross-validation to pick K</div>
+          <div>④ √n is a common starting point for K</div>
+          <div>⑤ Fewer dimensions → KNN works better</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:60px 40px;font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:3px">
+  K-NEAREST NEIGHBOURS · INTERACTIVE LECTURE · <a href="#top" style="color:var(--cyan);text-decoration:none">BACK TO TOP ↑</a>
+</div>
+
+<!-- ══════════════════════════════════════ SCRIPTS ══════════════════════════════════════ -->
+<script>
+// ───────────────────────────────────────────────
+// UTILITIES
+// ───────────────────────────────────────────────
+function rand(a,b){ return Math.random()*(b-a)+a; }
+function randn(){ let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+function dist(a,b){ return Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2); }
+function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+
+function getCtx(id, h){
+  const c = document.getElementById(id);
+  const dpr = window.devicePixelRatio||1;
+  const w = c.offsetWidth || 600;
+  const ch = h || parseInt(c.getAttribute('height'))||400;
+  c.width = w*dpr; c.height = ch*dpr;
+  c.style.height = ch+'px';
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr,dpr);
+  return {ctx,w,h:ch};
+}
+
+function W(canvas){ return canvas.offsetWidth||600; }
+
+// ───────────────────────────────────────────────
+// COLOR PALETTE
+// ───────────────────────────────────────────────
+const COL_A = '#00d4ff';
+const COL_B = '#ff7f3e';
+const COL_A_FILL = 'rgba(0,212,255,0.85)';
+const COL_B_FILL = 'rgba(255,127,62,0.85)';
+const COL_QUERY = '#f5d55a';
+const COL_GREEN = '#39e8a0';
+const COL_RED = '#ff4d6a';
+
+function classColor(cls){ return cls===0 ? COL_A_FILL : COL_B_FILL; }
+function classStroke(cls){ return cls===0 ? COL_A : COL_B; }
+
+// Coordinate helpers for a unit space [-6,6] mapped to canvas
+function mkMap(w,h,pad=44){
+  const xMin=-6,xMax=6,yMin=-6,yMax=6;
+  function px(x){ return pad + (x-xMin)/(xMax-xMin)*(w-2*pad); }
+  function py(y){ return h-pad - (y-yMin)/(yMax-yMin)*(h-2*pad); }
+  function ix(px_){ return xMin + (px_-pad)/(w-2*pad)*(xMax-xMin); }
+  function iy(py_){ return yMax - (py_-pad)/(h-2*pad)*(yMax-yMin); }
+  return {px,py,ix,iy,xMin,xMax,yMin,yMax,pad,w,h};
+}
+
+function drawGrid(ctx,m){
+  ctx.strokeStyle='#0c1e2e'; ctx.lineWidth=1;
+  for(let v=-5;v<=5;v+=1){
+    ctx.beginPath(); ctx.moveTo(m.px(v),m.pad); ctx.lineTo(m.px(v),m.h-m.pad); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(m.pad,m.py(v)); ctx.lineTo(m.w-m.pad,m.py(v)); ctx.stroke();
+  }
+  ctx.strokeStyle='#1a3347'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(m.px(0),m.pad); ctx.lineTo(m.px(0),m.h-m.pad); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(m.pad,m.py(0)); ctx.lineTo(m.w-m.pad,m.py(0)); ctx.stroke();
+}
+
+function drawPoint(ctx,m,pt,r=5,selected=false){
+  const xp=m.px(pt.x), yp=m.py(pt.y);
+  if(selected){
+    ctx.beginPath(); ctx.arc(xp,yp,r+6,0,Math.PI*2);
+    ctx.strokeStyle='rgba(245,213,90,0.5)'; ctx.lineWidth=2; ctx.stroke();
+  }
+  ctx.beginPath(); ctx.arc(xp,yp,r,0,Math.PI*2);
+  ctx.fillStyle=classColor(pt.cls); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=1; ctx.stroke();
+}
+
+function knnClassify(query, data, k){
+  const sorted = data.map(p=>({...p,d:dist(p,query)})).sort((a,b)=>a.d-b.d);
+  const neighbours = sorted.slice(0,k);
+  const votes = [0,0];
+  neighbours.forEach(n=>votes[n.cls]++);
+  return {predicted: votes[0]>=votes[1]?0:1, votes, neighbours};
+}
+
+// ───────────────────────────────────────────────
+// S1 — SEPARATOR
+// ───────────────────────────────────────────────
+let sepData = [];
+
+function generateSepData(){
+  sepData = [];
+  // Two interlocking moons
+  for(let i=0;i<50;i++){
+    const angle = rand(0,Math.PI);
+    const r = 2.5 + randn()*0.4;
+    sepData.push({x: Math.cos(angle)*r + randn()*0.3, y: Math.sin(angle)*r + randn()*0.3, cls:0});
+  }
+  for(let i=0;i<50;i++){
+    const angle = rand(Math.PI, 2*Math.PI);
+    const r = 2.5 + randn()*0.4;
+    sepData.push({x: Math.cos(angle)*r + 1.5 + randn()*0.3, y: Math.sin(angle)*r + randn()*0.3 - 1, cls:1});
+  }
+  updateSeparator();
+}
+
+function updateSeparator(){
+  const slope = parseFloat(document.getElementById('sepSlope').value);
+  const intercept = parseFloat(document.getElementById('sepInt').value);
+  document.getElementById('sepSlopeVal').textContent = slope.toFixed(2);
+  document.getElementById('sepIntVal').textContent = intercept.toFixed(2);
+  document.getElementById('sepFormula').textContent = `y = ${slope.toFixed(2)} · x + ${intercept.toFixed(2)}`;
+
+  const {ctx,w,h} = getCtx('sepCanvas',420);
+  const m = mkMap(w,h);
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#040d14'; ctx.fillRect(0,0,w,h);
+  drawGrid(ctx,m);
+
+  let wrong=0;
+  sepData.forEach(pt => {
+    const yLine = slope*pt.x + intercept;
+    const above = pt.y > yLine;
+    const predictedCls = above ? 0 : 1;
+    const correct = predictedCls === pt.cls;
+    if(!correct) wrong++;
+    const xp=m.px(pt.x), yp=m.py(pt.y);
+    if(!correct){
+      ctx.beginPath(); ctx.arc(xp,yp,9,0,Math.PI*2);
+      ctx.strokeStyle='rgba(255,77,106,0.5)'; ctx.lineWidth=2; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(xp,yp,5,0,Math.PI*2);
+    ctx.fillStyle=classColor(pt.cls); ctx.fill();
+  });
+
+  // Draw separator line
+  const xL = m.xMin, xR = m.xMax;
+  ctx.strokeStyle='rgba(245,213,90,0.8)'; ctx.lineWidth=2.5; ctx.setLineDash([8,5]);
+  ctx.beginPath(); ctx.moveTo(m.px(xL),m.py(slope*xL+intercept)); ctx.lineTo(m.px(xR),m.py(slope*xR+intercept)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Label
+  ctx.fillStyle='rgba(245,213,90,0.7)'; ctx.font='11px DM Mono,monospace';
+  ctx.textAlign='left'; ctx.fillText('separator line', m.px(xL)+8, m.py(slope*xL+intercept)-8);
+
+  const acc = ((100-wrong)/100*100).toFixed(1);
+  document.getElementById('misclassCount').textContent = wrong;
+  document.getElementById('sepAccuracy').textContent = acc+'%';
+  const pct = (wrong/sepData.length*100);
+  document.getElementById('misclassFill').style.width = pct+'%';
+}
+
+// ───────────────────────────────────────────────
+// S2 — CONCEPT CANVAS
+// ───────────────────────────────────────────────
+let conceptData=[], conceptQuery={x:0.5,y:0.5}, conceptK=3;
+
+function generateConceptData(){
+  conceptData=[];
+  const centres=[[-2,2],[2,-1.5],[-1,-2.5],[3,2.5]];
+  const classes=[0,1,0,1];
+  centres.forEach((c,i)=>{
+    for(let j=0;j<14;j++){
+      conceptData.push({x:c[0]+randn()*1.2, y:c[1]+randn()*1.2, cls:classes[i]});
+    }
+  });
+}
+
+function setConceptK(k){
+  conceptK=k;
+  document.querySelectorAll('#conceptK .k-btn').forEach(b=>b.classList.toggle('active', parseInt(b.textContent)===k));
+  drawConcept();
+}
+
+function drawConcept(){
+  const {ctx,w,h}=getCtx('conceptCanvas',380);
+  const m=mkMap(w,h);
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='#040d14'; ctx.fillRect(0,0,w,h);
+  drawGrid(ctx,m);
+
+  const res = knnClassify(conceptQuery, conceptData, conceptK);
+  const maxD = res.neighbours[res.neighbours.length-1].d;
+
+  // Neighbourhood circle
+  ctx.beginPath();
+  ctx.arc(m.px(conceptQuery.x), m.py(conceptQuery.y), m.px(conceptQuery.x+maxD)-m.px(conceptQuery.x), 0, Math.PI*2);
+  ctx.strokeStyle='rgba(245,213,90,0.25)'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+  ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='rgba(245,213,90,0.04)'; ctx.fill();
+
+  // Distance lines to neighbours
+  res.neighbours.forEach(n=>{
+    ctx.beginPath();
+    ctx.moveTo(m.px(conceptQuery.x),m.py(conceptQuery.y));
+    ctx.lineTo(m.px(n.x),m.py(n.y));
+    ctx.strokeStyle=classStroke(n.cls)+'88'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  // Points
+  conceptData.forEach(pt=>{
+    const isNeighbour = res.neighbours.some(n=>n.x===pt.x&&n.y===pt.y);
+    if(isNeighbour){
+      const xp=m.px(pt.x),yp=m.py(pt.y);
+      ctx.beginPath(); ctx.arc(xp,yp,10,0,Math.PI*2);
+      ctx.strokeStyle=classStroke(pt.cls); ctx.lineWidth=2; ctx.stroke();
+    }
+    drawPoint(ctx,m,pt,5);
+  });
+
+  // Query point
+  const qx=m.px(conceptQuery.x), qy=m.py(conceptQuery.y);
+  ctx.beginPath(); ctx.arc(qx,qy,8,0,Math.PI*2);
+  ctx.fillStyle=COL_QUERY; ctx.fill();
+  ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle='#000'; ctx.font='bold 9px DM Mono,monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('?',qx,qy);
+
+  // Vote display
+  const v = res.votes;
+  const pred = res.predicted;
+  document.getElementById('conceptVoteResult').textContent =
+    `Votes: A=${v[0]}, B=${v[1]}  →  Predicted: Class ${pred===0?'A':'B'}`;
+  document.getElementById('conceptVoteResult').style.color = pred===0?COL_A:COL_B;
+}
+
+document.getElementById('conceptCanvas').addEventListener('click',function(e){
+  const rect=this.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  const w=this.offsetWidth; const h=parseInt(this.getAttribute('height'))||380;
+  const m=mkMap(w,h);
+  conceptQuery={x:m.ix(e.clientX-rect.left), y:m.iy(e.clientY-rect.top)};
+  drawConcept();
+});
+
+// ───────────────────────────────────────────────
+// S3 — STEP-BY-STEP WALK
+// ───────────────────────────────────────────────
+let walkData=[], walkQuery={x:1.2,y:0.8}, walkK=3, walkStep=0;
+let walkAnimFrame=null;
+
+const WALK_STEPS = [
+  {
+    label:'Step 0 — Training Data Loaded',
+    num:'STEP 0 OF 5',
+    title:'Training Data Loaded',
+    body:'KNN stores all labelled training data points in memory. There is no model to fit — no weights to compute. Each point is simply remembered with its class label. This is why KNN is called a <em>lazy learner</em> — it defers all computation to prediction time.',
+    math:''
+  },
+  {
+    label:'Step 1 — New Query Point Arrives',
+    num:'STEP 1 OF 5',
+    title:'New Query Point Arrives',
+    body:'A new, unlabelled point (shown in yellow ●) has appeared. We must classify it. We know nothing about it except its coordinates in feature space. <br><br>Click anywhere on the canvas to move the query point to a different location.',
+    math:''
+  },
+  {
+    label:'Step 2 — Calculating Distances',
+    num:'STEP 2 OF 5',
+    title:'Computing Euclidean Distances',
+    body:'We calculate the distance from the query point to every single training point. Lines are drawn to visualise these connections. Closer points will contribute more to the final decision.',
+    math:'d(p,q) = √( (q.x - p.x)² + (q.y - p.y)² )'
+  },
+  {
+    label:'Step 3 — K Nearest Selected',
+    num:'STEP 3 OF 5',
+    title:`${walkK} Nearest Neighbours Selected`,
+    body:`We sort all distances and keep only the K=${walkK} smallest. These are the <strong style="color:${COL_QUERY}">nearest neighbours</strong> — the voters. Rings are drawn around them. The selection radius (dashed circle) shows how far we reached.`,
+    math:`Sort all distances → Keep top K=${walkK} smallest`
+  },
+  {
+    label:'Step 4 — Majority Vote',
+    num:'STEP 4 OF 5',
+    title:'Majority Vote → Final Class',
+    body:`Each selected neighbour casts one vote for their class. The class with the most votes wins. If there's a tie, the closer neighbour's class is used.`,
+    math:'Class = argmax( count(class) for class in neighbours )'
+  }
+];
+
+function generateWalkData(){
+  walkData=[];
+  const centres=[[-2.5,2],[-1,-2],[2.5,1.5],[1.8,-2],[0,3]];
+  const classes=[0,1,0,1,0];
+  centres.forEach((c,ci)=>{
+    for(let j=0;j<12;j++) walkData.push({x:c[0]+randn()*1.0, y:c[1]+randn()*1.0, cls:classes[ci]});
+  });
+}
+
+function setWalkK(k){
+  walkK=k;
+  document.querySelectorAll('#walkK .k-btn').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===k));
+  document.getElementById('walkKFormula').textContent=`K = ${k} neighbours will vote`;
+  WALK_STEPS[3].title=`${k} Nearest Neighbours Selected`;
+  WALK_STEPS[3].math=`Sort all distances → Keep top K=${k} smallest`;
+  drawWalkStep();
+}
+
+function walkReset(){
+  walkStep=0;
+  document.getElementById('walkDistCard').style.display='none';
+  document.getElementById('walkVoteCard').style.display='none';
+  document.getElementById('walkProgress').style.width='0%';
+  document.getElementById('btnNext').textContent='NEXT STEP →';
+  drawWalkStep();
+}
+
+function walkGenerate(){
+  generateWalkData();
+  walkReset();
+}
+
+function walkNext(){
+  if(walkStep<4){ walkStep++; drawWalkStep(); }
+  document.getElementById('walkProgress').style.width=(walkStep/4*100)+'%';
+  document.getElementById('btnNext').textContent = walkStep>=4 ? '✓ COMPLETE' : 'NEXT STEP →';
+}
+
+function highlightStep(i){
+  document.querySelectorAll('.step-card').forEach((c,j)=>{
+    c.classList.remove('active');
+    if(j<i) c.classList.add('done'); else c.classList.remove('done');
+  });
+  if(document.querySelectorAll('.step-card')[i]) document.querySelectorAll('.step-card')[i].classList.add('active');
+}
+
+function drawWalkStep(){
+  const step = WALK_STEPS[Math.min(walkStep,4)];
+  document.getElementById('walkStepLabel').textContent = step.label;
+  document.getElementById('walkStepNum').textContent = step.num;
+  document.getElementById('walkStepTitle').innerHTML = step.title;
+  document.getElementById('walkStepBody').innerHTML = step.body;
+  if(step.math){
+    document.getElementById('walkMathBox').style.display='block';
+    document.getElementById('walkMathBox').textContent=step.math;
+  } else {
+    document.getElementById('walkMathBox').style.display='none';
+  }
+  highlightStep(walkStep);
+
+  const {ctx,w,h}=getCtx('walkCanvas',480);
+  const m=mkMap(w,h,48);
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='#040d14'; ctx.fillRect(0,0,w,h);
+  drawGrid(ctx,m);
+
+  const result = knnClassify(walkQuery, walkData, walkK);
+  const maxD = result.neighbours[result.neighbours.length-1].d;
+
+  // STEP 2+: distance lines
+  if(walkStep>=2){
+    walkData.forEach(pt=>{
+      ctx.beginPath();
+      ctx.moveTo(m.px(walkQuery.x),m.py(walkQuery.y));
+      ctx.lineTo(m.px(pt.x),m.py(pt.y));
+      const d=dist(pt,walkQuery);
+      const alpha = walkStep===2 ? Math.max(0.03, 0.3-d*0.04) : 0.06;
+      ctx.strokeStyle=`rgba(245,213,90,${alpha})`; ctx.lineWidth=1; ctx.stroke();
+    });
+  }
+
+  // STEP 3+: neighbourhood circle & highlighted neighbours
+  if(walkStep>=3){
+    const radiusPx = m.px(walkQuery.x+maxD)-m.px(walkQuery.x);
+    ctx.beginPath(); ctx.arc(m.px(walkQuery.x),m.py(walkQuery.y),radiusPx,0,Math.PI*2);
+    ctx.strokeStyle='rgba(245,213,90,0.4)'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(245,213,90,0.04)'; ctx.fill();
+
+    // Solid lines to neighbours
+    result.neighbours.forEach(n=>{
+      ctx.beginPath();
+      ctx.moveTo(m.px(walkQuery.x),m.py(walkQuery.y));
+      ctx.lineTo(m.px(n.x),m.py(n.y));
+      ctx.strokeStyle=classStroke(n.cls)+'cc'; ctx.lineWidth=2; ctx.stroke();
+    });
+  }
+
+  // Draw all points
+  walkData.forEach(pt=>{
+    if(walkStep>=3){
+      const isN=result.neighbours.some(n=>n.x===pt.x&&n.y===pt.y);
+      if(isN){
+        const xp=m.px(pt.x),yp=m.py(pt.y);
+        ctx.beginPath(); ctx.arc(xp,yp,13,0,Math.PI*2);
+        ctx.strokeStyle=classStroke(pt.cls)+'99'; ctx.lineWidth=2; ctx.stroke();
+        ctx.beginPath(); ctx.arc(xp,yp,9,0,Math.PI*2);
+        ctx.strokeStyle=classStroke(pt.cls)+'cc'; ctx.lineWidth=1.5; ctx.stroke();
+      }
+    }
+    drawPoint(ctx,m,pt,5);
+  });
+
+  // Query point (from step 1)
+  if(walkStep>=1){
+    const qx=m.px(walkQuery.x),qy=m.py(walkQuery.y);
+    // Glow
+    const g=ctx.createRadialGradient(qx,qy,0,qx,qy,20);
+    g.addColorStop(0,'rgba(245,213,90,0.3)'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(qx,qy,20,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(qx,qy,9,0,Math.PI*2);
+    ctx.fillStyle=COL_QUERY; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#000'; ctx.font='bold 10px DM Mono,monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('?',qx,qy);
+  }
+
+  // STEP 4: show vote result on canvas
+  if(walkStep>=4){
+    const pred=result.predicted;
+    const qx=m.px(walkQuery.x),qy=m.py(walkQuery.y);
+    ctx.beginPath(); ctx.arc(qx,qy,9,0,Math.PI*2);
+    ctx.fillStyle=classColor(pred); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
+    // Label
+    ctx.font='bold 13px Syne,sans-serif';
+    ctx.fillStyle=classColor(pred);
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    ctx.fillText(`→ Class ${pred===0?'A':'B'}`,qx,qy+14);
+
+    drawVoteChart(result.votes);
+    document.getElementById('walkVoteCard').style.display='block';
+    document.getElementById('walkVerdict').textContent=`Classified as Class ${pred===0?'A':'B'}`;
+    document.getElementById('walkVerdict').style.color=classColor(pred);
+  } else {
+    document.getElementById('walkVoteCard').style.display='none';
+  }
+
+  // Distance table at step 3+
+  if(walkStep>=3){
+    document.getElementById('walkDistCard').style.display='block';
+    const rows=result.neighbours.map((n,i)=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid #1a3347;padding:3px 0"><span style="color:${classStroke(n.cls)}">#${i+1} Class ${n.cls===0?'A':'B'}</span><span>${n.d.toFixed(3)}</span></div>`).join('');
+    document.getElementById('walkDistTable').innerHTML=rows;
+  } else {
+    document.getElementById('walkDistCard').style.display='none';
+  }
+}
+
+// Click on walk canvas to move query
+document.getElementById('walkCanvas').addEventListener('click',function(e){
+  if(walkStep>=1){
+    const rect=this.getBoundingClientRect();
+    const w=this.offsetWidth; const h=parseInt(this.getAttribute('height'))||480;
+    const m=mkMap(w,h,48);
+    walkQuery={x:m.ix(e.clientX-rect.left), y:m.iy(e.clientY-rect.top)};
+    drawWalkStep();
+  }
+});
+
+function drawVoteChart(votes){
+  const {ctx,w,h}=getCtx('voteChart',100);
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='transparent';
+  const total=votes[0]+votes[1];
+  if(total===0) return;
+  const pA=votes[0]/total, pB=votes[1]/total;
+  const barH=34, gap=16, startY=14;
+  const maxW=w-80;
+  // Class A bar
+  ctx.fillStyle='rgba(0,212,255,0.15)'; ctx.fillRect(60,startY,maxW,barH);
+  ctx.fillStyle=COL_A; ctx.fillRect(60,startY,maxW*pA,barH);
+  ctx.font='bold 11px DM Mono'; ctx.fillStyle=COL_A; ctx.textAlign='right'; ctx.textBaseline='middle';
+  ctx.fillText('Class A',54,startY+barH/2);
+  ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText(votes[0]+' votes',66,startY+barH/2);
+  // Class B bar
+  ctx.fillStyle='rgba(255,127,62,0.15)'; ctx.fillRect(60,startY+barH+gap,maxW,barH);
+  ctx.fillStyle=COL_B; ctx.fillRect(60,startY+barH+gap,maxW*pB,barH);
+  ctx.fillStyle=COL_B; ctx.textAlign='right'; ctx.textBaseline='middle';
+  ctx.fillText('Class B',54,startY+barH+gap+barH/2);
+  ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText(votes[1]+' votes',66,startY+barH+gap+barH/2);
+}
+
+// ───────────────────────────────────────────────
+// S4 — DECISION BOUNDARY
+// ───────────────────────────────────────────────
+let boundaryData=[], boundaryK=1;
+let boundaryWorkerBusy=false;
+
+function generateBoundaryData(){
+  boundaryData=[];
+  const centres=[[-2.5,2.2],[-1.5,-2],[2.5,1.8],[2,-2.5],[0.5,0.5]];
+  const classes=[0,1,0,1,0];
+  centres.forEach((c,ci)=>{
+    for(let j=0;j<16;j++) boundaryData.push({x:c[0]+randn()*1.1, y:c[1]+randn()*1.1, cls:classes[ci]});
+  });
+  drawBoundary();
+}
+
+function setBoundaryK(k){
+  boundaryK=k;
+  document.querySelectorAll('#boundaryK .k-btn').forEach(b=>{
+    b.classList.toggle('active',parseInt(b.textContent)===k);
+  });
+  const descs={
+    1:'K=1 creates a perfect Voronoi partition — every point "owns" its nearest territory. Training accuracy is 100%, but the boundary is extremely jagged and prone to overfitting.',
+    3:'K=3 introduces some smoothing while keeping the boundary responsive. A common default starting point.',
+    5:'K=5 balances local detail with regional smoothness. Works well in many practical scenarios.',
+    7:'K=7 begins to produce a noticeably smoother boundary. Outliers have less influence.',
+    11:'K=11 creates a much smoother boundary. Some points near class borders may be misclassified.',
+    15:'K=15 is quite coarse — the model sees broad regions rather than local detail. Risk of underfitting.'
+  };
+  document.getElementById('boundaryDesc').innerHTML='<strong>K='+(k)+' behaviour:</strong> '+(descs[k]||'');
+  document.getElementById('boundaryKLabel').textContent=`K = ${k} · ${k===1?'Voronoi':k<=5?'Local':'Smooth'} boundary`;
+  drawBoundary();
+}
+
+function drawBoundary(){
+  const canvas=document.getElementById('boundaryCanvas');
+  const {ctx,w,h}=getCtx('boundaryCanvas',460);
+  const m=mkMap(w,h);
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='#040d14'; ctx.fillRect(0,0,w,h);
+
+  // Background grid classification
+  const GRID=52;
+  const cellW=(w-2*m.pad)/GRID, cellH=(h-2*m.pad)/GRID;
+  for(let gi=0;gi<GRID;gi++){
+    for(let gj=0;gj<GRID;gj++){
+      const cx=m.pad+cellW*(gj+0.5);
+      const cy=m.pad+cellH*(gi+0.5);
+      const qx=m.ix(cx), qy=m.iy(cy);
+      const res=knnClassify({x:qx,y:qy},boundaryData,boundaryK);
+      ctx.fillStyle=res.predicted===0?'rgba(0,212,255,0.12)':'rgba(255,127,62,0.12)';
+      ctx.fillRect(cx-cellW/2,cy-cellH/2,cellW+1,cellH+1);
+    }
+  }
+
+  drawGrid(ctx,m);
+
+  // Points
+  boundaryData.forEach(pt=>drawPoint(ctx,m,pt,5.5));
+
+  // Stats
+  let correct=0;
+  boundaryData.forEach(pt=>{
+    const res=knnClassify(pt,boundaryData.filter(p=>p!==pt),boundaryK);
+    if(res.predicted===pt.cls) correct++;
+  });
+  const acc=(correct/boundaryData.length*100).toFixed(1);
+  document.getElementById('bTrainAcc').textContent=acc+'%';
+  const smooth=boundaryK<=3?'Low':boundaryK<=7?'Med':'High';
+  document.getElementById('bSmooth').textContent=smooth;
+}
+
+// ───────────────────────────────────────────────
+// S5 — K CURVE
+// ───────────────────────────────────────────────
+function drawKCurve(){
+  const kVals=[1,2,3,4,5,6,7,8,9,11,13,15,19];
+  const trainAcc=[], testAcc=[];
+
+  // Generate train/test split from boundaryData
+  const all=[...boundaryData];
+  const n=all.length;
+  const trainN=Math.round(n*0.7);
+  const shuffled=[...all].sort(()=>Math.random()-0.5);
+  const train=shuffled.slice(0,trainN), test=shuffled.slice(trainN);
+
+  kVals.forEach(k=>{
+    let trC=0,teC=0;
+    train.forEach(p=>{const r=knnClassify(p,train.filter(q=>q!==p),Math.min(k,train.length-1));if(r.predicted===p.cls)trC++;});
+    test.forEach(p=>{const r=knnClassify(p,train,Math.min(k,train.length));if(r.predicted===p.cls)teC++;});
+    trainAcc.push(trC/train.length*100);
+    testAcc.push(teC/(test.length||1)*100);
+  });
+
+  const {ctx,w,h}=getCtx('kCurveCanvas',340);
+  const mg=48;
+  ctx.clearRect(0,0,w,h); ctx.fillStyle='#040d14'; ctx.fillRect(0,0,w,h);
+
+  // Grid
+  ctx.strokeStyle='#0c1e2e'; ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y=mg+(h-2*mg)*i/5;
+    ctx.beginPath(); ctx.moveTo(mg,y); ctx.lineTo(w-mg,y); ctx.stroke();
+  }
+
+  function mapX(i){ return mg+(w-2*mg)*i/(kVals.length-1); }
+  function mapY(v){ return mg+(h-2*mg)*(1-clamp(v,40,100)/100*(100/60)+40/100*(100/60)); }
+  // Actually map 40-100 range:
+  function mY(v){ return mg+(h-2*mg)*(1-(v-40)/60); }
+
+  // Axis labels
+  ctx.fillStyle='#2a4a60'; ctx.font='10px DM Mono,monospace'; ctx.textAlign='center';
+  kVals.forEach((k,i)=>ctx.fillText(k, mapX(i), h-mg+14));
+  ctx.textAlign='right';
+  [100,90,80,70,60,50,40].forEach(v=>{
+    ctx.fillText(v+'%', mg-8, mY(v)+4);
+    ctx.strokeStyle='#1a3347'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(mg,mY(v)); ctx.lineTo(w-mg,mY(v)); ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  ctx.fillStyle='#5c8aaa'; ctx.textAlign='center';
+  ctx.fillText('K value', w/2, h-6);
+
+  // Train line
+  ctx.strokeStyle=COL_A; ctx.lineWidth=2; ctx.beginPath();
+  trainAcc.forEach((v,i)=>{ const y=mY(v); if(i===0)ctx.moveTo(mapX(i),y); else ctx.lineTo(mapX(i),y); });
+  ctx.stroke();
+
+  // Test line
+  ctx.strokeStyle=COL_B; ctx.lineWidth=2.5; ctx.beginPath();
+  testAcc.forEach((v,i)=>{ const y=mY(v); if(i===0)ctx.moveTo(mapX(i),y); else ctx.lineTo(mapX(i),y); });
+  ctx.stroke();
+
+  // Dots
+  [trainAcc,testAcc].forEach((arr,ci)=>{
+    arr.forEach((v,i)=>{
+      ctx.beginPath(); ctx.arc(mapX(i),mY(v),4,0,Math.PI*2);
+      ctx.fillStyle=ci===0?COL_A:COL_B; ctx.fill();
+    });
+  });
+
+  // Best test K
+  let bestI=0;
+  testAcc.forEach((v,i)=>{ if(v>testAcc[bestI]) bestI=i; });
+  ctx.strokeStyle='rgba(57,232,160,0.4)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(mapX(bestI),mg); ctx.lineTo(mapX(bestI),h-mg); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle=COL_GREEN; ctx.font='10px DM Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText(`K=${kVals[bestI]} (best)`, mapX(bestI), mg-6);
+
+  // Legend
+  ctx.font='11px DM Mono,monospace'; ctx.textAlign='left';
+  ctx.fillStyle=COL_A; ctx.fillText('— Train accuracy', mg+8, mg+16);
+  ctx.fillStyle=COL_B; ctx.fillText('— Test accuracy', mg+8, mg+30);
+}
+
+// ───────────────────────────────────────────────
+// DISTANCE TABS
+// ───────────────────────────────────────────────
+const DIST_INFO=[
+  {label:'Euclidean',explain:'The straight-line distance between two points. Works well when all features are on similar scales and the geometry is isotropic (equal in all directions). The standard default for KNN.',formula:'d = √[ Σᵢ (xᵢ - yᵢ)² ]'},
+  {label:'Manhattan',explain:'Also called L1 or "taxicab" distance. Sum of absolute differences along each dimension. Better suited for high-dimensional spaces and when features represent counts or discrete values.',formula:'d = Σᵢ |xᵢ - yᵢ|'},
+  {label:'Minkowski',explain:'A generalisation of both Euclidean (p=2) and Manhattan (p=1). The parameter p controls the shape of the "distance ball". For p→∞ it becomes the Chebyshev distance (max of differences).',formula:'d = ( Σᵢ |xᵢ - yᵢ|ᵖ )^(1/p)'}
+];
+
+function setDistTab(i){
+  document.querySelectorAll('#distTabs .tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.getElementById('distExplain').textContent=DIST_INFO[i].explain;
+  document.getElementById('distFormula').textContent=DIST_INFO[i].formula;
+}
+
+// ───────────────────────────────────────────────
+// INIT
+// ───────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  generateSepData();
+
+  generateConceptData();
+  drawConcept();
+
+  generateWalkData();
+  walkStep=0;
+  drawWalkStep();
+
+  generateBoundaryData();
+  setBoundaryK(1);
+  drawBoundary();
+
+  drawKCurve();
+
+  setDistTab(0);
+
+  window.addEventListener('resize',()=>setTimeout(()=>{
+    updateSeparator();
+    drawConcept();
+    drawWalkStep();
+    drawBoundary();
+    drawKCurve();
+  },200));
+});
+</script>
+</body>
+</html>
