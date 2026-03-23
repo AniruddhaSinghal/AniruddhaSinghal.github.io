@@ -1,231 +1,858 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educational Teaching Tools</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #181c23;
-            color: #e6e6e6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .layout {
-            display: flex;
-            flex: 1;
-            min-height: 0;
-        }
-        .sidebar {
-            background: linear-gradient(180deg, #23272f 0%, #181c23 100%);
-            color: #b0b6c1;
-            width: 270px;
-            min-width: 220px;
-            padding: 48px 28px 28px 28px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            box-shadow: 2px 0 24px 0 rgba(0,0,0,0.12);
-        }
-        .sidebar .logo {
-            font-size: 2.1em;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 8px;
-            letter-spacing: 1.5px;
-        }
-        .sidebar .subtitle {
-            font-size: 1.08em;
-            color: #7ec8e3;
-            margin-bottom: 24px;
-        }
-        .sidebar .creator {
-            margin-top: 12px;
-            font-size: 1.05em;
-            color: #ffe6e6;
-            font-weight: 500;
-        }
-        .sidebar .creator span {
-            color: #fff200;
-            font-weight: 700;
-        }
-        .sidebar .roles {
-            color: #fff;
-            font-size: 0.98em;
-            font-weight: 400;
-            margin-left: 8px;
-        }
-        .sidebar .collab {
-            margin-top: 18px;
-            font-size: 1.01em;
-            color: #fff;
-            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
-            padding: 7px 18px;
-            border-radius: 20px;
-            display: inline-block;
-            font-weight: 600;
-            box-shadow: 0 2px 12px rgba(30,60,114,0.10);
-        }
-        .sidebar .linkedin {
-            display: inline-block;
-            margin-top: 16px;
-            color: #fff;
-            background: #0077b5;
-            padding: 8px 22px 8px 18px;
-            border-radius: 22px;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 1.08em;
-            letter-spacing: 0.5px;
-            transition: background 0.2s, color 0.2s;
-            box-shadow: 0 2px 12px rgba(0,119,181,0.10);
-        }
-        .sidebar .linkedin:hover {
-            background: #005983;
-            color: #fff200;
-        }
-        .main-content {
-            flex: 1;
-            padding: 48px 32px 32px 32px;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 32px;
-            margin-top: 0;
-        }
-        .tool-card {
-            background: #23272f;
-            border-radius: 16px;
-            padding: 32px 24px 28px 24px;
-            box-shadow: 0 4px 32px rgba(0,0,0,0.18);
-            transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
-            text-decoration: none;
-            color: #e6e6e6;
-            border: 1.5px solid #23272f;
-            position: relative;
-            overflow: hidden;
-        }
-        .tool-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 48px rgba(30,60,114,0.18);
-            border-color: #1e3c72;
-        }
-        .tool-card h3 {
-            color: #7ec8e3;
-            margin-bottom: 13px;
-            font-size: 1.25em;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .tool-card p {
-            color: #b0b6c1;
-            margin-bottom: 18px;
-            font-size: 1.01em;
-        }
-        .tool-card a {
-            display: inline-block;
-            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
-            color: #fff;
-            padding: 10px 26px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            font-size: 1.01em;
-            transition: background 0.3s, color 0.3s;
-            box-shadow: 0 2px 12px rgba(30,60,114,0.10);
-        }
-        .tool-card a:hover {
-            background: linear-gradient(90deg, #232526 0%, #414345 100%);
-            color: #7ec8e3;
-        }
-        @media (max-width: 900px) {
-            .layout { flex-direction: column; }
-            .sidebar { width: 100%; min-width: 0; border-radius: 0 0 24px 24px; align-items: center; text-align: center; }
-            .main-content { padding: 32px 10px 24px 10px; }
-        }
-        footer {
-            background: #181c23;
-            color: #7ec8e3;
-            text-align: center;
-            padding: 24px 10px 14px 10px;
-            margin-top: 40px;
-            border-top: 2px solid #23272f;
-            border-bottom-left-radius: 18px;
-            border-bottom-right-radius: 18px;
-            font-size: 1.05em;
-            letter-spacing: 0.5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Learning Lab — Aniruddha Singhal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:        #07090f;
+      --bg-card:   #0d1117;
+      --bg-card2:  #111827;
+      --border:    rgba(255,255,255,0.06);
+      --text-1:    #f0f4f8;
+      --text-2:    #8892a4;
+      --text-3:    #3d4a5c;
+      --blue:      #60a5fa;
+      --cyan:      #22d3ee;
+      --purple:    #a78bfa;
+      --pink:      #f472b6;
+      --green:     #34d399;
+      --amber:     #fbbf24;
+      --orange:    #fb923c;
+      --font-d:    'Space Grotesk', sans-serif;
+      --font-b:    'Inter', sans-serif;
+      --font-m:    'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATED BACKGROUND ────────────────────────────── */
+    .bg-wrap {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.13;
+    }
+    .orb-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, #4f46e5, transparent 70%);
+      top: -250px; left: -120px;
+      animation: drift1 14s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 550px; height: 550px;
+      background: radial-gradient(circle, #0891b2, transparent 70%);
+      top: 25%; right: -140px;
+      animation: drift2 18s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 450px; height: 450px;
+      background: radial-gradient(circle, #7c3aed, transparent 70%);
+      bottom: 5%; left: 25%;
+      animation: drift1 20s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes drift1 {
+      from { transform: translate(0,0) scale(1);    }
+      to   { transform: translate(40px,50px) scale(1.12); }
+    }
+    @keyframes drift2 {
+      from { transform: translate(0,0) scale(1);    }
+      to   { transform: translate(-30px,40px) scale(1.08); }
+    }
+
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(96,165,250,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96,165,250,.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* ── PAGE SHELL ─────────────────────────────────────── */
+    .shell { position: relative; z-index: 1; }
+
+    /* ── NAVBAR ─────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 15px 52px;
+      background: rgba(7,9,15,.82);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--border);
+      animation: slideDown .55s ease both;
+    }
+    @keyframes slideDown {
+      from { opacity:0; transform:translateY(-18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .nav-brand { display:flex; align-items:center; gap:10px; }
+    .nav-dot {
+      width:8px; height:8px; border-radius:50%; background:var(--cyan);
+      animation: glow 2.2s ease-in-out infinite;
+    }
+    @keyframes glow {
+      0%,100% { box-shadow:0 0 0 0 rgba(34,211,238,.45); }
+      50%      { box-shadow:0 0 0 9px rgba(34,211,238,0); }
+    }
+    .nav-logo {
+      font-family:var(--font-d); font-size:1.25rem; font-weight:700;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; letter-spacing:-.4px;
+    }
+    .nav-pill {
+      font-family:var(--font-m); font-size:.68rem; letter-spacing:.8px;
+      color:var(--green); background:rgba(52,211,153,.08);
+      border:1px solid rgba(52,211,153,.2); padding:4px 13px; border-radius:20px;
+    }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero {
+      max-width: 1280px; margin: 0 auto;
+      padding: 96px 52px 72px;
+      text-align: center;
+      animation: fadeUp .7s ease .15s both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(28px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-m); font-size: .72rem;
+      color: var(--cyan); background: rgba(34,211,238,.07);
+      border: 1px solid rgba(34,211,238,.2);
+      padding: 5px 16px; border-radius: 20px;
+      margin-bottom: 26px; letter-spacing: 1.2px; text-transform: uppercase;
+    }
+    .hero-eyebrow::before {
+      content:''; width:5px; height:5px; border-radius:50%;
+      background:var(--cyan); animation: glow 2.2s ease-in-out infinite;
+    }
+
+    .hero-h1 {
+      font-family: var(--font-d);
+      font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+      font-weight: 700; line-height: 1.09;
+      letter-spacing: -2px; margin-bottom: 22px;
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 55%, var(--blue) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-h1 .hi {
+      background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem; color: var(--text-2); max-width: 600px;
+      margin: 0 auto 36px; line-height: 1.72; font-weight: 300;
+    }
+
+    .hero-stats {
+      display: flex; align-items: center; justify-content: center;
+      gap: 28px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .hstat {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .88rem; color: var(--text-2);
+    }
+    .hstat .v {
+      font-family: var(--font-m); color: var(--blue); font-weight: 600;
+    }
+    .hstat-sep { color: var(--text-3); }
+
+    .ai-bar {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, rgba(167,139,250,.08), rgba(96,165,250,.08));
+      border: 1px solid rgba(167,139,250,.2);
+      padding: 10px 22px; border-radius: 12px;
+      font-size: .86rem; color: var(--text-2);
+      margin-top: 14px; animation: fadeUp .7s ease .45s both;
+    }
+    .ai-bar .ai  { color:var(--purple); font-weight:600; font-family:var(--font-m); }
+    .ai-bar .hum { color:var(--amber);  font-weight:600; font-family:var(--font-m); }
+
+    /* ── CONTENT AREA ───────────────────────────────────── */
+    .content {
+      max-width: 1280px; margin: 0 auto;
+      padding: 8px 52px 80px;
+    }
+
+    /* ── SECTION HEADER ─────────────────────────────────── */
+    .sec-hd {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px;
+    }
+    .sec-num {
+      font-family: var(--font-m); font-size: .68rem;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 11px; border-radius: 20px; font-weight: 500;
+    }
+    .sec-title {
+      font-family: var(--font-d); font-size: 1.35rem;
+      font-weight: 600; color: var(--text-1);
+    }
+    .sec-line { flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+
+    /* ── CATEGORY WRAPPER ───────────────────────────────── */
+    .cat-wrap { margin-bottom: 68px; }
+
+    /* ── GRID ────────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 22px;
+    }
+
+    /* ── CARD ────────────────────────────────────────────── */
+    .card {
+      --ca: rgba(96,165,250,.28);
+      --cg: linear-gradient(90deg, var(--blue), var(--cyan));
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 26px;
+      position: relative; overflow: hidden;
+      transition: transform .32s cubic-bezier(.23,1,.32,1),
+                  box-shadow .32s ease, border-color .32s ease;
+      text-decoration: none; color: inherit; display: block;
+    }
+    .card:hover {
+      transform: translateY(-7px);
+      border-color: var(--ca);
+      box-shadow: 0 22px 56px rgba(0,0,0,.45),
+                  0 0 0 1px color-mix(in srgb, var(--ca) 40%, transparent);
+    }
+
+    /* top glow bar */
+    .card-top {
+      position: absolute; top:0; left:0; right:0; height:2px;
+      background: var(--cg); border-radius:20px 20px 0 0;
+      opacity:0; transition: opacity .32s ease;
+    }
+    .card:hover .card-top { opacity:1; }
+
+    /* sweep shimmer */
+    .card::after {
+      content:''; position:absolute;
+      inset:-1px; border-radius:20px;
+      background: radial-gradient(
+        600px circle at var(--mx,50%) var(--my,50%),
+        rgba(255,255,255,.04), transparent 40%
+      );
+      opacity:0; transition: opacity .3s ease;
+      pointer-events:none;
+    }
+    .card:hover::after { opacity:1; }
+
+    .card-icon {
+      font-size:1.9rem; margin-bottom:14px; display:block;
+      transition: transform .3s ease;
+    }
+    .card:hover .card-icon { transform: scale(1.18) rotate(-6deg); }
+
+    .card-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: var(--font-m); font-size: .66rem;
+      letter-spacing: .8px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+      margin-bottom: 13px; font-weight: 500;
+    }
+
+    .card-title {
+      font-family: var(--font-d); font-size: 1.1rem;
+      font-weight: 600; color: var(--text-1);
+      margin-bottom: 9px; line-height: 1.3;
+    }
+    .card-desc {
+      font-size: .86rem; color: var(--text-2);
+      line-height: 1.62; margin-bottom: 20px;
+    }
+
+    .card-foot {
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .card-tags { display:flex; gap:6px; flex-wrap:wrap; }
+    .tag {
+      font-size:.68rem; color:var(--text-3);
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      padding:2px 8px; border-radius:6px; font-family:var(--font-m);
+    }
+    .arrow {
+      width:30px; height:30px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+      color:var(--text-3); font-size:.85rem; flex-shrink:0;
+      transition: all .3s ease;
+    }
+    .card:hover .arrow {
+      background:color-mix(in srgb,var(--ca) 30%,transparent);
+      border-color:var(--ca); color:var(--text-1);
+      transform:translate(2px,-2px);
+    }
+
+    /* ── CATEGORY COLOUR TOKENS ─────────────────────────── */
+    /* ML */
+    .ml  { --ca:rgba(96,165,250,.28);  --cg:linear-gradient(90deg,#60a5fa,#22d3ee); }
+    .chip-ml    { background:rgba(96,165,250,.08);  color:var(--blue);   border:1px solid rgba(96,165,250,.2);  }
+    .snum-ml    { background:rgba(96,165,250,.07);  color:var(--blue);   border:1px solid rgba(96,165,250,.18); }
+    /* Neural */
+    .nn  { --ca:rgba(167,139,250,.28); --cg:linear-gradient(90deg,#a78bfa,#f472b6); }
+    .chip-nn    { background:rgba(167,139,250,.08); color:var(--purple); border:1px solid rgba(167,139,250,.2); }
+    .snum-nn    { background:rgba(167,139,250,.07); color:var(--purple); border:1px solid rgba(167,139,250,.18);}
+    /* Stats */
+    .st  { --ca:rgba(52,211,153,.28);  --cg:linear-gradient(90deg,#34d399,#10b981); }
+    .chip-st    { background:rgba(52,211,153,.08);  color:var(--green);  border:1px solid rgba(52,211,153,.2);  }
+    .snum-st    { background:rgba(52,211,153,.07);  color:var(--green);  border:1px solid rgba(52,211,153,.18); }
+    /* Blockchain */
+    .bc  { --ca:rgba(251,191,36,.28);  --cg:linear-gradient(90deg,#fbbf24,#fb923c); }
+    .chip-bc    { background:rgba(251,191,36,.08);  color:var(--amber);  border:1px solid rgba(251,191,36,.2);  }
+    .snum-bc    { background:rgba(251,191,36,.07);  color:var(--amber);  border:1px solid rgba(251,191,36,.18); }
+    /* Robotics */
+    .ro  { --ca:rgba(251,146,60,.28);  --cg:linear-gradient(90deg,#fb923c,#f43f5e); }
+    .chip-ro    { background:rgba(251,146,60,.08);  color:var(--orange); border:1px solid rgba(251,146,60,.2);  }
+    .snum-ro    { background:rgba(251,146,60,.07);  color:var(--orange); border:1px solid rgba(251,146,60,.18); }
+
+    /* ── ABOUT SECTION ──────────────────────────────────── */
+    .about-wrap {
+      max-width:1280px; margin:0 auto 80px;
+      padding:0 52px;
+    }
+    .about-card {
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:24px; padding:48px;
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:56px; align-items:start;
+      position:relative; overflow:hidden;
+    }
+    .about-card::before {
+      content:''; position:absolute;
+      top:0; left:0; right:0; height:3px;
+      background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink),var(--amber));
+    }
+
+    .about-label {
+      font-family:var(--font-m); font-size:.68rem;
+      letter-spacing:2px; text-transform:uppercase;
+      color:var(--cyan); margin-bottom:10px;
+    }
+    .about-name {
+      font-family:var(--font-d); font-size:2rem; font-weight:700;
+      background:linear-gradient(90deg,var(--text-1),var(--blue));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:6px;
+    }
+    .about-tagline {
+      font-size:.93rem; color:var(--purple);
+      font-weight:500; margin-bottom:18px;
+    }
+    .about-bio {
+      font-size:.88rem; color:var(--text-2);
+      line-height:1.78; margin-bottom:16px;
+    }
+
+    .roles {
+      display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px;
+    }
+    .rc {
+      font-size:.76rem; padding:4px 13px; border-radius:20px; font-weight:500;
+    }
+    .rc-blue   { background:rgba(96,165,250,.09);  color:var(--blue);   border:1px solid rgba(96,165,250,.2);  }
+    .rc-purple { background:rgba(167,139,250,.09); color:var(--purple); border:1px solid rgba(167,139,250,.2); }
+    .rc-green  { background:rgba(52,211,153,.09);  color:var(--green);  border:1px solid rgba(52,211,153,.2);  }
+    .rc-amber  { background:rgba(251,191,36,.09);  color:var(--amber);  border:1px solid rgba(251,191,36,.2);  }
+    .rc-orange { background:rgba(251,146,60,.09);  color:var(--orange); border:1px solid rgba(251,146,60,.2);  }
+
+    .li-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      background:#0077b5; color:#fff;
+      padding:10px 22px; border-radius:10px;
+      text-decoration:none; font-weight:600; font-size:.88rem;
+      transition:all .3s ease;
+    }
+    .li-btn:hover {
+      background:#005983;
+      transform:translateY(-2px);
+      box-shadow:0 8px 24px rgba(0,119,181,.3);
+    }
+
+    /* right column */
+    .mission-box {
+      background:rgba(96,165,250,.04);
+      border:1px solid rgba(96,165,250,.1);
+      border-radius:16px; padding:26px; margin-bottom:20px;
+    }
+    .box-label {
+      font-family:var(--font-m); font-size:.66rem;
+      letter-spacing:1.5px; text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    .box-label-blue   { color:var(--cyan); }
+    .box-label-purple { color:var(--purple); }
+
+    .mission-quote {
+      font-size:1rem; color:var(--text-1);
+      line-height:1.68; font-style:italic;
+    }
+    .mission-quote em {
+      font-style:normal;
+      background:linear-gradient(90deg,var(--blue),var(--purple));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; font-weight:600;
+    }
+
+    .collab-box {
+      background:rgba(167,139,250,.04);
+      border:1px solid rgba(167,139,250,.14);
+      border-radius:16px; padding:22px;
+    }
+    .collab-bar {
+      display:flex; border-radius:8px; overflow:hidden;
+      height:34px; margin-bottom:12px;
+    }
+    .bar-ai {
+      flex:80; background:linear-gradient(90deg,#4f46e5,#7c3aed);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-m); font-size:.74rem;
+      font-weight:600; color:#fff; letter-spacing:.4px;
+    }
+    .bar-h {
+      flex:20; background:linear-gradient(90deg,#d97706,#f59e0b);
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--font-m); font-size:.74rem;
+      font-weight:600; color:#fff;
+    }
+    .collab-desc {
+      font-size:.82rem; color:var(--text-2); line-height:1.65;
+    }
+    .collab-desc strong { color:var(--text-2); font-weight:600; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      border-top:1px solid var(--border);
+      padding:28px 52px;
+      display:flex; align-items:center;
+      justify-content:space-between; flex-wrap:wrap; gap:14px;
+    }
+    .ft { font-size:.82rem; color:var(--text-3); }
+    .ft a { color:var(--blue); text-decoration:none; }
+    .ft a:hover { text-decoration:underline; }
+    .ft-pill {
+      font-family:var(--font-m); font-size:.7rem;
+      color:var(--green); background:rgba(52,211,153,.07);
+      border:1px solid rgba(52,211,153,.15);
+      padding:4px 13px; border-radius:20px;
+    }
+
+    /* ── SCROLL FADE-IN ─────────────────────────────────── */
+    .fi { opacity:0; transform:translateY(22px); transition:opacity .55s ease,transform .55s ease; }
+    .fi.on { opacity:1; transform:translateY(0); }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media(max-width:960px){
+      nav,footer { padding:14px 24px; }
+      .hero,.content,.about-wrap { padding-left:24px; padding-right:24px; }
+      .about-card { grid-template-columns:1fr; gap:30px; padding:28px 22px; }
+      .grid { grid-template-columns:1fr; }
+    }
+    @media(max-width:560px){
+      .hero-h1 { font-size:2.2rem; letter-spacing:-1px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="logo">EduTools</div>
-            <div class="subtitle">Modern Interactive Learning</div>
-            <div class="creator">
-                Created by <span>Aniruddha Singhal</span>
-                <span class="roles">Roboticist, Educator, Tinkerer</span>
-            </div>
-            <div class="collab">🚀 Open for Collaboration!</div>
-            <a class="linkedin" href="https://se.linkedin.com/in/aniruddha-singhal-57b72719" target="_blank" rel="noopener">Connect on LinkedIn</a>
-        </aside>
-        <main class="main-content">
-            <div class="tools-grid">
-                <div class="tool-card">
-                    <h3>Blockchain Interactive Learning</h3>
-                    <p>Explore blockchain concepts interactively: hashing, blocks, mining, and more. Visual demos and hands-on activities for foundational understanding.</p>
-                    <a href="./blockchain.html">Open Blockchain Tool</a>
-                </div>
-                <div class="tool-card">
-                    <h3>Hopfield Network Demo</h3>
-                    <p>Interactive visualization and simulation of Hopfield neural networks. Learn about associative memory and pattern retrieval.</p>
-                    <a href="./hopfield_network.html">Open Hopfield Network</a>
-                </div>
-                <div class="tool-card">
-                    <h3>KNN Lecture</h3>
-                    <p>Visual and interactive guide to k-Nearest Neighbors (KNN) algorithm. Experiment with classification and clustering concepts.</p>
-                    <a href="./knn_lecture.html">Open KNN Lecture</a>
-                </div>
-                <div class="tool-card">
-                    <h3>IAR Framework — Interactive Teaching Tool</h3>
-                    <p>Learn and experiment with the IAR (Inventory Analysis & Replenishment) framework. Includes animated lessons, ABC-XYZ diagnostics, and supply chain simulations.</p>
-                    <a href="./IAR_teaching_tool.html">Open IAR Tool</a>
-                </div>
-                <div class="tool-card">
-                    <h3>IAR Framework v3 (Final)</h3>
-                    <p>Latest version of the IAR teaching tool. Enhanced features and improved interactivity for advanced supply chain education.</p>
-                    <a href="./IAR_framework_v3_final.html">Open IAR v3 Tool</a>
-                </div>
-                <div class="tool-card">
-                    <h3>Regression Lecture</h3>
-                    <p>Lecture and interactive visualizations on regression analysis. Understand linear regression, fitting, and prediction concepts.</p>
-                    <a href="./regression_lecture.html">Open Regression Lecture</a>
-                </div>
-                <div class="tool-card">
-                    <h3>StatsLab Bundle</h3>
-                    <p>Comprehensive bundle of statistics lab resources and interactive tools for learning and teaching statistics.</p>
-                    <a href="./statslab-bundle.html">Open StatsLab Bundle</a>
-                </div>
-                <div class="tool-card">
-                    <h3>Why Machines Learn</h3>
-                    <p>Visualize the curse of dimensionality, SVMs, and kernel methods. Interactive 2D/3D plots and point cloud demos for machine learning concepts.</p>
-                    <a href="./whymachineslearn.html">Open ML Visualization</a>
-                </div>
-            </div>
-        </main>
+
+<!-- Animated Background -->
+<div class="bg-wrap">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="bg-grid"></div>
+
+<div class="shell">
+
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <nav>
+    <div class="nav-brand">
+      <div class="nav-dot"></div>
+      <span class="nav-logo">Visual Learning Lab</span>
     </div>
-    
-    <footer>
-        <p>&copy; 2024 Educational Tools. Crafted by Aniruddha Singhal. All rights reserved.</p>
-    </footer>
+    <span class="nav-pill">9 Interactive Modules</span>
+  </nav>
+
+  <!-- ── HERO ───────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-eyebrow">Interactive Educational Experiences</div>
+    <h1 class="hero-h1">
+      Where <span class="hi">Visual Intuition</span><br>Meets Deep Understanding
+    </h1>
+    <p class="hero-sub">
+      A curated collection of interactive lectures and live simulations built to transfer
+      genuine intuition for complex concepts — from machine learning to robotics,
+      statistics to blockchain.
+    </p>
+    <div class="hero-stats">
+      <div class="hstat"><span class="v">9</span> Learning Modules</div>
+      <span class="hstat-sep">·</span>
+      <div class="hstat"><span class="v">5</span> Subject Areas</div>
+      <span class="hstat-sep">·</span>
+      <div class="hstat"><span class="v">100%</span> Browser-Based</div>
+      <span class="hstat-sep">·</span>
+      <div class="hstat"><span class="v">Zero</span> Setup Required</div>
+    </div>
+    <div class="ai-bar">
+      <span>Crafted with</span>
+      <span class="ai">80% AI Generation</span>
+      <span>+</span>
+      <span class="hum">20% Human Curation</span>
+      <span>— a new model of knowledge creation</span>
+    </div>
+  </section>
+
+  <!-- ── LECTURES ────────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- 01 · Machine Learning -->
+    <div class="cat-wrap fi">
+      <div class="sec-hd">
+        <span class="sec-num snum-ml">01</span>
+        <h2 class="sec-title">Machine Learning</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="grid">
+
+        <a href="./regression_lecture.html" class="card ml">
+          <div class="card-top"></div>
+          <span class="card-icon">📈</span>
+          <span class="card-chip chip-ml">Interactive Lecture</span>
+          <h3 class="card-title">The Art of Regression</h3>
+          <p class="card-desc">Visualize how models fit data, feel the intuition behind least squares, and watch predictions emerge from raw scatter — all through live, draggable charts you control in real time.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Linear Regression</span>
+              <span class="tag">Curve Fitting</span>
+              <span class="tag">Prediction</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+        <a href="./knn_lecture.html" class="card ml">
+          <div class="card-top"></div>
+          <span class="card-icon">🔵</span>
+          <span class="card-chip chip-ml">Interactive Lecture</span>
+          <h3 class="card-title">K-Nearest Neighbours</h3>
+          <p class="card-desc">Understand why a single decision boundary fails, then see how KNN exploits local geometry to classify complex data. Experiment with k values and watch decision regions reshape instantly.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Classification</span>
+              <span class="tag">Distance Metrics</span>
+              <span class="tag">Decision Boundaries</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+        <a href="./whymachineslearn.html" class="card ml">
+          <div class="card-top"></div>
+          <span class="card-icon">🌐</span>
+          <span class="card-chip chip-ml">3D Visualization</span>
+          <h3 class="card-title">Curse of Dimensionality &amp; SVMs</h3>
+          <p class="card-desc">Travel from 2D to 3D feature spaces to feel the curse of dimensionality firsthand. Explore Support Vector Machines, kernel tricks, and why high-dimensional geometry behaves so counterintuitively.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">SVM</span>
+              <span class="tag">Kernel Methods</span>
+              <span class="tag">High-Dim Geometry</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 02 · Neural Networks & AI -->
+    <div class="cat-wrap fi">
+      <div class="sec-hd">
+        <span class="sec-num snum-nn">02</span>
+        <h2 class="sec-title">Neural Networks &amp; AI</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="grid">
+
+        <a href="./hopfield_network.html" class="card nn">
+          <div class="card-top"></div>
+          <span class="card-icon">🧠</span>
+          <span class="card-chip chip-nn">Live Simulation</span>
+          <h3 class="card-title">Hopfield Network — Associative Memory</h3>
+          <p class="card-desc">Step inside a recurrent network that stores and retrieves memories. Watch corrupted patterns converge to stored attractors and feel the mathematics of energy minimization through real-time, interactive simulation.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Recurrent Nets</span>
+              <span class="tag">Energy Landscape</span>
+              <span class="tag">Pattern Recall</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+        <a href="./vla_lecture.html" class="card nn">
+          <div class="card-top"></div>
+          <span class="card-icon">🤖</span>
+          <span class="card-chip chip-nn">Interactive Lecture</span>
+          <h3 class="card-title">Vision-Language-Action Models</h3>
+          <p class="card-desc">Explore the frontier of embodied AI. Understand how modern robots fuse vision, language understanding, and action planning — and why VLA models represent a paradigm shift in intelligent robotics.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Foundation Models</span>
+              <span class="tag">Embodied AI</span>
+              <span class="tag">Robotics Perception</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 03 · Statistics -->
+    <div class="cat-wrap fi">
+      <div class="sec-hd">
+        <span class="sec-num snum-st">03</span>
+        <h2 class="sec-title">Statistics</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="grid">
+
+        <a href="./statslab-bundle.html" class="card st">
+          <div class="card-top"></div>
+          <span class="card-icon">📊</span>
+          <span class="card-chip chip-st">Lab Bundle</span>
+          <h3 class="card-title">StatsLab — Interactive Statistics</h3>
+          <p class="card-desc">A comprehensive interactive statistics laboratory covering distributions, hypothesis testing, confidence intervals, and statistical inference. Build rock-solid intuition through guided experiments and animated visualizations.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Distributions</span>
+              <span class="tag">Hypothesis Testing</span>
+              <span class="tag">Inference</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 04 · Blockchain & Cryptography -->
+    <div class="cat-wrap fi">
+      <div class="sec-hd">
+        <span class="sec-num snum-bc">04</span>
+        <h2 class="sec-title">Blockchain &amp; Cryptography</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="grid">
+
+        <a href="./blockchain.html" class="card bc">
+          <div class="card-top"></div>
+          <span class="card-icon">⛓️</span>
+          <span class="card-chip chip-bc">Interactive Demo</span>
+          <h3 class="card-title">Blockchain — From Hashing to Consensus</h3>
+          <p class="card-desc">Demystify blockchain from first principles. Interact with live hash functions, construct blocks, simulate mining difficulty, and witness how distributed consensus makes tampering computationally infeasible.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Cryptographic Hashing</span>
+              <span class="tag">Mining</span>
+              <span class="tag">Consensus</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 05 · Robotics & Operations -->
+    <div class="cat-wrap fi">
+      <div class="sec-hd">
+        <span class="sec-num snum-ro">05</span>
+        <h2 class="sec-title">Robotics &amp; Operations</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="grid">
+
+        <a href="./IAR_teaching_tool.html" class="card ro">
+          <div class="card-top"></div>
+          <span class="card-icon">🏭</span>
+          <span class="card-chip chip-ro">Teaching Tool</span>
+          <h3 class="card-title">IAR Framework — Inventory-to-Agility Reallocation</h3>
+          <p class="card-desc">Master the IAR framework through animated lessons. Run ABC-XYZ diagnostics, simulate supply chain reallocation scenarios, and understand how smart inventory management unlocks capital for automation investment.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">ABC-XYZ Analysis</span>
+              <span class="tag">Supply Chain</span>
+              <span class="tag">Inventory Optimization</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+        <a href="./IAR_framework_v3_final.html" class="card ro">
+          <div class="card-top"></div>
+          <span class="card-icon">⚙️</span>
+          <span class="card-chip chip-ro">Economic Framework</span>
+          <h3 class="card-title">IAR v3 — Economics of Industrial Robotics Investment</h3>
+          <p class="card-desc">A rigorous economic framework for justifying industrial robotics investment with zero net new capital. Explore real financing paths — from RaaS subscriptions to equipment leases — and model ROI over 24–36 months.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">CapEx vs OpEx</span>
+              <span class="tag">ROI Modeling</span>
+              <span class="tag">Industrial Robotics</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── ABOUT ───────────────────────────────────────────── -->
+  <section class="about-wrap fi">
+    <div class="about-card">
+
+      <!-- Left: Creator -->
+      <div>
+        <div class="about-label">// creator</div>
+        <div class="about-name">Aniruddha Singhal</div>
+        <div class="about-tagline">Roboticist · Educator · Applied AI Researcher</div>
+
+        <p class="about-bio">
+          Aniruddha Singhal is a technology leader and educator with deep expertise at the intersection
+          of robotics, artificial intelligence, and industrial automation. With a career spanning
+          enterprise consulting and applied research, he has worked on automation strategy, intelligent
+          systems design, and the economics of deploying robotics at scale in manufacturing and supply
+          chain environments.
+        </p>
+        <p class="about-bio">
+          A passionate advocate for accessible, visual education, Aniruddha builds interactive learning
+          tools that demystify complex technical concepts — making advanced AI, machine learning, and
+          systems thinking available to engineers, students, and decision-makers alike. He is actively
+          open to collaborations in robotics education, AI curriculum design, and applied ML research.
+        </p>
+
+        <div class="roles">
+          <span class="rc rc-blue">Robotics</span>
+          <span class="rc rc-purple">Applied AI</span>
+          <span class="rc rc-green">Education</span>
+          <span class="rc rc-amber">Supply Chain</span>
+          <span class="rc rc-orange">Tinkerer</span>
+        </div>
+
+        <a class="li-btn" href="https://se.linkedin.com/in/aniruddha-singhal-57b72719" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136
+            2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37
+            4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782
+            13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24
+            1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          Connect on LinkedIn
+        </a>
+      </div>
+
+      <!-- Right: Mission + AI Collab -->
+      <div>
+        <div class="mission-box">
+          <div class="box-label box-label-blue">// mission</div>
+          <p class="mission-quote">
+            "The goal of every module here is simple: <em>transfer visual intuition.</em>
+            Before you can use a formula, you need to feel it. Before you can apply an algorithm,
+            you need to see it breathe. These tools exist to close the gap between abstract theory
+            and lived, embodied understanding."
+          </p>
+        </div>
+
+        <div class="collab-box">
+          <div class="box-label box-label-purple">// how these were built</div>
+          <div class="collab-bar">
+            <div class="bar-ai">AI Generation — 80%</div>
+            <div class="bar-h">Human — 20%</div>
+          </div>
+          <p class="collab-desc">
+            Every module was built through a <strong>human-AI collaboration.</strong>
+            Roughly <strong>80% of the code, animations, and content structure</strong> was
+            generated by large language models acting as tireless co-authors. The remaining
+            <strong>20% represents human curation</strong>: the choice of what to teach,
+            the pedagogical sequencing, the insight into what actually confuses learners,
+            and the judgment calls that no model can make alone. This is a living experiment
+            in what becomes possible when deep domain expertise is amplified by AI.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────────── -->
+  <footer>
+    <span class="ft">
+      &copy; 2025 Visual Learning Lab &nbsp;·&nbsp;
+      Crafted by <a href="https://se.linkedin.com/in/aniruddha-singhal-57b72719" target="_blank" rel="noopener">Aniruddha Singhal</a>
+      &nbsp;·&nbsp; All rights reserved.
+    </span>
+    <span class="ft-pill">Open for Collaboration</span>
+  </footer>
+
+</div><!-- /shell -->
+
+<script>
+  /* ── Scroll fade-in ── */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('on'), i * 75);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  /* ── Card radial mouse glow ── */
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top)  / r.height* 100).toFixed(1) + '%');
+    });
+  });
+</script>
+
 </body>
 </html>

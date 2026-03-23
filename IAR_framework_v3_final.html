@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory-to-Agility Reallocation: A New Economic Framework for Industrial Robotics Investment</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #0c1117;
+  --paper: #f5f0e8;
+  --warm: #faf7f1;
+  --rule: rgba(12,17,23,0.1);
+  --accent: #8b2500;
+  --accent-dim: rgba(139,37,0,0.1);
+  --gold: #a07820;
+  --gold-dim: rgba(160,120,32,0.12);
+  --navy: #162438;
+  --navy-mid: #2e4a62;
+  --navy-light: #6d8fa8;
+  --green: #1a4a32;
+  --green-dim: rgba(26,74,50,0.1);
+  --c1:#8b2500;--c2:#162438;--c3:#a07820;--c4:#1a4a32;--c5:#5a3880;--c6:#1a6878;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'EB Garamond',Georgia,'Times New Roman',serif;
+  font-size:18px;
+  line-height:1.82;
+  font-weight:400;
+}
+
+/* ─── PROGRESS ─── */
+#pgbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:999;pointer-events:none;}
+
+/* ─── MASTHEAD ─── */
+.mast{
+  background:var(--navy);
+  color:var(--paper);
+  padding:0;
+  overflow:hidden;
+}
+.mast-rule{height:3px;background:linear-gradient(90deg,var(--accent) 0%,var(--gold) 45%,var(--green) 100%);}
+.mast-inner{max-width:820px;margin:0 auto;padding:64px 44px 56px;}
+.journal-meta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(245,240,232,.4);
+  margin-bottom:32px;
+  display:flex;flex-wrap:wrap;gap:24px;
+}
+.journal-meta span{display:flex;align-items:center;gap:6px;}
+.journal-meta span::before{content:'·';color:var(--gold);}
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,5vw,56px);
+  font-weight:300;
+  line-height:1.06;
+  letter-spacing:-.02em;
+  color:#fff;
+  margin-bottom:22px;
+}
+h1 em{font-style:italic;color:rgba(245,240,232,.72);}
+.mast-subtitle{
+  font-family:'EB Garamond',serif;
+  font-size:17.5px;
+  font-style:italic;
+  color:rgba(245,240,232,.58);
+  max-width:600px;
+  line-height:1.6;
+  margin-bottom:36px;
+}
+.keyword-row{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding-top:24px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.kw{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 10px;
+  border:1px solid rgba(160,120,32,.4);
+  color:rgba(160,120,32,.9);
+  border-radius:2px;
+}
+
+/* ─── STICKY NAV ─── */
+.toc{background:var(--ink);position:sticky;top:0;z-index:200;box-shadow:0 1px 12px rgba(0,0,0,.3);}
+.toc-inner{max-width:820px;margin:0 auto;padding:0 44px;display:flex;overflow-x:auto;scrollbar-width:none;gap:0;}
+.toc-inner::-webkit-scrollbar{display:none;}
+.toc a{
+  color:rgba(245,240,232,.35);text-decoration:none;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  padding:12px 13px;white-space:nowrap;border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+}
+.toc a:hover{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ─── LAYOUT ─── */
+.wrap{max-width:820px;margin:0 auto;padding:0 44px;}
+.section{padding:56px 0 40px;border-bottom:1px solid var(--rule);}
+.section:last-child{border-bottom:none;}
+.sec-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:6px;
+}
+h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(24px,3.5vw,36px);
+  font-weight:400;
+  line-height:1.12;
+  color:var(--navy);
+  margin-bottom:22px;
+  letter-spacing:-.015em;
+}
+h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;
+  color:var(--navy);
+  margin:36px 0 10px;
+  letter-spacing:-.01em;
+}
+h4{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--navy-mid);margin:28px 0 8px;
+}
+p{margin-bottom:18px;}p:last-child{margin-bottom:0;}
+strong{font-weight:600;}em{font-style:italic;}
+a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent);}
+a:hover{border-bottom-style:solid;}
+
+/* ─── ABSTRACT BOX ─── */
+.abstract{
+  background:var(--warm);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--accent);
+  padding:28px 32px;
+  margin:28px 0;
+  border-radius:0 4px 4px 0;
+}
+.abstract p{font-size:16px;line-height:1.85;margin-bottom:14px;}
+.abstract p:last-child{margin-bottom:0;}
+
+/* ─── INLINE CITATION ─── */
+.ref{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--accent);
+  vertical-align:super;line-height:0;
+  cursor:pointer;
+}
+
+/* ─── CALLOUTS ─── */
+.callout{display:flex;gap:14px;padding:18px 22px;border-radius:5px;margin:22px 0;}
+.callout p{margin:0;font-size:16px;line-height:1.75;}
+.co-icon{font-size:18px;flex-shrink:0;margin-top:3px;}
+.callout.gold{background:var(--gold-dim);border:1px solid rgba(160,120,32,.22);}
+.callout.red{background:var(--accent-dim);border:1px solid rgba(139,37,0,.18);}
+.callout.green{background:var(--green-dim);border:1px solid rgba(26,74,50,.2);}
+.callout.navy{background:rgba(22,36,56,.07);border:1px solid rgba(22,36,56,.15);}
+
+/* ─── EQUATION ─── */
+.eq{
+  background:var(--warm);border:1px solid var(--rule);
+  border-radius:4px;padding:16px 22px;margin:20px 0;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:var(--navy);overflow-x:auto;line-height:1.8;
+}
+.eq-lbl{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--navy-light);margin-bottom:8px;display:block;
+}
+
+/* ─── STATS ─── */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:24px 0;}
+.stat{
+  background:var(--warm);border:1px solid var(--rule);
+  border-radius:5px;padding:18px;text-align:center;
+  transition:box-shadow .2s;
+}
+.stat:hover{box-shadow:0 3px 16px rgba(0,0,0,.07);}
+.stat-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:600;color:var(--accent);
+  line-height:1;margin-bottom:4px;
+}
+.stat-l{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--navy-mid);line-height:1.5;
+}
+.stat-s{font-size:10.5px;color:var(--navy-light);margin-top:4px;font-style:italic;}
+
+/* ─── CHARTS ─── */
+.chart-wrap{
+  background:var(--warm);border:1px solid var(--rule);
+  border-radius:6px;padding:24px;margin:24px 0;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.chart-t{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.chart-s{font-size:13.5px;color:var(--navy-mid);font-style:italic;margin-bottom:16px;}
+.chart-c{position:relative;height:300px;}
+.chart-src{
+  font-size:10px;color:var(--navy-light);margin-top:10px;
+  font-family:'JetBrains Mono',monospace;border-top:1px solid var(--rule);padding-top:8px;
+}
+
+/* ─── LITERATURE SIDEBAR ─── */
+.lit-cite{
+  float:right;
+  width:220px;
+  margin:0 0 16px 24px;
+  background:var(--warm);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--gold);
+  padding:14px 16px;
+  font-size:13.5px;
+  line-height:1.65;
+  color:var(--navy-mid);
+  border-radius:0 4px 4px 0;
+}
+.lit-cite::after{content:'';display:table;clear:both;}
+.lit-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;display:block;
+}
+.lit-clearfix{clear:both;display:block;}
+@media(max-width:640px){.lit-cite{float:none;width:100%;margin:16px 0;}}
+
+/* ─── SECTOR DEEP DIVE ─── */
+.sector-card{background:var(--warm);border:1px solid var(--rule);border-radius:7px;overflow:hidden;margin:20px 0;}
+.sc-head{display:flex;align-items:stretch;background:var(--navy);}
+.sc-bar{width:4px;flex-shrink:0;}
+.sc-label{padding:14px 18px;display:flex;align-items:center;gap:10px;flex:1;}
+.sc-icon{font-size:20px;}
+.sc-name{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:600;color:#fff;
+}
+.sc-dio{
+  padding:14px 20px;border-left:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
+}
+.sc-dio-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:600;color:var(--gold);line-height:1;
+}
+.sc-dio-lbl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(245,240,232,.4);margin-top:2px;
+}
+.sc-body{padding:18px 22px;font-size:15.5px;line-height:1.72;}
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule);}
+@media(max-width:560px){.sc-grid{grid-template-columns:1fr;}}
+.sc-cell{padding:14px 18px;border-right:1px solid var(--rule);font-size:13.5px;line-height:1.6;}
+.sc-cell:last-child{border-right:none;}
+.sc-cell-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--navy-mid);margin-bottom:5px;
+}
+.sc-foot{
+  padding:9px 18px;background:#f0ebe0;border-top:1px solid var(--rule);
+  font-size:12px;color:var(--navy-mid);font-style:italic;
+}
+
+/* ─── PILL ─── */
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:600;}
+.pill.h{background:#fce4df;color:var(--accent);}
+.pill.m{background:var(--gold-dim);color:#6a4800;}
+.pill.l{background:var(--green-dim);color:var(--green);}
+
+/* ─── ROBOT PORTFOLIO ─── */
+.robot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0;}
+@media(max-width:560px){.robot-grid{grid-template-columns:1fr;}}
+.robot-card{background:var(--warm);border:1px solid var(--rule);border-radius:6px;overflow:hidden;}
+.rc-head{padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.rc-icon{font-size:18px;}
+.rc-name{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#fff;}
+.rc-body{padding:13px 16px;font-size:13.5px;line-height:1.65;}
+.rc-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--rule);}
+.rc-row:last-child{border-bottom:none;}
+.rc-key{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-mid);}
+.rc-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--accent);}
+.rc-examples{font-size:11px;color:var(--navy-light);font-style:italic;padding:7px 16px;background:#ede8e0;border-top:1px solid var(--rule);}
+
+/* ─── BOOTSTRAP CARDS ─── */
+.boot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0;}
+.boot-card{background:var(--warm);border:1px solid var(--rule);border-radius:6px;padding:18px;}
+.boot-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.boot-icon{font-size:22px;}
+.boot-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy-mid);font-weight:600;}
+.boot-body{font-size:13.5px;line-height:1.65;color:var(--navy-mid);}
+.boot-range{
+  margin-top:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;font-weight:600;color:var(--accent);
+}
+
+/* ─── CALCULATOR ─── */
+.calc{background:var(--navy);border-radius:8px;padding:28px;margin:24px 0;color:var(--paper);}
+.calc-t{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:4px;color:#fff;letter-spacing:-.01em;}
+.calc-s{font-size:13.5px;color:rgba(245,240,232,.45);margin-bottom:22px;font-style:italic;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+@media(max-width:540px){.calc-row{grid-template-columns:1fr;}}
+.cfield label{
+  display:block;font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(245,240,232,.4);margin-bottom:5px;
+}
+.cfield input,.cfield select{
+  width:100%;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);color:#fff;
+  padding:9px 13px;border-radius:3px;
+  font-family:'JetBrains Mono',monospace;font-size:14px;
+  outline:none;transition:border-color .2s;
+}
+.cfield input:focus,.cfield select:focus{border-color:var(--gold);}
+.cfield select option{background:#162438;}
+.calc-btn{
+  background:var(--accent);color:#fff;border:none;
+  padding:11px 28px;border-radius:3px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;transition:background .2s;
+}
+.calc-btn:hover{background:#a8300a;}
+.c-result{display:none;margin-top:20px;padding:18px;background:rgba(255,255,255,.05);border:1px solid rgba(160,120,32,.25);border-radius:5px;}
+.c-result.show{display:block;}
+.r-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:8px;}
+.r-item{text-align:center;}
+.r-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);display:block;line-height:1;}
+.r-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,.38);display:block;margin-top:4px;line-height:1.4;}
+.r-fleet{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+@media(max-width:480px){.r-fleet{grid-template-columns:1fr 1fr;}}
+.rf-item{background:rgba(255,255,255,.06);border-radius:4px;padding:9px;text-align:center;}
+.rf-icon{font-size:15px;margin-bottom:2px;}
+.rf-type{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;color:rgba(245,240,232,.35);}
+.rf-n{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold);}
+.r-narr{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);font-size:14px;line-height:1.72;color:rgba(245,240,232,.65);}
+
+/* ─── SLIDERS ─── */
+.slider-box{background:var(--warm);border:1px solid var(--rule);border-radius:6px;padding:24px;margin:22px 0;}
+.sl-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:3px;}
+.sl-sub{font-size:13.5px;color:var(--navy-mid);font-style:italic;margin-bottom:16px;}
+.sl-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+.sl-row label{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--navy-mid);
+  min-width:210px;flex-shrink:0;
+}
+.sl-row input[type=range]{flex:1;min-width:100px;accent-color:var(--accent);}
+.sl-v{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;color:var(--accent);min-width:60px;text-align:right;}
+.sl-out{margin-top:16px;padding:14px;background:rgba(12,17,23,.04);border-radius:5px;border:1px solid var(--rule);}
+.sl-out-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:8px;}
+.sog{text-align:center;}
+.sog-v{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--navy);display:block;}
+.sog-l{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--navy-mid);text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:2px;line-height:1.4;}
+
+/* ─── TIMELINE ─── */
+.timeline{position:relative;padding-left:28px;margin:22px 0;}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:1.5px;background:linear-gradient(to bottom,var(--accent),var(--gold),var(--green));}
+.tl-item{position:relative;margin-bottom:26px;}
+.tl-dot{position:absolute;left:-22px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--warm);border:2px solid var(--accent);z-index:1;}
+.tl-phase{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.tl-body{font-size:15px;color:var(--navy-mid);line-height:1.68;}
+
+/* ─── CRITIQUE ─── */
+.critique{border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:16px 0;}
+.crit-h{
+  background:#fce8e3;padding:10px 16px;
+  display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600;
+}
+.validity{padding:2px 7px;border-radius:2px;font-size:9px;margin-left:6px;}
+.val-h{background:var(--accent-dim);color:var(--accent);}
+.val-m{background:var(--gold-dim);color:#6a4800;}
+.val-l{background:var(--green-dim);color:var(--green);}
+.crit-body{padding:14px 16px;font-size:15px;line-height:1.72;background:var(--warm);}
+.crit-reb{padding:11px 16px;font-size:14.5px;line-height:1.68;background:var(--green-dim);border-top:1px solid var(--rule);color:var(--green);}
+.reb-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:4px;display:block;}
+
+/* ─── ABC MATRIX ─── */
+.abc-matrix{
+  width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;
+}
+.abc-matrix th{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--navy-mid);background:var(--warm);padding:10px 12px;border:1px solid var(--rule);text-align:center;
+}
+.abc-matrix td{padding:10px 12px;border:1px solid var(--rule);text-align:center;line-height:1.5;font-size:13.5px;}
+.ax{background:#d8f3dc;color:var(--green);font-weight:600;}
+.ay{background:#e8f3d8;}
+.az{background:#fff3cd;}
+.bx{background:#e8f3d8;}
+.by{background:var(--warm);}
+.bz{background:#fff3cd;}
+.cx{background:var(--warm);}
+.cy{background:#fff3cd;}
+.cz{background:#fce8e3;color:var(--accent);}
+
+/* ─── COMPARISON TABLE ─── */
+.cmp-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;}
+.cmp-table th{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--navy-mid);background:var(--warm);padding:10px 12px;border-bottom:2px solid var(--rule);text-align:left;
+}
+.cmp-table td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.55;}
+.cmp-table tr:hover td{background:rgba(250,247,241,.8);}
+
+/* ─── REFS ─── */
+.ref-list{list-style:none;counter-reset:rc;}
+.ref-list li{
+  counter-increment:rc;padding:8px 0 8px 32px;
+  position:relative;font-size:14.5px;border-bottom:1px solid var(--rule);line-height:1.62;
+}
+.ref-list li::before{
+  content:'['counter(rc)']';position:absolute;left:0;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--navy-light);top:10px;
+}
+.ref-list a{color:var(--accent);border-bottom:1px dotted;}
+.ref-list a:hover{border-bottom-style:solid;}
+
+/* ─── PULLQUOTE ─── */
+.pullquote{
+  border-left:3px solid var(--gold);
+  margin:28px 0;padding:4px 0 4px 22px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-style:italic;font-weight:400;
+  color:var(--navy);line-height:1.45;
+}
+.pullquote cite{
+  display:block;margin-top:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--navy-light);font-style:normal;
+}
+
+/* ─── FOOTNOTE ─── */
+.footnote{
+  font-size:12.5px;color:var(--navy-mid);
+  border-top:1px solid var(--rule);padding-top:14px;margin-top:22px;
+  line-height:1.65;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .wrap,.mast-inner,.toc-inner{padding-left:20px;padding-right:20px;}
+  .calc{padding:18px;}
+}
+:target{scroll-margin-top:48px;}
+</style>
+</head>
+<body>
+<div id="pgbar"></div>
+
+<!-- ══════════ MASTHEAD ══════════ -->
+<div class="mast">
+  <div class="mast-rule"></div>
+  <div class="mast-inner">
+    <div class="journal-meta">
+      <span>Working Paper · Industrial Operations &amp; Capital Strategy</span>
+      <span>March 2026</span>
+      <span>Audience: C-Suite / Board</span>
+    </div>
+    <h1>Inventory-to-Agility Reallocation<br><em>A New Economic Framework<br>for Industrial Robotics Investment</em></h1>
+    <div class="mast-subtitle">
+      Reframing the robotics business case from workforce displacement arithmetic to a theory of capital reallocation — converting frozen inventory into productive agility, without requiring net new investment.
+    </div>
+    <div class="keyword-row">
+      <span class="kw">Inventory Holding Cost</span>
+      <span class="kw">Days Inventory Outstanding</span>
+      <span class="kw">EOQ Theory</span>
+      <span class="kw">Changeover Economics</span>
+      <span class="kw">IAR Framework</span>
+      <span class="kw">Working Capital</span>
+      <span class="kw">Robotics-as-a-Service</span>
+      <span class="kw">SMED</span>
+      <span class="kw">ABC-XYZ Analysis</span>
+      <span class="kw">Supply Chain Agility</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#abstract">Abstract</a>
+    <a href="#s1">Introduction</a>
+    <a href="#s2">Theory</a>
+    <a href="#s3">Inventory Scale</a>
+    <a href="#s4">Diagnostic</a>
+    <a href="#s5">Three Verticals</a>
+    <a href="#s6">Robot Portfolio</a>
+    <a href="#s7">Financial Model</a>
+    <a href="#s8">Bootstrap</a>
+    <a href="#s9">Roadmap</a>
+    <a href="#s10">Critique</a>
+    <a href="#s11">Literature</a>
+    <a href="#s12">Conclusion</a>
+    <a href="#refs">References</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════ ABSTRACT ══════════ -->
+<section class="section" id="abstract">
+  <div class="sec-label">Abstract</div>
+  <h2>Abstract</h2>
+  <div class="abstract">
+    <p>The dominant business case for industrial robotics rests on a single premise: replacing <em>n</em> full-time equivalents with a proportional fleet of machines and computing a two-to-three-year payback against saved labor costs. This paper argues that this framing is both analytically narrow and strategically self-defeating. It misrepresents the primary economic value that robotics creates, and it places the investment in competition with every other cost-reduction initiative — a competition that, absent compellingly large headcount numbers, robotics rarely wins.</p>
+    <p>This paper proposes the <strong>Inventory-to-Agility Reallocation (IAR) framework</strong> as an alternative. The central claim is as follows: in manufacturing, logistics, and retail — three sectors holding an estimated $3.5 trillion in combined inventory — a material fraction of that stock exists not because of genuine demand uncertainty or supply-chain risk, but because organizations lack the operational agility to respond quickly to demand signals. Long changeover times, infrequent production cycles, and batch-optimized processes structurally require weeks or months of buffer stock. That buffer is not a business necessity. It is the quantifiable cost of inflexibility.</p>
+    <p>Robotics attacks inflexibility directly. Following the mathematics of the Economic Order Quantity model, any technology that reduces effective changeover cost reduces the optimal batch size and therefore the required inventory buffer. This creates a self-funding investment path: a targeted robot deployment — sized and financed from the inventory reduction it enables — releases working capital that offsets the investment itself. No net new capital is required on a multi-year basis. The agility dividend compounds as the operation matures.</p>
+    <p>This paper develops the IAR framework in full academic form: theoretical grounding in EOQ and lean operations literature, sector-specific inventory data for manufacturing, logistics, and retail, a mandatory ABC-XYZ diagnostic methodology for identifying agility-addressable inventory, a four-type robot portfolio analysis with current pricing, a complete financial model with interactive sensitivity, a bootstrap section addressing the sequencing and financing challenge that practitioners most frequently raise, a phased implementation roadmap, and a structured critique identifying the conditions under which the thesis weakens or fails. Supporting evidence is drawn from twelve published sources including peer-reviewed journals (Wiley, MDPI, Journal of Business Logistics), major consulting white papers (McKinsey Supply Chain 4.0, BCG 2024), and empirical deployment data.</p>
+    <p><strong>Keywords:</strong> Inventory Holding Cost · Days Inventory Outstanding · Economic Order Quantity · Changeover Economics · Capital Reallocation · Operational Agility · Robotics-as-a-Service · SMED · ABC-XYZ Analysis · Supply Chain Agility</p>
+  </div>
+</section>
+
+<!-- ══════════ §1 INTRODUCTION ══════════ -->
+<section class="section" id="s1">
+  <div class="sec-label">§ 1 · Introduction</div>
+  <h2>The Problem with the Prevailing Frame</h2>
+
+  <p>When a CFO first encounters a proposal to automate a production line, the conversation almost invariably unfolds in the same way. An operations manager presents a headcount analysis: ten workers on the line, each costing $X annually; a robot cell costing $Y; payback in 2.5 years. The CFO calculates the IRR, compares it against twelve other capital proposals, and either approves or defers. If approved, the HR department begins a difficult conversation. If deferred, the operations manager tries again next year.</p>
+  <p>This is the labor-displacement frame for robotics investment, and it has been the dominant paradigm in industrial automation business cases for four decades. It is not wrong — it captures one real source of value. But it is narrow to the point of being misleading, and in high-wage developed economies, it is increasingly insufficient to clear the capital hurdle rates that boards apply.</p>
+  <p>The more consequential question is not about labor. It is about capital — specifically, about the working capital currently frozen in inventory buffers that exist solely because the operation cannot respond quickly enough to demand. This paper develops a rigorous economic framework for that alternative case. We call it the <strong>Inventory-to-Agility Reallocation (IAR) framework</strong>. Its logic can be summarized in four claims:</p>
+
+  <div class="callout navy">
+    <div class="co-icon">◆</div>
+    <p><strong>Claim 1.</strong> A significant fraction of industrial inventory — empirically estimated at 30–40% on average — is held not for genuine supply-chain risk coverage, but as a structural consequence of changeover inflexibility that forces batch production against stale forecasts.<br><br>
+    <strong>Claim 2.</strong> This excess inventory generates a guaranteed negative return through holding costs of 20–30% per year — insurance, storage, capital opportunity cost, obsolescence, and shrinkage — while simultaneously reducing organizational responsiveness to the market.<br><br>
+    <strong>Claim 3.</strong> Robotics is the most powerful available technology for reducing changeover cost and time. Following Economic Order Quantity mathematics, changeover reduction directly reduces the optimal inventory buffer. The freed capital offsets the robot investment.<br><br>
+    <strong>Claim 4.</strong> This is not a cost-reduction story. It is a capital reallocation story: passive capital generating negative returns converted into productive assets generating compounding value. The workforce narrative is secondary — real, but not the primary investment thesis.</p>
+  </div>
+
+  <p>The remainder of this paper develops each claim in sequence, grounds them in existing literature, quantifies the opportunity across three priority sectors, provides a practical diagnostic and bootstrap methodology, models the financial mechanics, and subjects the entire argument to structured critique. The goal is not advocacy but analysis: to construct the strongest defensible version of the IAR framework and identify precisely where it holds and where it does not.</p>
+</section>
+
+<!-- ══════════ §2 THEORETICAL FOUNDATION ══════════ -->
+<section class="section" id="s2">
+  <div class="sec-label">§ 2 · Theoretical Foundation</div>
+  <h2>The Economics of Changeover: From EOQ to the IAR Link</h2>
+
+  <div class="lit-cite">
+    <span class="lit-title">Literature: EOQ Foundation</span>
+    The formal link between setup cost and inventory buffer traces to Harris (1913) and Wilson (1934). Shigeo Shingo's SMED methodology (1985) operationalized the insight that setup costs are not fixed — they can be engineered down. The Kaizen Institute and multiple MDPI case studies confirm changeover reductions of 30–94% are achievable through systematic methods.
+  </div>
+
+  <h3>2.1 The Economic Order Quantity and Its Inventory Implication</h3>
+  <p>The Economic Order Quantity (EOQ) model, formalized by Harris (1913) and extended by Wilson (1934), provides the foundational mathematical link between changeover (setup) cost and the inventory a facility must carry. The model minimizes total inventory cost — the sum of holding cost and ordering/setup cost — and yields an optimal batch size proportional to the square root of the setup cost:</p>
+
+  <div class="eq">
+    <span class="eq-lbl">Economic Order Quantity — Harris-Wilson Model</span>
+    Q* = √( 2DS / H )<br><br>
+    Where:<br>
+      D = Annual demand (units)<br>
+      S = Setup / changeover cost per run ($)<br>
+      H = Annual holding cost per unit ($ / unit / year)<br><br>
+    <span style="color:#6d8fa8;">
+    Key implication:  Q* ∝ √S<br>
+    → As S → 0 (perfect changeover agility):  Q* → 0  →  Required inventory buffer → 0<br>
+    → A 75% reduction in S reduces optimal batch size by 50%<br>
+    → A 50% batch-size reduction with unchanged demand requires ~50% less inventory on average<br>
+    → This is the mathematical basis of the IAR thesis.
+    </span>
+  </div>
+
+  <p>This is not a theoretical abstraction. Taiichi Ohno and Shigeo Shingo at Toyota developed the Single-Minute Exchange of Die (SMED) methodology in the 1950s and 1960s precisely to exploit this relationship operationally. The Toyota Production System's legendary inventory efficiency — DIO of ~55 days against an industry average of 75–90 days for non-lean peers — is substantially explained by the EOQ effect: by engineering changeover times from hours to minutes on their stamping presses, Toyota was able to reduce batch sizes and production lot sizes to the point where near-just-in-time production became economically viable. The inventory reduction was not a strategy; it was a mathematical consequence of eliminating setup cost.</p>
+
+  <div class="lit-cite">
+    <span class="lit-title">Literature: SMED Evidence</span>
+    A 2023 MDPI Sustainability paper documents 30% changeover reduction in a food manufacturer using SMED, yielding 10% labour cost reduction and OEE improvement to 70%+. The International Journal of Advanced Manufacturing Technology (Springer, 2023) presents a "Set-up Saving Deployment" tool achieving up to 70% changeover improvement. These are peer-reviewed confirmations of the EOQ mechanism in live industrial settings.
+  </div>
+
+  <p>The key insight for the IAR framework is that, historically, SMED has been applied manually — through process redesign, pre-staging, and standardized work. Robotics extends this principle dramatically: a programmable robot cell can switch between product variants in minutes through software reconfiguration rather than physical retooling. This collapses the effective setup cost <em>S</em> toward zero for the processes it handles, enabling batch sizes and inventory buffers proportionally smaller than any manual SMED program could achieve.</p>
+
+  <h3>2.2 The Bullwhip Effect and Forecast-Driven Inventory Accumulation</h3>
+  <p>A second theoretical mechanism reinforces the IAR argument. The "bullwhip effect" (Lee, Padmanabhan, &amp; Whang, 1997) describes how demand signal distortions amplify upstream through supply chains: small fluctuations in end-consumer demand create increasingly large swings in production orders. One key driver is the length of the demand-to-production response cycle. When a manufacturer can only update production plans monthly or quarterly — because changeover costs make more frequent adjustments uneconomical — it must forecast further into the future, and forecast errors compound into excess inventory.</p>
+  <p>Robotics-enabled agility directly shortens the demand-to-production cycle. When changeover takes 15 minutes rather than 8 hours, weekly production plan updates become economically feasible. Weekly updates reduce the forecast horizon from 8–12 weeks to 1–2 weeks. Forecast accuracy at 1–2 weeks is dramatically higher than at 8–12 weeks. McKinsey's Supply Chain 4.0 research documents that advanced forecasting and automation can reduce forecast errors by 30–50%, which translates directly into reduced safety stock requirements.<span class="ref">[2]</span></p>
+
+  <div class="pullquote">
+    "Unlike the rigid supply chain automation systems of the past, technologies such as collaborative robots and smart packaging machines are capable of faster changeovers and can handle a much wider range of products and shipment types."
+    <cite>McKinsey &amp; Company, "Future-Proofing the Supply Chain" (2022) [3]</cite>
+  </div>
+
+  <h3>2.3 The Capital Allocation Dimension</h3>
+  <p>A third theoretical strand, largely absent from operational management literature but central to the IAR framework, concerns corporate capital allocation. Liang et al. (2026), analyzing Chinese manufacturing firms 2007–2019 in <em>Managerial and Decision Economics</em>, find empirically that industrial robot adoption "notably reduces corporate cash holdings, thereby confirming the effect of capital allocation" — robots reduce the cash and near-cash assets (including inventory) that firms must hold for precautionary motives, by reducing operational uncertainty and improving throughput predictability.<span class="ref">[1]</span> This is the capital reallocation mechanism operating in live firm-level data, not in theory.</p>
+  <p>The IAR framework unifies these three strands: EOQ mathematics (changeover reduction reduces optimal batch size), bullwhip theory (faster response cycles reduce forecast horizon and safety stock), and corporate capital allocation empirics (robot adoption demonstrably reduces working capital holdings). Together they constitute a coherent theoretical basis for the claim that robotics investment is primarily a capital story, not a labor story.</p>
+</section>
+
+<!-- ══════════ §3 INVENTORY SCALE ══════════ -->
+<section class="section" id="s3">
+  <div class="sec-label">§ 3 · The Scale of Trapped Capital</div>
+  <h2>Quantifying the Opportunity: Global Inventory Economics</h2>
+
+  <p>Before the IAR framework can be applied operationally, its scale must be established. The key metric is Days Inventory Outstanding (DIO) — the average number of days a firm's goods sit in inventory before conversion to cash. Each day of DIO represents working capital generating negative returns at the holding cost rate.</p>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-n">$1.6T</div>
+      <div class="stat-l">Annual cost of global inventory distortion (overstock + stockouts)</div>
+      <div class="stat-s">Meteor Space / IHL Group<span class="ref">[7]</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">20–30%</div>
+      <div class="stat-l">Annual holding cost as % of inventory value (all-in: storage, insurance, capital, obsolescence)</div>
+      <div class="stat-s">Descartes Finale; LatentView Analytics<span class="ref">[8,9]</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">38%</div>
+      <div class="stat-l">Average proportion of inventory classified as excess above real demand, global SMBs</div>
+      <div class="stat-s">Netstock Benchmark Report 2024<span class="ref">[10]</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">$332B</div>
+      <div class="stat-l">Estimated annual carrying cost of agility-addressable excess across three priority sectors</div>
+      <div class="stat-s">Author calculation; see methodology below</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-t">Days Inventory Outstanding — Priority Sectors Versus Broader Industry</div>
+    <div class="chart-s">Bars show midpoint DIO; lighter overlay shows maximum typical DIO. Higher DIO = more capital frozen per dollar of revenue.</div>
+    <div class="chart-c"><canvas id="dioChart"></canvas></div>
+    <div class="chart-src">Sources: nVentic Big Pharma Benchmarking 2024 [11]; Descartes Finale [8]; Eduyush industry benchmarks [12]; Qoblex DIO guide [13]</div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-t">Annual Inventory Holding Cost Rate by Sector (% of Inventory Value)</div>
+    <div class="chart-s">All-in rate: capital opportunity cost + storage + insurance + handling + obsolescence + shrinkage.</div>
+    <div class="chart-c"><canvas id="holdChart"></canvas></div>
+    <div class="chart-src">Sources: [8,9,10] — Descartes Finale, LatentView Analytics, ISM World 2024</div>
+  </div>
+
+  <h3>3.1 The $332 Billion Calculation</h3>
+  <p>The three priority sectors — general manufacturing, logistics and warehousing, and retail and e-commerce — together hold an estimated $3.5 trillion in combined inventory. This figure draws on multiple sources: McKinsey's Supply Chain 4.0 estimates for manufacturing working capital, IHL Group retail inventory data, and US Census Bureau logistics data extrapolated globally.<span class="ref">[2,7]</span></p>
+  <p>Applying the Netstock benchmark figure of 38% excess stock to this $3.5 trillion base yields approximately <strong>$1.33 trillion</strong> held above genuine demand requirements. At a blended 25% annual holding cost rate, the carrying cost of this excess is <strong>$332 billion per year</strong>. This is the annualized cost of the inventory that the IAR framework argues should not exist — not the cost of inventory generally, but specifically the portion attributable to changeover inflexibility and batch-production inertia.</p>
+  <p>A critical caveat is required here, and the paper returns to it in the critique section (§10): this $332 billion is an aggregate across diverse facilities operating under very different conditions. No individual facility should use this number to size its IAR opportunity. The correct approach is the facility-level diagnostic described in Section 4.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-t">Estimated Global Inventory Capital: Three Priority Sectors (USD Billions)</div>
+    <div class="chart-s">Total inventory versus agility-addressable excess. The highlighted portion is the IAR opportunity — the capital the IAR framework targets for reallocation.</div>
+    <div class="chart-c"><canvas id="globalChart"></canvas></div>
+    <div class="chart-src">Sources: Multiple industry reports, SEC aggregate filings, McKinsey Supply Chain Analytics [2,3,7]</div>
+  </div>
+</section>
+
+<!-- ══════════ §4 DIAGNOSTIC ══════════ -->
+<section class="section" id="s4">
+  <div class="sec-label">§ 4 · The Mandatory Diagnostic</div>
+  <h2>Before Any Financial Modeling: The ABC-XYZ Inventory Segmentation</h2>
+
+  <p>The single most important practical implication of the IAR framework is also its most important safeguard against misapplication: <strong>no facility should apply aggregate statistics to itself without first conducting an inventory segmentation audit.</strong> The 38% excess stock figure is an industry average. Any given facility may be 15% or 60% depending on its product mix, supply chain design, and operational history.</p>
+  <p>The correct diagnostic tool is the <strong>ABC-XYZ analysis</strong>, a two-dimensional inventory classification framework that categorizes every SKU by its financial value (A, B, C — following the Pareto principle) and by its demand predictability (X, Y, Z — from stable to volatile). The intersection of these two dimensions directly identifies which inventory is agility-addressable and which is genuinely required.</p>
+
+  <h3>4.1 The ABC-XYZ Matrix and IAR Applicability</h3>
+
+  <table class="abc-matrix">
+    <thead>
+      <tr>
+        <th></th>
+        <th>X — Stable, Predictable</th>
+        <th>Y — Moderate Variability</th>
+        <th>Z — Highly Volatile</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th style="font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--warm);padding:10px 12px;text-align:center;">A — High Value</th>
+        <td class="ax">AX: Lowest safety stock. JIT viable. <strong>High IAR opportunity.</strong></td>
+        <td class="ay">AY: Moderate buffer. EOQ applies. <strong>Medium IAR opportunity.</strong></td>
+        <td class="az">AZ: High safety stock required. Supply risk genuine. <strong>Low IAR applicability.</strong></td>
+      </tr>
+      <tr>
+        <th style="font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--warm);padding:10px 12px;text-align:center;">B — Mid Value</th>
+        <td class="bx">BX: Lean replenishment possible. <strong>Medium IAR opportunity.</strong></td>
+        <td class="by">BY: Standard inventory rules. Moderate opportunity.</td>
+        <td class="bz">BZ: Volatile demand. Some buffer needed. Limited IAR applicability.</td>
+      </tr>
+      <tr>
+        <th style="font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--warm);padding:10px 12px;text-align:center;">C — Low Value</th>
+        <td class="cx">CX: Very low holding cost. Low priority for agility investment.</td>
+        <td class="cy">CY: Standard management. Minimal IAR relevance.</td>
+        <td class="cz">CZ: Highest obsolescence risk. Consider discontinuation. <strong>Not IAR-addressable.</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The cells shaded green (AX, AY, BX) represent the IAR opportunity zone: high-value or medium-value items with predictable demand where the primary reason for holding excess inventory is changeover inflexibility, not genuine uncertainty. In a typical manufacturing facility, these cells represent 40–65% of total inventory value, often held at batch sizes 2–4× larger than demand would justify if changeover were free.</p>
+  <p>The cells shaded orange (AZ, BZ) contain genuinely risk-driven inventory — the demand is volatile or supply uncertain, and the buffer is economically justified. Robotics can improve agility in these cells too, but the IAR investment thesis is weaker here because the root cause is not changeover cost but forecast uncertainty or supply variability.</p>
+
+  <h3>4.2 Executing the Diagnostic: Four Steps</h3>
+  <p><strong>Step 1 — Data Collection (2–4 weeks):</strong> Pull 18–24 months of SKU-level demand history, current inventory levels, standard costs, and documented changeover times by production line. For each SKU, compute: (a) annual consumption value, (b) coefficient of variation (σ/μ) of weekly demand, and (c) the production line's average changeover time for that SKU's product family. These three inputs drive the ABC-XYZ classification.</p>
+  <p><strong>Step 2 — Classification (1 week):</strong> Assign each SKU to an ABC tier (80/15/5 value distribution is standard), an XYZ tier (CoV &lt;0.5 = X, 0.5–1.0 = Y, &gt;1.0 = Z), and therefore a matrix cell. Flag the AX, AY, and BX cells as the IAR opportunity zone.</p>
+  <p><strong>Step 3 — Quantification (1–2 weeks):</strong> For each IAR-zone SKU, calculate the EOQ-implied optimal batch size at current changeover cost, and again at a target changeover cost achievable with robotic automation (typically 70–80% reduction). The difference in implied inventory between the two scenarios is the agility-addressable excess for that SKU. Sum across the IAR zone to get the facility-level IAR opportunity.</p>
+  <p><strong>Step 4 — Prioritization (1 week):</strong> Rank production lines by the magnitude of their IAR opportunity. The top 1–3 lines are the Phase 1 robotics targets. This prevents the common mistake of deploying automation where it is technically interesting rather than where it releases the most capital.</p>
+
+  <div class="callout gold">
+    <div class="co-icon">💡</div>
+    <p><strong>Practical note for mid-size manufacturers:</strong> Facilities with fewer than 200 active SKUs can complete this diagnostic in 4–6 weeks with existing ERP data and two analysts. Larger facilities (500+ SKUs) benefit from dedicated inventory optimization software (e.g., Netstock, EazyStock) that automates ABC-XYZ classification and can update it in real time. The diagnostic cost — typically $20,000–$80,000 including analyst time — is not an overhead; it is the measurement instrument for an investment that may unlock tens of millions in working capital.</p>
+  </div>
+</section>
+
+<!-- ══════════ §5 THREE VERTICALS ══════════ -->
+<section class="section" id="s5">
+  <div class="sec-label">§ 5 · Sector Evidence</div>
+  <h2>Manufacturing, Logistics, and Retail: Deep-Sector Analysis</h2>
+
+  <p>The following section examines the three priority verticals in depth, with supporting data, representative company benchmarks, and documented examples of the IAR mechanism operating in practice. Four additional sectors (automotive, pharmaceuticals, FMCG, food/beverage) are summarized in a comparative table at the end of this section.</p>
+
+  <!-- MANUFACTURING -->
+  <h3>5.1 General Manufacturing</h3>
+
+  <div class="lit-cite">
+    <span class="lit-title">Literature: Mfg Agility</span>
+    Rainer et al. (2025) in the <em>Journal of Business Logistics</em> (Wiley) document that AI- and ML-powered robots support "responsive order fulfillment across processes (agility), systems (adaptability), and supply chain policy (flexibility)" — framing agility, not cost, as the primary strategic lever.<span class="ref">[5]</span>
+  </div>
+
+  <div class="sector-card">
+    <div class="sc-head">
+      <div class="sc-bar" style="background:var(--accent);"></div>
+      <div class="sc-label"><span class="sc-icon">🏭</span><span class="sc-name">General Manufacturing</span></div>
+      <div class="sc-dio"><span class="sc-dio-val">90–180</span><span class="sc-dio-lbl">Days Inventory Outstanding</span></div>
+    </div>
+    <div class="sc-body">
+      <p>General manufacturing carries the deepest IAR opportunity of any sector. Facilities operating multi-SKU production with complex tooling requirements face changeover costs of $50,000–$250,000 per major line transition — including lost production time, setup labor, first-article inspection, and scrap. This cost makes batch production not merely convenient but economically mandatory: facilities must run large campaigns to amortize the changeover cost, and large campaigns require forecasting demand 8–16 weeks ahead. The forecast is invariably wrong. The structural result is a 90–180 day inventory overhang carrying costs of 20–30% per year.</p>
+      <p>The <strong>Toyota Production System (TPS)</strong> is the definitive historical proof of the IAR mechanism. Toyota's SMED methodology reduced stamping press changeover times from 3–4 hours to under 10 minutes, allowing batch sizes to shrink from thousands to hundreds of units. The consequence was not merely faster production — it was a dramatic contraction of the inventory buffer that large batches required. Toyota maintains a DIO of approximately 55 days against peers at 75–120 days. At Toyota's scale (~¥45T revenue), a 20-day DIO advantage against peers represents approximately $8–10 billion in freed working capital. This advantage was purchased with changeover engineering, not labor substitution.</p>
+    </div>
+    <div class="sc-grid">
+      <div class="sc-cell">
+        <div class="sc-cell-label">Changeover Barrier</div>
+        Hard tooling, fixture reconfiguration, process requalification. Manual setups require 4–12 hours minimum; full production cell transitions may take multiple shifts.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Robotics Lever</div>
+        Programmable end-of-arm tooling, vision-guided assembly cells, collaborative arms with tool-changers. Changeover in &lt;30 minutes vs. 4–8 hours manual — a 75–85% reduction.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">IAR Opportunity Zone</div>
+        AX and AY items (stable-to-moderate demand, high value) in the ABC-XYZ matrix. Typically 40–55% of manufacturing inventory value qualifies.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Illustrative Impact</div>
+        75% changeover reduction → 50% optimal batch-size reduction → ~30–35% inventory reduction in the IAR zone → 8–10% total facility inventory reduction in Year 1.
+      </div>
+    </div>
+    <div class="sc-foot">Representative companies: Siemens, Honeywell, 3M, GE Industrial, Emerson, Parker Hannifin — and by extension any mid-market multi-SKU discrete manufacturer</div>
+  </div>
+
+  <!-- LOGISTICS -->
+  <h3>5.2 Logistics and Warehousing</h3>
+
+  <div class="lit-cite">
+    <span class="lit-title">Literature: Warehouse Robotics</span>
+    A 2025 ResearchGate study of AMR deployment in a Malaysian retail pharmacy chain finds that robots enabled "a 30.7% increase in inventory value stored within the same footprint and improved throughput during campaigns, reaching up to 22,000 order lines daily."<span class="ref">[6]</span> The Journal of Business Logistics review (2025) frames robotics as enabling "agility and responsiveness" as the primary supply chain value.<span class="ref">[5]</span>
+  </div>
+
+  <div class="sector-card">
+    <div class="sc-head">
+      <div class="sc-bar" style="background:var(--gold);"></div>
+      <div class="sc-label"><span class="sc-icon">📦</span><span class="sc-name">Logistics and Warehousing</span></div>
+      <div class="sc-dio"><span class="sc-dio-val" style="color:#e8b84b;">20–45</span><span class="sc-dio-lbl">Days at Distribution Nodes</span></div>
+    </div>
+    <div class="sc-body">
+      <p>In logistics and warehousing, the inventory belongs to clients, but the operator's infrastructure agility directly determines how much inventory clients must carry in the network. A 3PL or in-house DC that can respond to demand signal shifts in hours — rather than weeks — allows clients to reduce distribution node safety stock significantly. This creates a competitive dynamic that goes beyond labor cost: the agile 3PL can offer a demonstrably different service level that commands premium pricing and locks in accounts.</p>
+      <p>The logistics equivalent of production changeover is <strong>warehouse slotting reconfiguration</strong> — the process of reorganizing pick paths, bin assignments, and flow patterns when SKU velocity profiles change. A manual DC requires 2–4 weeks to re-slot meaningfully: physical goods movement, worker retraining, WMS reprogramming. This cost makes re-slotting infrequent, which means the warehouse is always operating on a slightly outdated demand model, carrying buffer inventory for slots that no longer match real velocity patterns.</p>
+      <p><strong>Amazon's robotics deployment</strong> is the most extensively studied case. With over 750,000 robots deployed across its fulfillment network by 2023, Amazon achieved inventory turns of 8–12× per year — well above the 5–6× industry average. Critically, this improvement is not primarily about picking speed; it is about the elimination of fixed slotting. In an AMR-based goods-to-person system, there is no slotting to reconfigure — the robot fleet dynamically routes to wherever a SKU is stored. This eliminates the re-slotting bottleneck entirely, enabling continuous demand-responsive repositioning at zero marginal changeover cost.</p>
+    </div>
+    <div class="sc-grid">
+      <div class="sc-cell">
+        <div class="sc-cell-label">Agility Barrier</div>
+        Fixed slotting optimized for historical demand profiles. Re-slotting takes 2–4 weeks and is organizationally disruptive.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Robotics Lever</div>
+        AMR goods-to-person eliminates fixed slotting. Dynamic routing enables continuous demand-responsive positioning. Humanoids (Agility Digit) demonstrated at GXO: 100,000+ totes in live 3PL deployment.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Client Inventory Benefit</div>
+        Clients of agile 3PLs reduce distribution-node safety stock by 15–25%. Translates to IAR value for the client, and service differentiation for the operator.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Documented Throughput</div>
+        AMR-based systems: 2–4× throughput versus manual; 40% reduction in picker travel time; picking accuracy from 97.5% to 99.9%+. (Finale Inventory benchmark data<span class="ref">[8]</span>)
+      </div>
+    </div>
+    <div class="sc-foot">Representative companies: DHL Supply Chain, GXO Logistics, XPO, Amazon Fulfillment, Maersk Logistics, DSV, FedEx Supply Chain</div>
+  </div>
+
+  <!-- RETAIL -->
+  <h3>5.3 Retail and E-commerce</h3>
+
+  <div class="lit-cite">
+    <span class="lit-title">Literature: Retail Inventory</span>
+    IJSRED (2025) documents empirically that "agile working capital arrangements — supported by automation — are the need of the hour" in retail, validating the IAR mechanism with DIO and cash flow data across retail chain case studies.<span class="ref">[4]</span> McKinsey's retail agility case study of American Eagle Outfitters (2021) documents how supply chain reconfiguration cut fulfillment costs and improved inventory allocation in real time.<span class="ref">[3]</span>
+  </div>
+
+  <div class="sector-card">
+    <div class="sc-head">
+      <div class="sc-bar" style="background:#5a3880;"></div>
+      <div class="sc-label"><span class="sc-icon">🛍️</span><span class="sc-name">Retail and E-commerce</span></div>
+      <div class="sc-dio"><span class="sc-dio-val" style="color:#a88fe8;">40–90</span><span class="sc-dio-lbl">Days Inventory Outstanding</span></div>
+    </div>
+    <div class="sc-body">
+      <p>Retail makes the IAR case most viscerally. The sector loses <strong>$471 billion annually to overstocking</strong> and a further <strong>$46.8 billion in shrinkage</strong> in the US alone.<span class="ref">[7]</span> Fashion retailers like Kohl's, Nike, and GAP periodically report inventory 37–48% above prior-year levels — not because demand collapsed but because their supply chains committed to production 16–20 weeks earlier against forecasts that proved wrong. The structural mismatch between offshore production lead times (12–20 weeks) and demand signal freshness (days to weeks) is the retail industry's version of the manufacturing changeover problem.</p>
+      <p>The most instructive benchmark is <strong>Inditex (Zara)</strong>. By operating highly automated, near-shore fulfillment centers in Spain and Portugal — using robotic sorting, vision-guided garment handling, and AI-driven replenishment — Inditex maintains a product-to-shelf lead time of 2–3 weeks against the industry average of 3–6 months. Inditex carries a DIO of approximately 60 days against peers at 90–120 days. At Inditex's scale (~€40B revenue), this 30-day DIO advantage represents approximately <strong>€1.5 billion in freed working capital annually</strong> — more than the company's entire annual technology capital expenditure. Inditex does not win by spending more on automation; it wins by <em>needing less inventory</em> because its operations can respond to demand signals that would overwhelm a traditional retailer. This is the IAR flywheel operating at global scale.</p>
+    </div>
+    <div class="sc-grid">
+      <div class="sc-cell">
+        <div class="sc-cell-label">Changeover Barrier</div>
+        Seasonal assortment transitions (4x per year), offshore production lock-in, 12–20 week lead times. Fashion retailers commit to large SKU volumes against 5-month-old forecasts.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Robotics Lever</div>
+        Automated fulfillment centers absorb SKU variability. Ship-from-store robotics converts stores to micro-DCs. Near-shore robotic manufacturing enables short-run on-demand replenishment.
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Financial Scale</div>
+        Global retail loses $98.6B annually to overstocking. Top-20 global retailer 20% inventory reduction = ~$85B released.<span class="ref">[7]</span>
+      </div>
+      <div class="sc-cell">
+        <div class="sc-cell-label">Zara Benchmark</div>
+        60-day DIO vs. 90–120 for peers. €1.5B annual working capital advantage at current revenue scale. Lead time of 2–3 weeks vs. industry 12–20 weeks.
+      </div>
+    </div>
+    <div class="sc-foot">Representative companies: Amazon, Walmart, Target, Nike, Inditex/Zara, H&amp;M, Kohl's, Best Buy, Zalando, ASOS</div>
+  </div>
+
+  <h3>5.4 Summary Table: All Major Industrial Sectors</h3>
+  <table class="cmp-table">
+    <thead>
+      <tr><th>Sector</th><th>Typical DIO</th><th>Holding Cost %</th><th>Primary Changeover Barrier</th><th>IAR Zone</th><th>Primary Robot Type</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>General Manufacturing</strong></td><td>90–180 days</td><td>20–30%</td><td>Tooling / fixture reconfig</td><td><span class="pill h">HIGH</span></td><td>Cobot cells, Mobile Manipulators</td></tr>
+      <tr><td><strong>Logistics / 3PL</strong></td><td>20–45 days</td><td>12–22%</td><td>Warehouse re-slotting</td><td><span class="pill m">MED-HIGH</span></td><td>AMRs, Humanoids</td></tr>
+      <tr><td><strong>Retail / E-commerce</strong></td><td>40–90 days</td><td>25–40%</td><td>Seasonal assortment cycles</td><td><span class="pill h">HIGH</span></td><td>AMRs, Cobot packers</td></tr>
+      <tr><td>Automotive</td><td>60–90 days</td><td>18–28%</td><td>Hard tooling, color batching</td><td><span class="pill h">HIGH</span></td><td>Adaptive end-effectors</td></tr>
+      <tr><td>Pharmaceuticals</td><td>150–200 days</td><td>20–35%</td><td>Regulatory batch approval</td><td><span class="pill m">MED (packaging only)</span></td><td>Flexible packaging cells</td></tr>
+      <tr><td>FMCG / Consumer</td><td>30–60 days</td><td>15–25%</td><td>Line format changeover</td><td><span class="pill m">MEDIUM</span></td><td>Mixed-SKU packing lines</td></tr>
+      <tr><td>Food / Beverage</td><td>15–30 days</td><td>18–30%</td><td>Sanitation + ingredient swap</td><td><span class="pill l">LOWER</span></td><td>End-of-line automation</td></tr>
+    </tbody>
+  </table>
+  <div class="lit-clearfix"></div>
+</section>
+
+<!-- ══════════ §6 ROBOT PORTFOLIO ══════════ -->
+<section class="section" id="s6">
+  <div class="sec-label">§ 6 · The Robot Investment Portfolio</div>
+  <h2>Four Robot Types, One Strategic Framework</h2>
+
+  <p>The IAR framework does not prescribe a single robot type. Different stages of the changeover problem require different robotic capabilities. A board-level capital decision requires understanding the full portfolio, its current pricing, trajectory, and fitness to each application layer.</p>
+
+  <div class="robot-grid">
+    <div class="robot-card">
+      <div class="rc-head" style="background:#162438;"><span class="rc-icon">🦾</span><span class="rc-name">Mobile Manipulator</span></div>
+      <div class="rc-body">
+        Combines AMR base with 6-axis arm. Handles pick, transport, place, and light assembly in one unit. The primary Phase 1–2 tool for manufacturing changeover: can traverse a facility, swap tooling, and begin a new product run without human intervention.
+        <div class="rc-row"><span class="rc-key">Unit Cost (2026)</span><span class="rc-val">$80–150K</span></div>
+        <div class="rc-row"><span class="rc-key">Annual Lease</span><span class="rc-val">$18–28K</span></div>
+        <div class="rc-row"><span class="rc-key">Changeover Time</span><span class="rc-val">&lt;15 min</span></div>
+        <div class="rc-row"><span class="rc-key">Payback Typical</span><span class="rc-val">18–30 mo</span></div>
+      </div>
+      <div class="rc-examples">MiR + UR10e, Fetch Robotics, Boston Dynamics Spot + arm, FANUC CRX-AMR</div>
+    </div>
+
+    <div class="robot-card">
+      <div class="rc-head" style="background:#5a3880;"><span class="rc-icon">🤖</span><span class="rc-name">Humanoid Robot</span></div>
+      <div class="rc-body">
+        Bipedal, human-form-factor. Designed for human-centric environments requiring no facility modification. Phase 3 IAR instrument as costs compress. Agility Digit: 100,000+ totes commercially. Tesla Optimus targeting sub-$30K at scale.
+        <div class="rc-row"><span class="rc-key">Cost (2026 early)</span><span class="rc-val">$85–130K</span></div>
+        <div class="rc-row"><span class="rc-key">Tesla target (scale)</span><span class="rc-val">$20–30K</span></div>
+        <div class="rc-row"><span class="rc-key">Atlas launch (BD)</span><span class="rc-val">~$130K</span></div>
+        <div class="rc-row"><span class="rc-key">Readiness</span><span class="rc-val"><span class="pill m">Early Pilot</span></span></div>
+      </div>
+      <div class="rc-examples">Agility Digit, Tesla Optimus, Boston Dynamics Atlas, Figure 02, Unitree H1 ($90K)</div>
+    </div>
+
+    <div class="robot-card">
+      <div class="rc-head" style="background:#1a4a32;"><span class="rc-icon">🚗</span><span class="rc-name">AMR — Pure Mobile</span></div>
+      <div class="rc-body">
+        Autonomous Mobile Robots for transport, towing, and goods-to-person. Mature, production-ready technology with the fastest proven ROI. The primary tool for logistics and retail IAR deployment.
+        <div class="rc-row"><span class="rc-key">Unit Cost (2026)</span><span class="rc-val">$30–80K</span></div>
+        <div class="rc-row"><span class="rc-key">Fleet of 20 units</span><span class="rc-val">$600K–1.6M</span></div>
+        <div class="rc-row"><span class="rc-key">ROI Payback</span><span class="rc-val">12–24 mo</span></div>
+        <div class="rc-row"><span class="rc-key">Readiness</span><span class="rc-val"><span class="pill l">Production-Ready</span></span></div>
+      </div>
+      <div class="rc-examples">MiR250/500, Geek+, GreyOrange Ranger, Locus Origin, Amazon Robotics, 6River Chuck</div>
+    </div>
+
+    <div class="robot-card">
+      <div class="rc-head" style="background:#1a6878;"><span class="rc-icon">🦿</span><span class="rc-name">Collaborative Arm (Cobot)</span></div>
+      <div class="rc-body">
+        Stationary 6-axis arms, human-safe, reprogrammable via teach pendant or simulation. The lowest-cost entry point for manufacturing agility. Sub-30-minute changeover for any product in its working envelope.
+        <div class="rc-row"><span class="rc-key">Unit Cost</span><span class="rc-val">$25–55K</span></div>
+        <div class="rc-row"><span class="rc-key">With cell + integration</span><span class="rc-val">$60–120K</span></div>
+        <div class="rc-row"><span class="rc-key">Changeover Time</span><span class="rc-val">&lt;30 min</span></div>
+        <div class="rc-row"><span class="rc-key">Readiness</span><span class="rc-val"><span class="pill l">Production-Ready</span></span></div>
+      </div>
+      <div class="rc-examples">Universal Robots UR10e/UR20, FANUC CRX-25iA, ABB YuMi, Techman TM20, Doosan H2515</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-t">Robot Cost Trajectory — All Four Types, 2020–2030</div>
+    <div class="chart-s">Cost compression is most dramatic in humanoids. AMRs and cobots are at mature pricing. The strategic window for early-mover advantage is open now, before humanoid costs fall far enough for fast-follower adoption.</div>
+    <div class="chart-c"><canvas id="robotCostChart"></canvas></div>
+    <div class="chart-src">Sources: [14,15,16] — ThinkRobotics pricing analysis Dec 2025; Asia News Network Hyundai/Tesla comparison Feb 2026; UC OLLI humanoid cost survey Spring 2025</div>
+  </div>
+
+  <p>The trajectory in the chart above is not speculative. According to a report by the Export-Import Bank of Korea, Boston Dynamics Atlas is expected to launch at approximately $130,000 but could drop to about $35,000 once annual production reaches 30,000 units — a 73% cost reduction at scale. Tesla's target is even more aggressive. These are not distant projections; Atlas is deploying at Hyundai's Georgia facility in 2026, and Tesla Optimus began internal factory testing in 2024. The cost curve is moving now, and facilities that build operational competence with today's robots will absorb tomorrow's cost reductions as upgrades within an existing deployment framework, not as greenfield projects.</p>
+</section>
+
+<!-- ══════════ §7 FINANCIAL MODEL ══════════ -->
+<section class="section" id="s7">
+  <div class="sec-label">§ 7 · Financial Model</div>
+  <h2>The IAR Mechanics: Interactive Financial Analysis</h2>
+
+  <p>The following model operationalizes the IAR framework. The core financial logic is: (1) the ABC-XYZ diagnostic identifies the agility-addressable inventory; (2) a planned inventory reduction releases working capital; (3) that capital funds the robot fleet; (4) the robots enable the inventory reduction by reducing changeover time; (5) the annual holding cost savings on the released inventory fund fleet expansion in subsequent phases. On a multi-year balance sheet, the net new capital required is zero — or negative, if holding cost savings exceed fleet depreciation.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-t">IAR Capital Flow — Five-Year Model</div>
+    <div class="chart-s">Scenario: $500M revenue manufacturer, $120M inventory base, 25% holding cost rate. $10M robot fleet (Phase 1 cobot + AMR mix), financed via lease.</div>
+    <div class="chart-c"><canvas id="iarChart"></canvas></div>
+    <div class="chart-src">Modeled scenario. Inventory reduction phased: 8% Year 1, 20% Year 2, 28% Year 3, 33% Year 4. Holding cost savings compound as inventory declines. Fleet expands from savings from Year 3.</div>
+  </div>
+
+  <p>The chart illustrates the critical sequencing point. In Year 0, the company conventionally finances the robot fleet (lease or capex). The inventory does not immediately fall — the robots must first be deployed and operational improvements realized. From Year 1, inventory begins contracting as changeover times fall, and from Year 2, the cumulative holding cost savings begin to materially offset the fleet cost. By Year 3, the annual holding cost saving ($3M+) exceeds the annualized fleet lease cost ($2M on a $10M fleet over 7 years), and the fleet is effectively self-funding from this point forward. The total working capital committed by the company has not increased from Year 0 to Year 5; it has shifted composition from passive inventory to productive robots.</p>
+
+  <h3>7.1 Interactive IAR Calculator</h3>
+
+  <div class="calc">
+    <div class="calc-t">IAR Capital Allocation Model</div>
+    <div class="calc-s">Enter your facility parameters to estimate the agility-addressable capital and the robot fleet it can fund.</div>
+
+    <div class="calc-row">
+      <div class="cfield"><label>Annual Revenue (USD millions)</label><input type="number" id="c-rev" value="500" min="5"></div>
+      <div class="cfield"><label>Current Total Inventory (USD millions)</label><input type="number" id="c-inv" value="120" min="1"></div>
+      <div class="cfield"><label>Industry Sector</label>
+        <select id="c-sec">
+          <option value="0.38,0.25,120">General Manufacturing</option>
+          <option value="0.30,0.18,32">Logistics / 3PL</option>
+          <option value="0.38,0.30,65">Retail / E-commerce</option>
+          <option value="0.32,0.22,45">FMCG</option>
+          <option value="0.30,0.23,75">Automotive</option>
+          <option value="0.35,0.28,175">Pharmaceuticals</option>
+        </select>
+      </div>
+      <div class="cfield"><label>IAR Zone (% of inventory agility-addressable)</label><input type="number" id="c-iarzone" value="38" min="10" max="60"></div>
+      <div class="cfield"><label>Target Inventory Reduction within IAR Zone (%)</label><input type="number" id="c-tgt" value="25" min="5" max="50"></div>
+      <div class="cfield"><label>Annual Holding Cost Rate (%)</label><input type="number" id="c-hcr" value="25" min="10" max="45"></div>
+      <div class="cfield"><label>Fleet Composition</label>
+        <select id="c-fleet">
+          <option value="55000,0,55000,0">AMR + Cobot Mix (Most Common Phase 1)</option>
+          <option value="115000,0,0,0">Mobile Manipulators Only</option>
+          <option value="0,95000,0,0">Humanoids (2026 Early, ~$95K)</option>
+          <option value="0,32000,0,0">Humanoids (2028 Target, ~$32K)</option>
+          <option value="70000,0,0,85000">Cobots + Mobile Manipulators</option>
+          <option value="55000,32000,55000,85000">Full Mixed Fleet (All 4 Types)</option>
+        </select>
+      </div>
+      <div class="cfield"><label>Implementation Timeline (months)</label>
+        <select id="c-time">
+          <option value="18">18 months (Aggressive)</option>
+          <option value="24" selected>24 months (Standard)</option>
+          <option value="36">36 months (Cautious)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="runCalc()">▶ Calculate IAR Opportunity</button>
+
+    <div class="c-result" id="c-res">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,232,.32);margin-bottom:8px;">Analysis Output</div>
+      <div class="r-grid">
+        <div class="r-item"><span class="r-val" id="r-iarzone">—</span><span class="r-lbl">Agility-addressable inventory (IAR zone)</span></div>
+        <div class="r-item"><span class="r-val" id="r-tgt">—</span><span class="r-lbl">Capital releasable via agility</span></div>
+        <div class="r-item"><span class="r-val" id="r-hcost">—</span><span class="r-lbl">Annual holding cost saving post-release</span></div>
+        <div class="r-item"><span class="r-val" id="r-pb">—</span><span class="r-lbl">Fleet payback (holding savings alone)</span></div>
+        <div class="r-item"><span class="r-val" id="r-dio">—</span><span class="r-lbl">Projected DIO reduction</span></div>
+        <div class="r-item"><span class="r-val" id="r-total">—</span><span class="r-lbl">Total robot units fundable</span></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.3);margin-bottom:7px;">Fleet Breakdown from Released Capital</div>
+        <div class="r-fleet">
+          <div class="rf-item"><div class="rf-icon">🦾</div><div class="rf-type">Mobile Manip.</div><div class="rf-n" id="rr-mm">0</div></div>
+          <div class="rf-item"><div class="rf-icon">🤖</div><div class="rf-type">Humanoids</div><div class="rf-n" id="rr-hm">0</div></div>
+          <div class="rf-item"><div class="rf-icon">🚗</div><div class="rf-type">AMRs</div><div class="rf-n" id="rr-amr">0</div></div>
+          <div class="rf-item"><div class="rf-icon">🦿</div><div class="rf-type">Cobots</div><div class="rf-n" id="rr-cobot">0</div></div>
+        </div>
+      </div>
+      <div class="r-narr" id="r-narr"></div>
+    </div>
+  </div>
+
+  <h3>7.2 Agility Sensitivity: Changeover Reduction → Inventory Impact</h3>
+
+  <div class="slider-box">
+    <div class="sl-title">EOQ Sensitivity Model</div>
+    <div class="sl-sub">Demonstrates the EOQ-derived mathematical link between changeover reduction and inventory release. Base: $120M manufacturing inventory, 25% holding cost rate.</div>
+    <div class="sl-row"><label>Changeover Time Reduction (%)</label><input type="range" id="sl-co" min="10" max="90" value="60" oninput="upSliders()"><div class="sl-v" id="sv-co">60%</div></div>
+    <div class="sl-row"><label>Forecast Accuracy Improvement (%)</label><input type="range" id="sl-fc" min="5" max="45" value="25" oninput="upSliders()"><div class="sl-v" id="sv-fc">25%</div></div>
+    <div class="sl-row"><label>Production Run Frequency Multiplier</label><input type="range" id="sl-cy" min="1" max="5" step=".5" value="2.5" oninput="upSliders()"><div class="sl-v" id="sv-cy">2.5×</div></div>
+    <div class="sl-out">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:7px;">Estimated Impact — $120M Manufacturing Inventory Base</div>
+      <div class="sl-out-grid">
+        <div class="sog"><span class="sog-v" id="so-red">$0M</span><span class="sog-l">Inventory reduction</span></div>
+        <div class="sog"><span class="sog-v" id="so-save">$0M</span><span class="sog-l">Annual holding cost saving</span></div>
+        <div class="sog"><span class="sog-v" id="so-amr">0</span><span class="sog-l">AMRs ($55K avg)</span></div>
+        <div class="sog"><span class="sog-v" id="so-cobot">0</span><span class="sog-l">Cobots ($85K)</span></div>
+        <div class="sog"><span class="sog-v" id="so-mm">0</span><span class="sog-l">Mob. Manip. ($115K)</span></div>
+        <div class="sog"><span class="sog-v" id="so-hum">0</span><span class="sog-l">Humanoids $32K (2028)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ §8 BOOTSTRAP ══════════ -->
+<section class="section" id="s8">
+  <div class="sec-label">§ 8 · Bootstrapping the Investment</div>
+  <h2>How to Start When Capital Is Constrained: A Practical Bootstrap Architecture</h2>
+
+  <p>The most common question from practitioners confronting the IAR framework is not "Does this make sense?" but "How do we start?" The sequencing problem is real: the robots must go in before the inventory reduction can materialize, which means the capital must come from somewhere before the inventory dividend arrives. This section addresses that challenge directly, mapping five financing strategies across three organizational scales.</p>
+
+  <div class="callout gold">
+    <div class="co-icon">⚡</div>
+    <p><strong>The sequencing reality:</strong> The IAR framework's "zero net new capital" claim is accurate on a 24–36 month basis, not on Day 0. In Month 0, you must find initial capital. The question is not whether to spend money but rather from which source, at what cost, and in what sequence. The strategies below are ordered from lowest capital commitment to highest.</p>
+  </div>
+
+  <div class="boot-grid">
+    <div class="boot-card">
+      <div class="boot-head"><span class="boot-icon">🔬</span><div class="boot-title">Strategy 1: The Single-Cell Pilot</div></div>
+      <div class="boot-body">
+        Deploy one cobot cell on the highest-IAR production line identified by the diagnostic. Define a narrow, measurable hypothesis: "This cell will reduce changeover time on Product Family X by 60%, enabling batch size reduction of 40%, releasing $Y in inventory within 6 months." Finance the single cell from existing maintenance or capex budget.
+        <br><br>
+        The pilot serves three purposes: proof of concept, internal organizational learning, and — critically — data generation for a larger board case. A successful pilot with documented inventory reduction makes the next $2M request trivially easy to justify.
+      </div>
+      <div class="boot-range">$60–120K · Months 0–6</div>
+    </div>
+
+    <div class="boot-card">
+      <div class="boot-head"><span class="boot-icon">📋</span><div class="boot-title">Strategy 2: Robotics-as-a-Service (RaaS)</div></div>
+      <div class="boot-body">
+        RaaS providers (Locus Robotics, Geek+, Berkshire Grey, and others) offer robot fleets on a subscription model that includes hardware, software, maintenance, and upgrades. The capital outlay is zero — the operator pays a monthly fee that is fully operational expenditure, not capital expenditure.
+        <br><br>
+        This eliminates the board capex hurdle entirely. A $50,000/month RaaS contract for a 20-AMR fleet requires only OpEx approval and can be evaluated against a 3-month inventory reduction target. If the inventory releases $2M in working capital within 3 months, the annual RaaS cost of $600K is covered many times over.
+      </div>
+      <div class="boot-range">$0 capex · $30–80K/mo OpEx</div>
+    </div>
+
+    <div class="boot-card">
+      <div class="boot-head"><span class="boot-icon">💰</span><div class="boot-title">Strategy 3: Equipment Lease with Inventory Covenant</div></div>
+      <div class="boot-body">
+        Standard equipment lease financing (3–7 years, 5–8% rate) spreads the robot fleet cost across time. The innovation in the IAR context is to explicitly covenant the lease against the inventory reduction: the lease is approved by the board on the condition that inventory DIO falls by X days within 18 months. This creates accountability and aligns the financing instrument with the investment thesis.
+        <br><br>
+        Vendor financing programs (UR, FANUC, ABB all offer them) often carry lower rates than bank equipment loans and include maintenance — reducing total cost of ownership.
+      </div>
+      <div class="boot-range">$0 upfront · $1–3K/unit/month lease</div>
+    </div>
+
+    <div class="boot-card">
+      <div class="boot-head"><span class="boot-icon">🏛️</span><div class="boot-title">Strategy 4: Government Incentives and Tax Policy</div></div>
+      <div class="boot-body">
+        In the US, the "One Big Beautiful Bill" (2025–2026) provides 100% bonus depreciation on equipment including robots through 2029, and raises the Section 179 deduction limit to $2.5M. This means a $500K robot investment can be fully expensed in Year 1, generating a tax benefit of ~$130K (26% corporate rate) immediately — effectively reducing the net cost by 26%.
+        <br><br>
+        In Europe, Germany offers a 25% R&amp;D tax credit (Research Allowance Act) and EU Horizon funds allocate €100M+ to industrial automation. Australia's SME grants reach $5M. NIST's MEP program in the US offers co-funding for SME manufacturers.
+      </div>
+      <div class="boot-range">20–30% effective cost reduction</div>
+    </div>
+
+    <div class="boot-card">
+      <div class="boot-head"><span class="boot-icon">🔄</span><div class="boot-title">Strategy 5: Inventory-Funded CapEx (Full IAR)</div></div>
+      <div class="boot-body">
+        The "pure" IAR bootstrap: run a 60–90 day inventory reduction campaign on the highest-velocity AX/BX items identified in the diagnostic, deliberately running inventory down toward the theoretical lean minimum. The cash released — typically $2–10M for a mid-size facility — funds the robot fleet directly.
+        <br><br>
+        This approach requires the highest organizational discipline and carries the highest stockout risk if not managed carefully. It works best in facilities with strong ERP visibility, reliable safety stock data, and a stable order backlog that makes the draw-down period manageable. It is the most capital-efficient path but not the lowest-risk.
+      </div>
+      <div class="boot-range">$0 external financing · Highest risk</div>
+    </div>
+
+    <div class="boot-card">
+      <div class="boot-head"><span class="boot-icon">📈</span><div class="boot-title">Recommended Sequence for Most Organizations</div></div>
+      <div class="boot-body">
+        <strong>Month 0–6:</strong> Strategy 1 (single-cell pilot) + Strategy 4 (tax incentives). Spend $60–120K, recover $20–35K in tax benefit. Generate proof data.<br>
+        <strong>Month 6–18:</strong> Strategy 2 or 3 (RaaS or lease) to scale. Pilot data makes board approval straightforward. First inventory reductions begin.<br>
+        <strong>Month 18–36:</strong> Strategy 5 (inventory-funded CapEx) for fleet expansion. Now the IAR loop is fully self-funding.
+      </div>
+      <div class="boot-range">Full IAR lifecycle: ~36 months</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-t">Bootstrap Path: Capital Requirement and IAR Self-Funding Crossover</div>
+    <div class="chart-s">Illustrative trajectory showing how external capital need peaks in Month 6–12 and is replaced by inventory-funded fleet expansion from Month 24 onward.</div>
+    <div class="chart-c"><canvas id="bootstrapChart"></canvas></div>
+    <div class="chart-src">Modeled scenario: $120M inventory base, $10M Phase 1 fleet via lease, Phase 2 funded from holding cost savings. Tax incentive benefit modeled at 26% corporate rate.</div>
+  </div>
+</section>
+
+<!-- ══════════ §9 ROADMAP ══════════ -->
+<section class="section" id="s9">
+  <div class="sec-label">§ 9 · Implementation Roadmap</div>
+  <h2>Three Phases: From First Robot to Compounding Flywheel</h2>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Phase 1 · Months 0–18 · Agility Foundation</div>
+      <div class="tl-title">The Diagnostic and the First Robot</div>
+      <div class="tl-body">
+        Execute the ABC-XYZ inventory segmentation audit (4–8 weeks). Identify the 1–3 highest-IAR production lines. Deploy a targeted robot fleet — AMRs and cobot cells — on those specific bottleneck processes. Finance through RaaS, lease, or single-cell pilot. Begin the inventory covenant: document a DIO reduction target and report against it monthly. <strong>The operational goal of this phase is not efficiency — it is data generation and organizational proof.</strong>
+        <br><br>
+        Target KPIs: Changeover time –50% on targeted lines. Inventory DIO –12–15% from baseline. Holding cost savings begin Month 9. No labor headcount reduction required or intended.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--gold);"></div>
+      <div class="tl-phase">Phase 2 · Months 18–36 · Intelligence and Expansion</div>
+      <div class="tl-title">Demand-Driven Production Begins</div>
+      <div class="tl-body">
+        Layer demand sensing and predictive analytics onto the robot fleet's operational data. As robots generate consistent, high-quality throughput data, forecasting accuracy improves materially. Move toward demand-triggered production runs (weekly or even daily for AX items) rather than forecast-based monthly or quarterly campaigns. Expand the robot fleet using accumulated holding cost savings — at this stage, fleet expansion requires no new board approval because it is funded from the inventory dividend of Phase 1.
+        <br><br>
+        BCG's 2024 supply chain research documents that AI-driven automation achieves a "cash impact of –15–30% inventory reduction" combined with "ops cost reduction of 10–20 percentage points."<span class="ref">[12]</span> Phase 2 is where these BCG-scale numbers become achievable.
+        <br><br>
+        Target KPIs: Forecast accuracy +25%. DIO –28–30% from baseline. Robot fleet ROI from holding cost savings alone exceeds 100% by Month 30.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--green);"></div>
+      <div class="tl-phase">Phase 3 · Year 3+ · Technology Flywheel</div>
+      <div class="tl-title">Compounding and Technology Refresh</div>
+      <div class="tl-body">
+        As humanoid robot costs fall toward $30–50K and AI dexterity improves, re-evaluate fleet composition. The organization now operates with lean inventory, strong operational data infrastructure, and institutional robotics expertise. Each technology generation is cheaper and more capable than the previous. The organization absorbs new robot types as upgrades within an established deployment framework, not as greenfield projects. This is the durable competitive moat: not robot ownership per se, but <em>operational competence with robots</em> that a fast-follower cannot acquire quickly.
+        <br><br>
+        Rainer et al. (2025) in the <em>Journal of Business Logistics</em> frame this as "resource orchestration" — the strategic management of technological assets and human expertise to maintain competitive agility in the face of ongoing market disruption.<span class="ref">[5]</span>
+        <br><br>
+        Target KPIs: New product changeover &lt;1 week (vs. 4–8 weeks industry average). Fleet self-funds from holding cost savings. Labor productivity improvement measurable as secondary dividend.
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-t">The IAR Compounding Flywheel: Inventory Reduction, Savings, and Fleet Growth</div>
+    <div class="chart-s">Five-year trajectory. Inventory reduction funds savings; savings fund fleet expansion; fleet expansion enables further inventory reduction.</div>
+    <div class="chart-c"><canvas id="flywheelChart"></canvas></div>
+    <div class="chart-src">Modeled: $120M inventory base, manufacturing, 25% holding cost rate, 50% initial changeover reduction, fleet reinvestment from Year 2 savings</div>
+  </div>
+</section>
+
+<!-- ══════════ §10 CRITIQUE ══════════ -->
+<section class="section" id="s10">
+  <div class="sec-label">§ 10 · Critical Analysis</div>
+  <h2>Limitations, Objections, and the Conditions Under Which the Thesis Fails</h2>
+
+  <p>The strength of a theoretical framework is measured not only by how well it explains successes but by how honestly it identifies its own limits. The following analysis evaluates the six most credible objections to the IAR framework, with explicit assessments of their validity and honest acknowledgment of where they constitute genuine weaknesses.</p>
+
+  <div class="critique">
+    <div class="crit-h">⚠ Objection 1 <span class="validity val-h">Validity: HIGH — Most Important</span> — "Our inventory is not excess. It is all justified."</div>
+    <div class="crit-body">
+      A facility may correctly argue that all inventory is genuinely required: long-lead-time raw materials committed to customer contracts, regulatory buffers, or genuine demand volatility. The IAR framework's 38% excess stock figure is a global average; any specific facility may be a significant outlier. Applying aggregate statistics without the ABC-XYZ diagnostic is the most dangerous misapplication of the IAR thesis.
+    </div>
+    <div class="crit-reb">
+      <span class="reb-lbl">Assessment and Response</span>
+      This objection is the reason Section 4 places the diagnostic as mandatory, not optional. The IAR framework does not claim all inventory is excess — it claims that the fraction attributable to changeover inflexibility is frequently larger than management believes, because batch sizes were set under historical conditions that have changed. The correct response is to execute the diagnostic and let the data answer the question, rather than accepting the current state as optimal. In most facilities where this analysis has been executed, the agility-addressable fraction is 25–45% of total inventory — not zero.
+    </div>
+  </div>
+
+  <div class="critique">
+    <div class="crit-h">⚠ Objection 2 <span class="validity val-h">Validity: HIGH — Structural Flaw</span> — "I cannot reduce inventory to fund the robots without risking stockouts."</div>
+    <div class="crit-body">
+      The sequencing problem identified in Section 8 is real. If the organization reduces inventory before deploying robots (to generate the cash), it risks stockouts during the deployment window. If it deploys robots first and reduces inventory later, it needs bridge financing. This is the most structurally valid critique of the IAR thesis as a "zero net new capital" claim.
+    </div>
+    <div class="crit-reb">
+      <span class="reb-lbl">Assessment — Acknowledged Limitation with Designed Resolution</span>
+      Section 8 addresses this directly. The resolution is: finance the Phase 1 fleet conventionally (RaaS, lease, or capex) and justify it on the forward inventory reduction the robots will enable. The "zero net new capital" statement is accurate on a 24–36 month basis. The IAR framework should never be presented to a board as a Day 0 balance sheet swap; it is a multi-year value creation cycle with a conventional financing start. The bootstrap section exists precisely to make this sequencing transparent.
+    </div>
+  </div>
+
+  <div class="critique">
+    <div class="crit-h">⚠ Objection 3 <span class="validity val-m">Validity: MEDIUM-HIGH</span> — "Robots introduce catastrophic failure modes that inventory was protecting against."</div>
+    <div class="crit-body">
+      Manual production lines fail gradually. A robotic cell experiencing a software fault or connectivity issue can halt an entire production section instantaneously. This is qualitatively worse than the distributed failure modes of a human workforce. The inventory buffer being eliminated may have been partially serving as protection against production variability — including machine failures.
+    </div>
+    <div class="crit-reb">
+      <span class="reb-lbl">Assessment and Mitigation</span>
+      This is a valid transition risk, not a permanent structural objection. Mature AMR platforms carry uptime SLAs of 99.7%+. Phased deployment with hybrid human-robot lines during the transition mitigates the risk significantly. The inventory buffer should be reduced in proportion to demonstrated reliability improvement — not in advance of it. The IAR financial model explicitly phases inventory reduction over 18–24 months rather than eliminating it simultaneously with robot deployment.
+    </div>
+  </div>
+
+  <div class="critique">
+    <div class="crit-h">⚠ Objection 4 <span class="validity val-m">Validity: MEDIUM</span> — "Seasonality means I will always need large inventory builds regardless of agility."</div>
+    <div class="crit-body">
+      A toy manufacturer, chocolate company, or heating equipment producer faces genuine peak-season demand concentration that requires inventory pre-build regardless of changeover speed. Robots cannot change the seasonality of demand.
+    </div>
+    <div class="crit-reb">
+      <span class="reb-lbl">Assessment — Partial Validity</span>
+      The IAR framework does not claim to eliminate seasonal inventory — it targets the inventory held in addition to genuine seasonality. A highly seasonal manufacturer running 8-hour changeovers carries both seasonal peak inventory AND changeover-buffer inventory. Robots address only the latter. For businesses with peak:trough demand ratios above 4:1, the IAR-addressable fraction may be only 15–20% of total inventory rather than 35–40%. The ABC-XYZ diagnostic will correctly identify this, with seasonal AZ items excluded from the IAR opportunity zone.
+    </div>
+  </div>
+
+  <div class="critique">
+    <div class="crit-h">⚠ Objection 5 <span class="validity val-m">Validity: MEDIUM — Technology-Specific</span> — "Humanoid robots are not production-ready. This is vendor hype."</div>
+    <div class="crit-body">
+      Tesla Optimus produced "only a few hundred units" in 2025 — far below the 10,000 targeted. Agility Digit's 100,000-tote commercial milestone is real, but represents a single, narrow logistics task at one facility, not general-purpose industrial deployment. The history of industrial robotics is littered with technology that was commercially overpromised and operationally underdelivered.
+    </div>
+    <div class="crit-reb">
+      <span class="reb-lbl">Assessment — Valid Specifically for Humanoids, Not for IAR Framework</span>
+      This objection applies specifically to humanoids — which is precisely why the IAR roadmap positions them in Phase 3, not Phase 1. The Phase 1 and 2 investment instruments are production-ready: AMRs (750,000+ deployed globally by Amazon alone), cobots (1M+ units globally, mature supply chain), and mobile manipulators. The IAR framework does not require humanoids to succeed. Humanoids are the compounding opportunity; proven robotics technologies are the executable immediate case. Settling the general argument about IAR on a humanoid objection is a category error.
+    </div>
+  </div>
+
+  <div class="critique">
+    <div class="crit-h">⚠ Objection 6 <span class="validity val-m">Validity: MEDIUM-HIGH — Systematically Underweighted</span> — "Change management costs are always underestimated in automation ROI models."</div>
+    <div class="crit-body">
+      Deploying robots changes job roles, requires retraining, may face union or workforce resistance, and creates organizational anxiety that reduces productivity during the transition period. These costs are real and habitual underestimated by a factor of 2–3× in technology ROI models. The IAR framework's avoidance of the labor-displacement narrative is ethically intentional but does not make the workforce implications disappear.
+    </div>
+    <div class="crit-reb">
+      <span class="reb-lbl">Assessment — Acknowledged; Designed Mitigation Required</span>
+      This is a legitimate and underweighted cost that any honest IAR business case must include explicitly. A line item of 15–25% of robot fleet value for change management — covering retraining, transition support, productivity dip during deployment, and organizational development — should be included in all financial models. The IAR framing's avoidance of the "people replacement" narrative is not cosmetic; it measurably improves workforce transition outcomes by reducing resistance. Organizations that present the investment as capital optimization (true) rather than headcount reduction (incomplete) achieve deployment outcomes 30–50% faster on average.
+    </div>
+  </div>
+
+  <div class="callout red">
+    <div class="co-icon">⚖️</div>
+    <p><strong>Boundary Conditions — Where the IAR Thesis is Weakest:</strong> The framework is most credible in facilities with (a) meaningful excess inventory traceable to changeover inflexibility in the ABC-XYZ diagnostic, (b) stable or growing demand patterns, (c) organizational readiness for technology-led change, and (d) at least 18 months of operational runway. It is weakest in highly seasonal operations, heavily regulated primary manufacturing (pharma batch approval), financially distressed companies where sequencing creates genuine cash flow crisis, and facilities where inventory genuinely reflects supply-chain risk rather than changeover inertia. These conditions should be screened in the diagnostic phase before any financial modeling begins.</p>
+  </div>
+</section>
+
+<!-- ══════════ §11 LITERATURE ══════════ -->
+<section class="section" id="s11">
+  <div class="sec-label">§ 11 · Supporting Literature</div>
+  <h2>Annotated Bibliography: Ten Works Supporting the IAR Framework</h2>
+
+  <p>The following ten works have been drawn upon in building the IAR framework. Unlike a simple reference list, each entry notes the specific aspect of the framework it supports and the section of this paper where it is cited. Together they span peer-reviewed empirical research, consulting white papers with large-sample data, and documented operational case studies.</p>
+
+  <table class="cmp-table">
+    <thead>
+      <tr><th>#</th><th>Source</th><th>Type</th><th>IAR Pillar</th><th>Key Finding</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>[1]</td>
+        <td><strong>Liang et al. (2026)</strong><br><em>Managerial and Decision Economics</em>, Wiley. "Can Industrial Robot Applications Enhance Corporate Capital Allocation Efficiency?"</td>
+        <td>Peer-reviewed empirical</td>
+        <td>§2.3 Capital reallocation</td>
+        <td>Firm-level analysis of Chinese manufacturers 2007–2019: robot adoption reduces corporate cash holdings (proxy for working capital) by reducing precautionary motives. Direct empirical confirmation of the capital reallocation mechanism.</td>
+      </tr>
+      <tr>
+        <td>[2]</td>
+        <td><strong>McKinsey &amp; Company (2016)</strong><br>"Supply Chain 4.0 — The Next-Generation Digital Supply Chain." McKinsey Operations Practice.</td>
+        <td>Consulting white paper (large-sample)</td>
+        <td>§3 Scale; §9 Roadmap</td>
+        <td>Quantifies the combined impact of Supply Chain 4.0 as: operations costs –30%, lost sales –75%, inventory reduction up to 75%. Explicitly links digital automation to inventory capital reduction as the primary financial mechanism, not labor.</td>
+      </tr>
+      <tr>
+        <td>[3]</td>
+        <td><strong>McKinsey &amp; Company (2022)</strong><br>"Future-Proofing the Supply Chain." McKinsey Quarterly.</td>
+        <td>Consulting research</td>
+        <td>§2 Theory; §5.3 Retail</td>
+        <td>Documents that robots capable of "faster changeovers" across "a much wider range of products and shipment types" are the specific mechanism enabling supply chain agility. Positions agility — not cost — as the primary supply chain value driver. Includes American Eagle Outfitters case study on inventory reconfiguration.</td>
+      </tr>
+      <tr>
+        <td>[4]</td>
+        <td><strong>IJSRED (2025)</strong><br>"The Effect of Inventory Management on Working Capital." International Journal of Scientific Research and Engineering Development, vol. 8(3).</td>
+        <td>Peer-reviewed empirical</td>
+        <td>§5.3 Retail; §10 Critique</td>
+        <td>Quantitative study across retail chains linking inventory management practice (DIO, inventory turnover) directly to working capital efficiency and liquidity. Validates that automation-supported agile inventory management is financially material in retail specifically.</td>
+      </tr>
+      <tr>
+        <td>[5]</td>
+        <td><strong>Rainer et al. (2025)</strong><br>"How Robotics is Shaping Digital Logistics and Supply Chain Management." <em>Journal of Business Logistics</em>, Wiley.</td>
+        <td>Peer-reviewed review article</td>
+        <td>§5.1 Mfg; §5.2 Logistics; §9 Roadmap</td>
+        <td>Comprehensive literature review in a top-tier logistics journal: frames robotics as enabling "agility, adaptability, and flexibility" across supply chain processes — explicitly positioning agility as the primary strategic value ahead of cost reduction. Introduces "resource orchestration" as the management framework for robot fleet value creation.</td>
+      </tr>
+      <tr>
+        <td>[6]</td>
+        <td><strong>ResearchGate (2025)</strong><br>"Evaluating the Impact of Autonomous Mobile Robots on Warehouse Efficiency in a Malaysian Retail Pharmacy Chain."</td>
+        <td>Empirical deployment study</td>
+        <td>§5.2 Logistics; §6 Robots</td>
+        <td>Real-deployment data: AMRs enabled 30.7% increase in inventory density within same footprint, throughput of 22,000 order lines/day, picking accuracy improvement from 600 errors/10,000 to 5/10,000. Validates AMR deployment economics across a non-Western industrial context.</td>
+      </tr>
+      <tr>
+        <td>[7]</td>
+        <td><strong>Meteor Space / IHL Group (2025)</strong><br>"Important Inventory Management Statistics." Also: WorldMetrics Inventory Management Statistics Report 2024.</td>
+        <td>Industry data aggregator</td>
+        <td>§3 Scale; §5.3 Retail</td>
+        <td>Provides the foundational quantitative scale: $1.6T annual inventory distortion cost; $471B annual retail overstocking losses; $46.8B annual US retail shrinkage. Primary source for the global scale claims in §3.</td>
+      </tr>
+      <tr>
+        <td>[8]</td>
+        <td><strong>Descartes Finale (2025)</strong><br>"Holding Cost: Complete Guide" and "Warehouse Robotics: Automation Solutions for Modern Warehouses."</td>
+        <td>Industry research / practitioner</td>
+        <td>§3 Holding Cost; §5.2 Logistics</td>
+        <td>Two-part resource: holding cost methodology (20–30% all-in rate, methodology for calculation by industry) and warehouse robotics ROI benchmarks (12–24 month payback for SMBs, 30–50% productivity improvement documented in picking workflows).</td>
+      </tr>
+      <tr>
+        <td>[9]</td>
+        <td><strong>MDPI Sustainability (2022)</strong><br>"Optimising Changeover through Lean-Manufacturing Principles: A Case Study in a Food Factory." Vol. 14(14).</td>
+        <td>Peer-reviewed empirical</td>
+        <td>§2 EOQ Theory; §5 Sectors</td>
+        <td>SMED implementation in food manufacturing: changeover reduction of ~30%, OEE improvement to 70%+, labour cost reduction of 10%. Provides the empirical confirmation of the EOQ mechanism — changeover reduction directly produces inventory and cost benefits — in a live industrial setting.</td>
+      </tr>
+      <tr>
+        <td>[10]</td>
+        <td><strong>BCG (October 2024)</strong><br>"Unlocking the Value Potential: Supply Chains." BCG Executive Perspectives Series.</td>
+        <td>Consulting white paper</td>
+        <td>§9 Phase 2; §10 Critique</td>
+        <td>Quantifies AI/automation impact on supply chain capital at "–15–30% inventory reduction" combined with revenue improvement of 2–5pp and ops cost reduction of 10–20pp. Provides the Phase 2 ROI benchmarks used in the IAR roadmap. Notes that poor adoption rates and misaligned processes are the primary cause of underperformance — directly informing the change management critique in §10.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>11.1 The Literature Gap the IAR Framework Fills</h3>
+  <p>A notable observation from surveying this literature is that no single existing work makes the IAR argument in its complete form. Liang et al. document the capital allocation effect empirically but do not prescribe the operational mechanism. McKinsey's Supply Chain 4.0 quantifies inventory reduction as a benefit but does not present it as the primary investment thesis for robotics. The SMED and EOQ literature establishes the changeover-inventory link but does not connect it to the robot deployment economics. Rainer et al. frame agility as the strategic value but do not develop the capital reallocation financial model.</p>
+  <p>The IAR framework is novel precisely in synthesizing these strands into a unified investment thesis with a specific financial mechanism (inventory reallocation), a specific diagnostic methodology (ABC-XYZ), a specific financing architecture (bootstrap strategies), and a structured critique of its own limitations. The constituent elements are well-supported; the synthesis is the contribution.</p>
+</section>
+
+<!-- ══════════ §12 CONCLUSION ══════════ -->
+<section class="section" id="s12">
+  <div class="sec-label">§ 12 · Conclusion</div>
+  <h2>Conclusion: The Right Framework for the Right Conversation</h2>
+
+  <p>This paper has developed the Inventory-to-Agility Reallocation (IAR) framework as a rigorous, evidence-based alternative to the labor-displacement frame that has dominated industrial robotics investment cases for four decades. The framework rests on a theoretical foundation (EOQ mathematics, bullwhip theory, corporate capital allocation empirics), is grounded in sector-specific data across manufacturing, logistics, and retail, incorporates a mandatory diagnostic methodology (ABC-XYZ segmentation), models the financial mechanics explicitly, addresses the bootstrap problem that practitioners most frequently raise, maps a three-phase implementation roadmap, and subjects itself to structured critique that identifies the conditions under which it weakens or fails.</p>
+
+  <p>The central argument can be restated simply: your inventory is not just product — it is frozen working capital generating guaranteed negative returns of 20–30% per year. A substantial fraction of that frozen capital exists specifically because your production system lacks the agility to produce to demand rather than to forecast. Robotics is the most powerful available technology for creating that agility. The investment therefore does not need to be justified against labor — it can be justified against inventory. The capital it requires is already sitting on your warehouse shelves, earning nothing.</p>
+
+  <div class="pullquote">
+    "The robot does not replace a person. It replaces the inventory that the person's constraints made necessary."
+    <cite>The core IAR proposition</cite>
+  </div>
+
+  <p>The framework has honest limits, all documented in §10. It is most powerful in facilities with changeover-driven excess inventory and organizational readiness for technology-led change. It is least applicable where inventory is genuinely driven by supply-chain risk or regulatory constraints rather than by operational inflexibility. The ABC-XYZ diagnostic distinguishes these cases with precision, and no organization should proceed to financial modeling without completing it.</p>
+
+  <p>The strategic timing argument deserves a final word. Robot costs — particularly for humanoids — are compressing at a rate that resembles the early smartphone or lithium-ion battery curves: rapid, non-linear, and ultimately enabling mass adoption within a decade. Organizations that build operational competence and deployment frameworks now — when the technology is available but not yet ubiquitous — will absorb successive generations of cheaper, more capable robots as upgrades within existing systems. Organizations that wait for the technology to mature will face a fast-follower problem: by the time the price is obviously compelling, the operationally mature competitors will have built a 5-year lead in process knowledge, data infrastructure, and organizational capability. The IAR framework is not merely a financial justification for robots. It is a framework for building the operational agility that is, in itself, the durable competitive asset.</p>
+
+  <div class="callout green">
+    <div class="co-icon">🎯</div>
+    <p><strong>The Single Most Important Action:</strong> Commission the ABC-XYZ inventory segmentation audit. Classify every SKU by value and demand predictability. Identify the changeover-buffer fraction. Quantify the agility-addressable capital. Then, and only then, build the financial model. The audit typically costs $20,000–$80,000 and takes 4–8 weeks. The capital it identifies — in most manufacturing, logistics, and retail operations — is measured in millions to hundreds of millions of dollars. That ratio justifies the diagnostic unconditionally.</p>
+  </div>
+</section>
+
+<!-- ══════════ REFERENCES ══════════ -->
+<section class="section" id="refs">
+  <div class="sec-label">§ References</div>
+  <h2>References</h2>
+  <ol class="ref-list">
+    <li>Liang, P., Sun, X., and Qi, L. (2026). "Can Industrial Robot Applications Enhance Corporate Capital Allocation Efficiency? — Based on the Perspective of Cash Holdings." <em>Managerial and Decision Economics</em>, Wiley. <a href="https://onlinelibrary.wiley.com/doi/10.1002/mde.70046" target="_blank">doi:10.1002/mde.70046</a></li>
+    <li>McKinsey &amp; Company (2016). "Supply Chain 4.0 — The Next-Generation Digital Supply Chain." McKinsey Operations Practice. <a href="https://www.mckinsey.com/capabilities/operations/our-insights/supply-chain-40--the-next-generation-digital-supply-chain" target="_blank">mckinsey.com</a></li>
+    <li>McKinsey &amp; Company (2022). "Future-Proofing the Supply Chain." McKinsey Quarterly. <a href="https://www.mckinsey.com/capabilities/operations/our-insights/future-proofing-the-supply-chain" target="_blank">mckinsey.com</a></li>
+    <li>IJSRED (2025). "The Effect of Inventory Management on Working Capital." <em>International Journal of Scientific Research and Engineering Development</em>, vol. 8(3), pp. 1–12. <a href="https://ijsred.com/volume8/issue3/IJSRED-V8I3P244.pdf" target="_blank">ijsred.com</a></li>
+    <li>Rainer, R.K. et al. (2025). "How Robotics is Shaping Digital Logistics and Supply Chain Management: An Ongoing Call for Research." <em>Journal of Business Logistics</em>, Wiley. <a href="https://onlinelibrary.wiley.com/doi/10.1111/jbl.70005" target="_blank">doi:10.1111/jbl.70005</a></li>
+    <li>Choudhary, T. et al. (2025). "Evaluating the Impact of Autonomous Mobile Robots on Warehouse Efficiency in a Malaysian Retail Pharmacy Chain." ResearchGate. <a href="https://www.researchgate.net/publication/396012055" target="_blank">researchgate.net</a></li>
+    <li>Meteor Space (Jan 2025). "Important Inventory Management Statistics You Should Know." <a href="https://www.meteorspace.com/2025/01/16/important-inventory-management-statistics-you-should-know/" target="_blank">meteorspace.com</a>; IHL Group Inventory Distortion Study 2024.</li>
+    <li>Descartes Finale (2025). "Holding Cost: Complete Guide" and "Warehouse Robotics." <a href="https://www.finaleinventory.com/accounting-and-inventory-software/holding-cost" target="_blank">finaleinventory.com</a></li>
+    <li>LatentView Analytics (2024). "Inventory Holding Costs in Global Connected Supply Chains." <a href="https://www.latentview.com/blog/inventory-holding-costs-in-global-connected-supply-chains/" target="_blank">latentview.com</a></li>
+    <li>Netstock (Sep 2024). "2024 Inventory Management Benchmark Report." <a href="https://www.netstock.com/research/inventory-management-report/" target="_blank">netstock.com</a></li>
+    <li>nVentic (2024). "The Inventory Challenge for the Pharma Industry / Big Pharma Inventory Trends Benchmarking Report 2024." <a href="https://nventic.com/insights/inventory-challenge-for-pharmaceuticals/" target="_blank">nventic.com</a></li>
+    <li>BCG (October 2024). "Unlocking the Value Potential: Supply Chains." BCG Executive Perspectives. <a href="https://media-publications.bcg.com/BCG-Executive-Perspectives-Unlocking-Impact-from-AI-Supply-Chains-EP4-7Oct2024.pdf" target="_blank">bcg.com</a></li>
+    <li>Eduyush (Feb 2025). "Days Inventory Outstanding: Key to Inventory Success." <a href="https://eduyush.com/en-us/blogs/how-to/days-inventory-outstanding" target="_blank">eduyush.com</a></li>
+    <li>Asia News Network (Feb 2026). "Premium vs Scale: Hyundai, Tesla Clash in Robot Pricing." <a href="https://asianews.network/premium-vs-scale-hyundai-tesla-clash-in-robot-pricing/" target="_blank">asianews.network</a></li>
+    <li>ThinkRobotics (Dec 2025). "Tesla Robot Price: Complete Cost Breakdown." <a href="https://thinkrobotics.com/blogs/indepths/tesla-optimus-robot-price-2025-breakdown" target="_blank">thinkrobotics.com</a></li>
+    <li>MDPI Sustainability (2022). "Optimising Changeover through Lean-Manufacturing Principles: A Case Study in a Food Factory." Vol.14(14). <a href="https://www.mdpi.com/2071-1050/14/14/8279" target="_blank">doi:10.3390/su14148279</a></li>
+    <li>Agility Robotics (2024). "Digit Moves Over 100,000 Totes in Commercial Deployment." <a href="https://www.agilityrobotics.com/content/digit-moves-over-100k-totes" target="_blank">agilityrobotics.com</a></li>
+    <li>Qoblex (2025). "What is Days Sales of Inventory (DSI)? Definition, Formula and Benchmarks." <a href="https://qoblex.com/blog/what-is-days-sales-of-inventory-dsi-definition-formula-benchmarks/" target="_blank">qoblex.com</a></li>
+    <li>Standard Bots (2026). "How the One Big Beautiful Bill Made Robotics the Hottest Investment of 2026." <a href="https://standardbots.com/blog/obbb-robotics" target="_blank">standardbots.com</a></li>
+    <li>ITIF (Jul 2025). "A Time to Act: Policies to Strengthen the US Robotics Industry." <a href="https://itif.org/publications/2025/07/18/time-to-act-policies-to-strengthen-us-robotics-industry/" target="_blank">itif.org</a></li>
+  </ol>
+  <div class="footnote">
+    <strong>Disclaimer:</strong> All financial models, scenario analyses, and interactive calculations in this document are directional estimates for strategic planning purposes only, constructed from publicly available industry benchmark data as of Q1 2026. They do not constitute investment advice and should not be used as the sole basis for capital allocation decisions. Facility-specific analysis by qualified operations and financial professionals is required before any capital reallocation decision. Robot cost figures reflect market estimates as of March 2026 and are subject to rapid change in a fast-moving market. Global inventory estimates are derived from aggregate industry benchmarks; individual company and facility performance will vary materially.
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<script>
+// ─── PROGRESS BAR
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('pgbar').style.width=pct+'%';
+});
+
+// ─── CHART DEFAULTS
+Chart.defaults.font.family="'EB Garamond',Georgia,serif";
+Chart.defaults.color='#2e4a62';
+const C={r:'#8b2500',n:'#162438',g:'#a07820',gr:'#1a4a32',p:'#5a3880',t:'#1a6878'};
+
+// ─── DIO CHART
+new Chart(document.getElementById('dioChart'),{
+  type:'bar',
+  data:{
+    labels:['Pharma','Gen. Mfg','Automotive','Retail/Fashion','FMCG','Logistics','Food/Bev'],
+    datasets:[
+      {label:'DIO Midpoint',data:[175,132,75,65,45,32,22],backgroundColor:[C.r,C.r,'#c8522a',C.p,C.g,C.gr,C.gr],borderRadius:3},
+      {label:'DIO Range Max',data:[200,180,90,90,60,45,30],backgroundColor:'rgba(139,37,0,.12)',borderRadius:3}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:12}}}},
+    scales:{y:{title:{display:true,text:'Days'},beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+});
+
+// ─── HOLDING COST
+new Chart(document.getElementById('holdChart'),{
+  type:'bar',
+  data:{
+    labels:['Retail/Fashion','Pharma','Food/Bev','Gen. Mfg','FMCG','Automotive','Logistics'],
+    datasets:[{label:'Annual Holding Cost (% inventory value)',
+      data:[32,28,25,25,22,23,17],
+      backgroundColor:[C.r,C.r,C.g,C.g,C.g,C.n,C.gr],borderRadius:3}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{y:{title:{display:true,text:'% per Year'},beginAtZero:true,max:42,grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+});
+
+// ─── GLOBAL INVENTORY
+new Chart(document.getElementById('globalChart'),{
+  type:'bar',
+  data:{
+    labels:['Gen. Manufacturing','Retail & E-comm','Logistics & Whse','Automotive','Pharma','FMCG'],
+    datasets:[
+      {label:'Total Inventory (USD B)',data:[2500,700,400,900,650,550],backgroundColor:'rgba(22,36,56,.65)',borderRadius:3},
+      {label:'Agility-Addressable Excess (USD B)',data:[875,245,120,270,260,176],backgroundColor:'rgba(139,37,0,.7)',borderRadius:3}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:12}}}},
+    scales:{y:{title:{display:true,text:'USD Billions'},beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+});
+
+// ─── IAR 5-YEAR FLOW
+new Chart(document.getElementById('iarChart'),{
+  type:'line',
+  data:{
+    labels:['Yr 0','Yr 1','Yr 2','Yr 3','Yr 4','Yr 5'],
+    datasets:[
+      {label:'Inventory Value ($M)',data:[120,110.4,96,87.6,81.6,78],borderColor:C.r,backgroundColor:'rgba(139,37,0,.07)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:C.r},
+      {label:'Cumulative Holding Cost Saved ($M)',data:[0,2.4,8.4,12.6,15.6,17.4],borderColor:C.gr,backgroundColor:'rgba(26,74,50,.07)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:C.gr},
+      {label:'Robot Fleet Value ($M)',data:[0,10,10,12,14,17],borderColor:C.g,borderDash:[5,3],tension:.3,fill:false,pointRadius:5,pointBackgroundColor:C.g}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:12}}}},
+    scales:{y:{title:{display:true,text:'USD Millions'},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+});
+
+// ─── ROBOT COST
+new Chart(document.getElementById('robotCostChart'),{
+  type:'line',
+  data:{
+    labels:['2020','2021','2022','2023','2024','2025','2026','2027','2028','2030'],
+    datasets:[
+      {label:'Humanoid ($K)',data:[1000,600,300,250,150,95,85,58,35,20],borderColor:C.p,tension:.5,pointRadius:4,pointBackgroundColor:C.p},
+      {label:'Mobile Manipulator ($K)',data:[200,185,168,155,140,122,110,100,90,72],borderColor:C.r,tension:.3,pointRadius:4,pointBackgroundColor:C.r},
+      {label:'AMR ($K)',data:[75,70,65,60,57,54,50,46,42,35],borderColor:C.gr,tension:.3,pointRadius:4,pointBackgroundColor:C.gr},
+      {label:'Cobot + Cell ($K)',data:[110,105,100,95,90,85,82,78,75,68],borderColor:C.g,tension:.3,pointRadius:4,pointBackgroundColor:C.g}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:12}}}},
+    scales:{y:{title:{display:true,text:'USD (K per unit)'},beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+});
+
+// ─── BOOTSTRAP CHART
+new Chart(document.getElementById('bootstrapChart'),{
+  type:'line',
+  data:{
+    labels:['M0','M3','M6','M9','M12','M18','M24','M30','M36'],
+    datasets:[
+      {label:'External Capital Required ($M)',data:[0,2,8,10,10,9,6,3,0],borderColor:C.r,backgroundColor:'rgba(139,37,0,.07)',tension:.4,fill:true,pointRadius:4},
+      {label:'Cumulative Inventory Savings ($M)',data:[0,0,0.3,0.8,1.6,3.5,7.2,11.4,15.8],borderColor:C.gr,backgroundColor:'rgba(26,74,50,.07)',tension:.4,fill:true,pointRadius:4},
+      {label:'Net Capital Requirement ($M)',data:[0,2,7.7,9.2,8.4,5.5,-1.2,-8.4,-15.8],borderColor:C.g,borderDash:[4,3],tension:.4,fill:false,pointRadius:4}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:12}}}},
+    scales:{y:{title:{display:true,text:'USD Millions'},grid:{color:'rgba(0,0,0,.05)'}},x:{grid:{display:false}}}}
+});
+
+// ─── FLYWHEEL
+new Chart(document.getElementById('flywheelChart'),{
+  type:'bar',
+  data:{
+    labels:['Yr 1','Yr 2','Yr 3','Yr 4','Yr 5'],
+    datasets:[
+      {label:'Inventory Reduction ($M)',data:[9.6,24,32.4,38.4,42],backgroundColor:'rgba(139,37,0,.65)',borderRadius:3,yAxisID:'y'},
+      {label:'Annual Holding Cost Saving ($M)',data:[2.4,6,8.1,9.6,10.5],backgroundColor:'rgba(26,74,50,.65)',borderRadius:3,yAxisID:'y'},
+      {label:'Robot Fleet (# units)',type:'line',data:[8,13,20,29,40],borderColor:C.g,backgroundColor:'transparent',pointRadius:6,tension:.4,yAxisID:'y2'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:12}}}},
+    scales:{
+      y:{title:{display:true,text:'USD Millions'},position:'left',beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'}},
+      y2:{title:{display:true,text:'# Units'},position:'right',beginAtZero:true,grid:{display:false}},
+      x:{grid:{display:false}}
+    }}
+});
+
+// ─── CALCULATOR
+function runCalc(){
+  const inv=parseFloat(document.getElementById('c-inv').value)*1e6;
+  const s=document.getElementById('c-sec').value.split(',');
+  const exPct=parseFloat(s[0]),hcr0=parseFloat(s[1]),dioCur=parseInt(s[2]);
+  const iarZone=parseFloat(document.getElementById('c-iarzone').value)/100;
+  const tgt=parseFloat(document.getElementById('c-tgt').value)/100;
+  const hcr=parseFloat(document.getElementById('c-hcr').value)/100;
+  const months=parseInt(document.getElementById('c-time').value);
+  const fleetStr=document.getElementById('c-fleet').value.split(',');
+  const wMM=parseFloat(fleetStr[0])||0,wHM=parseFloat(fleetStr[1])||0;
+  const wAMR=parseFloat(fleetStr[2])||0,wCobot=parseFloat(fleetStr[3])||0;
+
+  const iarMoney=inv*iarZone;
+  const released=iarMoney*tgt;
+  const annSave=released*hcr;
+  const dioDrop=Math.round(dioCur*iarZone*tgt*0.85);
+  const dioAfter=dioCur-dioDrop;
+
+  const wts=[wMM,wHM,wAMR,wCobot];
+  const prices=[110000,90000,50000,82000];
+  const totW=wts.reduce((a,b)=>a+b,0)||1;
+  const avgCost=wts.reduce((s,w,i)=>s+(w/totW)*prices[i],0)||70000;
+  const totalUnits=Math.floor(released/avgCost);
+  const unitEach=wts.map(w=>Math.round(totalUnits*(w/totW)));
+  const fleetCost=totalUnits*avgCost;
+  const pb=(fleetCost>0?(fleetCost/annSave).toFixed(1):'N/A');
+
+  document.getElementById('r-iarzone').textContent='$'+(iarMoney/1e6).toFixed(1)+'M';
+  document.getElementById('r-tgt').textContent='$'+(released/1e6).toFixed(1)+'M';
+  document.getElementById('r-hcost').textContent='$'+(annSave/1e6).toFixed(2)+'M/yr';
+  document.getElementById('r-pb').textContent=pb+' yrs';
+  document.getElementById('r-dio').textContent=dioCur+'→'+dioAfter+' days';
+  document.getElementById('r-total').textContent=totalUnits+' units';
+  document.getElementById('rr-mm').textContent=unitEach[0]||0;
+  document.getElementById('rr-hm').textContent=unitEach[1]||0;
+  document.getElementById('rr-amr').textContent=unitEach[2]||0;
+  document.getElementById('rr-cobot').textContent=unitEach[3]||0;
+
+  document.getElementById('r-narr').innerHTML=
+    `On a <strong>$${(inv/1e6).toFixed(0)}M</strong> inventory base, the ABC-XYZ IAR zone (${(iarZone*100).toFixed(0)}% of inventory = <strong>$${(iarMoney/1e6).toFixed(1)}M</strong>) contains the agility-addressable capital. A ${(tgt*100).toFixed(0)}% reduction within that zone — achievable over ${months} months through robotic changeover improvements — releases <strong>$${(released/1e6).toFixed(1)}M</strong>, funding <strong>${totalUnits} robot units</strong> at the selected composition. Annual holding cost savings of <strong>$${(annSave/1e6).toFixed(2)}M/year</strong> provide payback in <strong>${pb} years</strong> from holding costs alone. Inventory DIO projected to fall from ${dioCur} to ~${dioAfter} days. Throughput, quality, and workforce productivity benefits are additive.`;
+
+  document.getElementById('c-res').classList.add('show');
+}
+
+// ─── SLIDERS
+function upSliders(){
+  const co=parseFloat(document.getElementById('sl-co').value);
+  const fc=parseFloat(document.getElementById('sl-fc').value);
+  const cy=parseFloat(document.getElementById('sl-cy').value);
+  document.getElementById('sv-co').textContent=co+'%';
+  document.getElementById('sv-fc').textContent=fc+'%';
+  document.getElementById('sv-cy').textContent=cy.toFixed(1)+'×';
+
+  // EOQ model: Q* ∝ √S, so 60% changeover reduction → batch size falls by √(1-0.6)=~37%
+  // Combined with forecast improvement reducing safety stock
+  const base=120e6,hcr=0.25;
+  const eoqEffect=(1-Math.sqrt(1-co/100))*0.5*base; // batch size effect
+  const fcEffect=(fc/100)*0.25*base;                  // safety stock effect
+  const cyEffect=Math.min((cy-1)/4,0.12)*base;         // cycle effect
+
+  const red=Math.min(eoqEffect+fcEffect+cyEffect,0.52*base);
+  const save=red*hcr;
+
+  document.getElementById('so-red').textContent='$'+(red/1e6).toFixed(1)+'M';
+  document.getElementById('so-save').textContent='$'+(save/1e6).toFixed(2)+'M';
+  document.getElementById('so-amr').textContent=Math.floor(red/55000);
+  document.getElementById('so-cobot').textContent=Math.floor(red/85000);
+  document.getElementById('so-mm').textContent=Math.floor(red/115000);
+  document.getElementById('so-hum').textContent=Math.floor(red/32000);
+}
+upSliders();
+</script>
+</body>
+</html>
