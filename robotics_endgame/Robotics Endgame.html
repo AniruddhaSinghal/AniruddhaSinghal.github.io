@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotics' End Game | Infographics Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #050505;
+            --bg-card: #111111;
+            --bg-card-hover: #1a1a1a;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --accent-1: #3B82F6; /* Blue */
+            --accent-2: #06B6D4; /* Cyan */
+            --accent-3: #10B981; /* Emerald */
+            --accent-4: #F59E0B; /* Yellow */
+            --accent-5: #EA580C; /* Orange */
+            --accent-6: #EF4444; /* Red */
+            --accent-7: #8B5CF6; /* Violet */
+            --accent-8: #D946EF; /* Fuchsia */
+            
+            --border-color: #27272a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+            background-image: radial-gradient(circle at top center, #111 0%, #050505 100%);
+        }
+
+        header {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- Grid Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        /* --- Card Styles --- */
+        .nav-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            group: hover;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--card-accent, #fff);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--bg-card-hover);
+            border-color: #444;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .nav-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--card-accent, #fff);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-number svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-card:hover .card-number svg {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-action {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .card-action svg {
+            width: 16px;
+            height: 16px;
+            margin-left: 5px;
+        }
+
+        .nav-card:hover .card-action {
+            opacity: 1;
+            transform: translateX(0);
+            color: var(--card-accent, #fff);
+        }
+
+        /* --- Specific Card Accents --- */
+        .card-1 { --card-accent: var(--accent-1); }
+        .card-2 { --card-accent: var(--accent-2); }
+        .card-3 { --card-accent: var(--accent-3); }
+        .card-4 { --card-accent: var(--accent-4); }
+        .card-5 { --card-accent: var(--accent-5); }
+        .card-6 { --card-accent: var(--accent-6); }
+        .card-7 { --card-accent: var(--accent-7); }
+        .card-8 { --card-accent: var(--accent-8); }
+
+        @media (max-width: 768px) {
+            header { margin-bottom: 2rem; }
+            h1 { font-size: 2.5rem; }
+            .grid-container { grid-template-columns: 1fr; }
+            .card-action { opacity: 1; transform: translateX(0); color: var(--card-accent); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Robotics' End Game</h1>
+        <p class="subtitle">A visual exploration of the physical AI revolution, from data scaling laws to the achievement of Physical Artificial General Intelligence.</p>
+    </header>
+
+    <div class="grid-container">
+        
+        <!-- Card 1 -->
+        <a href="01_great_parallel.html" class="nav-card card-1">
+            <div class="card-number">
+                01
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <h2 class="card-title">The Great Parallel</h2>
+            <p class="card-desc">Mirroring the three-step evolution of AI language models (Pre-training, SFT, RLHF) directly onto physical robotics.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="02_wam.html" class="nav-card card-2">
+            <div class="card-number">
+                02
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </div>
+            <h2 class="card-title">World Action Models</h2>
+            <p class="card-desc">The paradigm shift from "head-heavy" LLMs to natively balanced models prioritizing vision and physical action.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="03_dream_zero.html" class="nav-card card-3">
+            <div class="card-number">
+                03
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </div>
+            <h2 class="card-title">Dream Zero</h2>
+            <p class="card-desc">Visualizing predictive World Models: How a robot simulates its own future actions before executing them.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="04_data_scalability.html" class="nav-card card-4">
+            <div class="card-number">
+                04
+                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <h2 class="card-title">Data Scalability</h2>
+            <p class="card-desc">Solving the bottleneck by moving from unscalable teleoperation to massive internet-scale video.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="05_egoscale.html" class="nav-card card-5">
+            <div class="card-number">
+                05
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <h2 class="card-title">EgoScale Law</h2>
+            <p class="card-desc">The mathematical proof and logarithmic scaling law that connects more data hours to superior physical dexterity.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 6 -->
+        <a href="06_sim_to_real.html" class="nav-card card-6">
+            <div class="card-number">
+                06
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <h2 class="card-title">Real-to-Sim-to-Real</h2>
+            <p class="card-desc">The Digital Cousin: Scanning real objects to procedurally train robot agents in virtual worlds before reality.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 7 -->
+        <a href="07_tech_tree.html" class="nav-card card-7">
+            <div class="card-number">
+                07
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <h2 class="card-title">The Tech Tree</h2>
+            <p class="card-desc">A skill-tree mapping of the final civilizational milestones needed to achieve Physical Artificial General Intelligence.</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+        <!-- Card 8 -->
+        <a href="08_timeline.html" class="nav-card card-8">
+            <div class="card-number">
+                08
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <h2 class="card-title">The 2040 Timeline</h2>
+            <p class="card-desc">The exponential ascent of artificial intelligence from basic pixel recognition (2012) to the physical singularity (2040).</p>
+            <div class="card-action">View Infographic <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+        </a>
+
+    </div>
+
+</body>
+</html>

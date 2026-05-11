@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Zero | Predictive World Models</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #050505;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --arm-base: #333333;
+            --arm-accent: #EA580C; /* Orange */
+            
+            --ghost-color: #06b6d4; /* Cyan */
+            --ghost-glow: rgba(6, 182, 212, 0.4);
+            
+            --target-color: #F59E0B; /* Yellow */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        header {
+            text-align: center;
+            max-width: 900px;
+            margin: 4rem 0 2rem 0;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- Canvas for the Scene --- */
+        .scene-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 500px;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Base SVG Styling */
+        svg.robot-arm {
+            position: absolute;
+            bottom: 50px;
+            left: 100px;
+            width: 600px;
+            height: 400px;
+            overflow: visible;
+            transform-origin: 10% 90%;
+            transition: all 0.5s ease;
+        }
+
+        /* The physical arm (t=0) */
+        .arm-physical {
+            z-index: 5;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+        }
+
+        .arm-physical .link { fill: var(--arm-base); stroke: #555; stroke-width: 2; }
+        .arm-physical .joint { fill: #111; stroke: var(--arm-accent); stroke-width: 4; }
+        .arm-physical .gripper { fill: #444; }
+
+        /* The ghost arms */
+        .arm-ghost {
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .arm-ghost .link { fill: none; stroke: var(--ghost-color); stroke-width: 2; }
+        .arm-ghost .joint { fill: transparent; stroke: var(--ghost-color); stroke-width: 2; }
+        .arm-ghost .gripper { fill: none; stroke: var(--ghost-color); stroke-width: 2; }
+
+        /* Ghost Poses */
+        .ghost-1 {
+            transform: translateX(80px) rotate(10deg);
+            opacity: 0.6;
+            filter: drop-shadow(0 0 10px var(--ghost-glow));
+        }
+        
+        .ghost-2 {
+            transform: translateX(180px) rotate(20deg);
+            opacity: 0.4;
+            filter: drop-shadow(0 0 15px var(--ghost-glow));
+        }
+
+        .ghost-3 {
+            transform: translateX(300px) rotate(25deg);
+            opacity: 0.2;
+            filter: drop-shadow(0 0 20px var(--ghost-glow));
+        }
+
+        /* Trajectory Line */
+        .trajectory-path {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .trajectory-path path {
+            fill: none;
+            stroke: var(--ghost-color);
+            stroke-width: 3;
+            stroke-dasharray: 10, 10;
+            opacity: 0.5;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* Target Object */
+        .target-object {
+            position: absolute;
+            bottom: 150px;
+            right: 150px;
+            width: 60px;
+            height: 80px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid var(--target-color);
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+            z-index: 2;
+        }
+
+        .target-object::after {
+            content: "GOAL";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--target-color);
+            letter-spacing: 2px;
+        }
+
+        /* --- Interactive Timeline --- */
+        .timeline-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Timeline Line */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 3.5rem;
+            left: 4rem;
+            right: 4rem;
+            height: 2px;
+            background: linear-gradient(90deg, #333 0%, var(--ghost-color) 100%);
+            z-index: -1;
+        }
+
+        .timeline-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            width: 200px;
+        }
+
+        .time-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            background: #111;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid #333;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-node:hover .time-label {
+            border-color: var(--ghost-color);
+            color: var(--ghost-color);
+            box-shadow: 0 0 15px var(--ghost-glow);
+        }
+
+        .node-dot {
+            width: 16px;
+            height: 16px;
+            background: #111;
+            border: 3px solid #555;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-node:hover .node-dot {
+            border-color: var(--ghost-color);
+            background: var(--ghost-color);
+            box-shadow: 0 0 15px var(--ghost-glow);
+        }
+
+        .node-info {
+            position: absolute;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .timeline-node:hover .node-info {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .node-info h4 {
+            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-info p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .math-snippet {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--ghost-color);
+            background: #111;
+            padding: 0.4rem;
+            border-radius: 4px;
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .scene-container { height: 300px; overflow: hidden; }
+            svg.robot-arm { transform: scale(0.6); left: -50px; bottom: -50px; }
+            .target-object { right: 50px; bottom: 80px; transform: scale(0.8); }
+            .timeline-container { flex-direction: column; align-items: center; gap: 2rem; }
+            .timeline-container::before { display: none; }
+            .node-info { position: relative; top: 1rem; opacity: 1; visibility: visible; transform: none; width: 100%; display: none; }
+            .timeline-node:hover .node-info { transform: none; display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Dream Zero</h1>
+        <p class="subtitle">Predictive World Models: The ability to simulate the future, calculate rewards, and visualize actions before moving a single physical motor.</p>
+    </header>
+
+    <div class="scene-container">
+        
+        <!-- Trajectory Path connecting the end effectors -->
+        <svg class="trajectory-path" viewBox="0 0 1200 500">
+            <!-- Curve from the physical arm to the target -->
+            <path d="M 400 200 Q 600 50 950 310" />
+        </svg>
+
+        <!-- The Target Object -->
+        <div class="target-object"></div>
+
+        <!-- Base SVG Definition (Hidden, used for cloning) -->
+        <defs>
+            <g id="arm-group">
+                <!-- Base Mount -->
+                <path class="link" d="M 20 380 L 80 380 L 70 330 L 30 330 Z" />
+                <!-- Link 1 -->
+                <path class="link" d="M 50 330 L 150 150 L 190 170 L 80 330 Z" />
+                <!-- Joint 1 -->
+                <circle class="joint" cx="50" cy="330" r="20" />
+                <!-- Link 2 -->
+                <path class="link" d="M 170 160 L 350 150 L 350 180 L 170 180 Z" />
+                <!-- Joint 2 -->
+                <circle class="joint" cx="170" cy="160" r="18" />
+                <!-- Joint 3 (Wrist) -->
+                <circle class="joint" cx="350" cy="165" r="15" />
+                <!-- Gripper -->
+                <path class="gripper" d="M 360 150 L 400 130 L 410 140 L 380 165 L 410 190 L 400 200 L 360 180 Z" />
+            </g>
+        </defs>
+
+        <!-- Ghost Arm 3 (t+1.5s) -->
+        <svg class="robot-arm arm-ghost ghost-3" viewBox="0 0 600 400">
+            <use href="#arm-group" />
+        </svg>
+
+        <!-- Ghost Arm 2 (t+1.0s) -->
+        <svg class="robot-arm arm-ghost ghost-2" viewBox="0 0 600 400">
+            <use href="#arm-group" />
+        </svg>
+
+        <!-- Ghost Arm 1 (t+0.5s) -->
+        <svg class="robot-arm arm-ghost ghost-1" viewBox="0 0 600 400">
+            <use href="#arm-group" />
+        </svg>
+
+        <!-- Physical Arm (t=0) -->
+        <svg class="robot-arm arm-physical" viewBox="0 0 600 400">
+            <use href="#arm-group" />
+        </svg>
+
+    </div>
+
+    <!-- Timeline / Fact Density -->
+    <div class="timeline-container">
+        
+        <div class="timeline-node">
+            <div class="time-label">t = 0.0s</div>
+            <div class="node-dot"></div>
+            <div class="node-info">
+                <h4>1. State Encoding</h4>
+                <p>The robot observes the current physical scene via cameras and proprioception.</p>
+                <span class="math-snippet">z_t = Encoder(Observation)</span>
+            </div>
+        </div>
+
+        <div class="timeline-node">
+            <div class="time-label">t + 0.5s</div>
+            <div class="node-dot"></div>
+            <div class="node-info">
+                <h4>2. Action Proposal</h4>
+                <p>The latent policy suggests a possible movement trajectory into the future.</p>
+                <span class="math-snippet">a_t ~ Policy(z_t)</span>
+            </div>
+        </div>
+
+        <div class="timeline-node">
+            <div class="time-label">t + 1.0s</div>
+            <div class="node-dot"></div>
+            <div class="node-info">
+                <h4>3. State Prediction</h4>
+                <p>The World Model accurately predicts what the scene will look like after moving.</p>
+                <span class="math-snippet">z_{t+1} = WorldModel(z_t, a_t)</span>
+            </div>
+        </div>
+
+        <div class="timeline-node">
+            <div class="time-label">t + 1.5s</div>
+            <div class="node-dot"></div>
+            <div class="node-info">
+                <h4>4. Reward Evaluation</h4>
+                <p>If the predicted state avoids collision and reaches the target, the physical movement is executed.</p>
+                <span class="math-snippet">R = Evaluate(z_{t+n}) > Threshold</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

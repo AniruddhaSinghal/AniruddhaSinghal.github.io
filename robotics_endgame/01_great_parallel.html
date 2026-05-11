@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Parallel | LLM vs Robotics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0a0a0a;
+            --bg-card: #141414;
+            --bg-card-hover: #1f1f1f;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --llm-accent: #F59E0B; /* Yellow */
+            --llm-glow: rgba(245, 158, 11, 0.15);
+            --bot-accent: #EA580C; /* Orange */
+            --bot-glow: rgba(234, 88, 12, 0.15);
+            --border-color: #27272a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 5rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--llm-accent), var(--bot-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            gap: 4rem;
+        }
+
+        /* The Link / Central Axis */
+        .central-axis {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--llm-accent), var(--bot-accent));
+            transform: translateX(-50%);
+            z-index: 0;
+            border-radius: 4px;
+        }
+
+        .central-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--bg-base);
+            padding: 1rem 1.5rem;
+            border: 2px solid #333;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            z-index: 10;
+            white-space: nowrap;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            border-image: linear-gradient(90deg, var(--llm-accent), var(--bot-accent)) 1;
+        }
+
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .col-header {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .llm-col .col-header { color: var(--llm-accent); }
+        .bot-col .col-header { color: var(--bot-accent); }
+
+        .card-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .llm-col .card-wrapper {
+            justify-content: flex-end;
+            padding-right: 2rem;
+        }
+
+        .bot-col .card-wrapper {
+            justify-content: flex-start;
+            padding-left: 2rem;
+        }
+
+        /* Connecting Lines from Central Axis */
+        .card-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 2rem;
+            height: 2px;
+            background-color: #333;
+            z-index: -1;
+            transition: background-color 0.3s ease;
+        }
+
+        .llm-col .card-wrapper::after { right: 0; }
+        .bot-col .card-wrapper::after { left: 0; }
+
+        .card-wrapper:hover::after {
+            background-color: currentColor;
+        }
+
+        .llm-col .card-wrapper:hover::after { background-color: var(--llm-accent); }
+        .bot-col .card-wrapper:hover::after { background-color: var(--bot-accent); }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 450px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .llm-col .card { border-left: 4px solid var(--border-color); }
+        .bot-col .card { border-right: 4px solid var(--border-color); }
+
+        .llm-col .card:hover {
+            border-left-color: var(--llm-accent);
+            box-shadow: 0 10px 30px var(--llm-glow);
+            background-color: var(--bg-card-hover);
+            transform: translateY(-5px);
+        }
+
+        .bot-col .card:hover {
+            border-right-color: var(--bot-accent);
+            box-shadow: 0 10px 30px var(--bot-glow);
+            background-color: var(--bg-card-hover);
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: #222;
+        }
+
+        .llm-col .icon { color: var(--llm-accent); }
+        .bot-col .icon { color: var(--bot-accent); }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .summary {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 0;
+            transition: margin-bottom 0.3s ease;
+        }
+
+        .details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover .summary {
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover .details {
+            max-height: 500px;
+            opacity: 1;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333;
+        }
+
+        .fact-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+
+        .fact-list li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .fact-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+        }
+
+        .llm-col .fact-list li::before { color: var(--llm-accent); }
+        .bot-col .fact-list li::before { color: var(--bot-accent); }
+
+        .stat-highlight {
+            font-family: 'JetBrains Mono', monospace;
+            background: #222;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .central-axis { display: none; }
+            .central-label {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                margin: 2rem auto;
+                width: max-content;
+            }
+            .llm-col .card-wrapper, .bot-col .card-wrapper {
+                justify-content: center;
+                padding: 0;
+            }
+            .card-wrapper::after { display: none; }
+            .llm-col .card, .bot-col .card { border: 1px solid var(--border-color); border-top-width: 4px; }
+            .llm-col .card { border-top-color: var(--llm-accent); }
+            .bot-col .card { border-top-color: var(--bot-accent); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The Great Parallel</h1>
+        <p class="subtitle">Mirroring the three-step evolutionary leaps of AI. What text models achieved digitally is now happening in physical robotics.</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Central Axis Link -->
+        <div class="central-axis"></div>
+        <div class="central-label">The Evolution Path</div>
+
+        <!-- Left Column: LLMs -->
+        <div class="column llm-col">
+            <div class="col-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Digital / Language
+            </div>
+
+            <!-- Stage 1 -->
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                        </div>
+                        <h3>1. Next Token Prediction</h3>
+                    </div>
+                    <p class="summary">Self-supervised learning across internet-scale data to predict the next word.</p>
+                    <div class="details">
+                        <ul class="fact-list">
+                            <li><strong>Scale:</strong> Pre-trained on <span class="stat-highlight">1T - 15T tokens</span> of raw text.</li>
+                            <li><strong>Core Concept:</strong> By learning to compress text, the model inherently learns world models, grammar, and facts.</li>
+                            <li><strong>Milestones:</strong> GPT-1/2/3, Chinchilla, LLaMA base models.</li>
+                            <li><strong>Limitation:</strong> Produces rambling text; not aligned to follow specific user instructions.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        <h3>2. Instruction Tuning</h3>
+                    </div>
+                    <p class="summary">Supervised fine-tuning (SFT) to teach the model how to respond to commands.</p>
+                    <div class="details">
+                        <ul class="fact-list">
+                            <li><strong>Scale:</strong> Requires <span class="stat-highlight">10k - 100k</span> high-quality Q&A pairs.</li>
+                            <li><strong>Core Concept:</strong> Transforms a document-completer into a helpful assistant. Formats the unstructured knowledge into conversational utility.</li>
+                            <li><strong>Milestones:</strong> InstructGPT, Flan-T5, Alpaca.</li>
+                            <li><strong>Limitation:</strong> Can still confidently hallucinate or generate harmful content if asked.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        </div>
+                        <h3>3. RLHF</h3>
+                    </div>
+                    <p class="summary">Reinforcement Learning from Human Feedback for final alignment and nuance.</p>
+                    <div class="details">
+                        <ul class="fact-list">
+                            <li><strong>Mechanism:</strong> Uses a secondary "Reward Model" trained on human preferences to penalize bad answers and reward good ones.</li>
+                            <li><strong>Core Concept:</strong> Optimization for Helpfulness, Honesty, and Harmlessness (HHH). Allows the model to generalize beyond basic SFT.</li>
+                            <li><strong>Milestones:</strong> ChatGPT, Claude, GPT-4.</li>
+                            <li><strong>Result:</strong> Mass adoption of AI interfaces.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Robotics -->
+        <div class="column bot-col">
+            <div class="col-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
+                Physical / Action
+            </div>
+
+            <!-- Stage 1 -->
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        </div>
+                        <h3>1. Next World State Prediction</h3>
+                    </div>
+                    <p class="summary">Pre-training on massive video and physics data to predict what happens next visually.</p>
+                    <div class="details">
+                        <ul class="fact-list">
+                            <li><strong>Scale:</strong> <span class="stat-highlight">Millions of hours</span> of egocentric video and YouTube.</li>
+                            <li><strong>Core Concept:</strong> Vision-Language-Action (VLA) models learn physics, object permanence, and affordances just by watching videos.</li>
+                            <li><strong>Milestones:</strong> RT-1, RT-2, OpenVLA.</li>
+                            <li><strong>Limitation:</strong> Understands the world, but lacks the specific motor control to act precisely in it.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.5 8.5C5.5 8.5 7 7 8 8C9 9 9 10 9 10"></path><path d="M15 10C15 10 15 9 16 8C17 7 18.5 8.5 18.5 8.5"></path><circle cx="12" cy="16" r="4"></circle><line x1="12" y1="12" x2="12" y2="2"></line></svg>
+                        </div>
+                        <h3>2. Action Fine-Tuning</h3>
+                    </div>
+                    <p class="summary">Behavioral cloning from human teleoperation data to teach specific physical tasks.</p>
+                    <div class="details">
+                        <ul class="fact-list">
+                            <li><strong>Scale:</strong> Requires <span class="stat-highlight">10k - 100k</span> teleoperated trajectories (e.g., folding shirts, making coffee).</li>
+                            <li><strong>Core Concept:</strong> Maps the general world understanding directly to robot joint torques and motor actions (Action Chunking).</li>
+                            <li><strong>Milestones:</strong> ALOHA, Mobile ALOHA, ACT.</li>
+                            <li><strong>Limitation:</strong> Fails when encountering out-of-distribution physical states (e.g., dropping an object).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="card-wrapper">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </div>
+                        <h3>3. Robot RL</h3>
+                    </div>
+                    <p class="summary">Reinforcement learning in Simulation and the Real World to achieve superhuman dexterity.</p>
+                    <div class="details">
+                        <ul class="fact-list">
+                            <li><strong>Mechanism:</strong> Agent explores and optimizes a reward function in GPU-accelerated simulators (Isaac Gym), then transfers to reality.</li>
+                            <li><strong>Core Concept:</strong> Self-correction, dynamic recovery, and emergent behaviors that humans cannot explicitly teleoperate.</li>
+                            <li><strong>Milestones:</strong> Eureka, DayDreamer, Sim-to-Real quadruped locomotion.</li>
+                            <li><strong>Result:</strong> Autonomous, general-purpose robots.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Optional subtle script to handle expanding/collapsing if we wanted exclusively click-based, but CSS hover is cleaner for this infographic style. -->
+    <script>
+        // Adding simple click toggle support for mobile devices where hover isn't present
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                const details = card.querySelector('.details');
+                if(details.style.maxHeight) {
+                    details.style.maxHeight = null;
+                    details.style.opacity = null;
+                    details.style.paddingTop = null;
+                    details.style.borderTop = null;
+                } else {
+                    details.style.maxHeight = '500px';
+                    details.style.opacity = '1';
+                    details.style.paddingTop = '1.5rem';
+                    details.style.borderTop = '1px solid #333';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

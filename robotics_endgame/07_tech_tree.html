@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Robotics Tech Tree | End Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #030303;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            /* Status Colors */
+            --color-unlocked: #06b6d4; /* Cyan - Achieved */
+            --glow-unlocked: rgba(6, 182, 212, 0.4);
+            
+            --color-progress: #F59E0B; /* Yellow - In Progress */
+            --glow-progress: rgba(245, 158, 11, 0.4);
+
+            --color-locked: #EA580C; /* Orange - End Game */
+            --glow-locked: rgba(234, 88, 12, 0.6);
+
+            --node-bg: #111111;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at center, #111 0%, #030303 100%);
+        }
+
+        header {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 2rem;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* --- Tech Tree Layout --- */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        /* SVG Background Lines */
+        .tree-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .line-unlocked {
+            fill: none;
+            stroke: var(--color-unlocked);
+            stroke-width: 3;
+            stroke-dasharray: 10, 10;
+            animation: flowDown 10s linear infinite;
+            filter: drop-shadow(0 0 5px var(--glow-unlocked));
+        }
+
+        .line-progress {
+            fill: none;
+            stroke: var(--color-progress);
+            stroke-width: 3;
+            stroke-dasharray: 10, 10;
+            animation: flowDown 15s linear infinite;
+            filter: drop-shadow(0 0 5px var(--glow-progress));
+        }
+
+        .line-locked {
+            fill: none;
+            stroke: #333;
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+        }
+
+        @keyframes flowDown {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* --- Hexagon Nodes --- */
+        .node-row {
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+            z-index: 10;
+        }
+
+        .node-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hex-outer {
+            width: 120px;
+            height: 140px;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .hex-inner {
+            width: 114px;
+            height: 134px;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: var(--node-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .node-icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .node-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* Status Styles */
+        .status-unlocked .hex-outer { background: var(--color-unlocked); box-shadow: 0 0 20px var(--glow-unlocked); }
+        .status-unlocked .node-icon, .status-unlocked .node-label { color: var(--color-unlocked); }
+        
+        .status-progress .hex-outer { background: var(--color-progress); box-shadow: 0 0 20px var(--glow-progress); }
+        .status-progress .node-icon, .status-progress .node-label { color: var(--color-progress); }
+
+        .status-locked .hex-outer { background: #444; }
+        .status-locked .node-icon, .status-locked .node-label { color: #888; }
+        
+        /* The final endgame node */
+        .status-endgame .hex-outer { 
+            background: linear-gradient(135deg, var(--color-locked), #7f1d1d);
+            width: 140px; height: 160px;
+            animation: pulse-endgame 3s infinite alternate;
+        }
+        .status-endgame .hex-inner { width: 132px; height: 152px; background: #000; }
+        .status-endgame .node-icon, .status-endgame .node-label { color: var(--color-locked); }
+
+        @keyframes pulse-endgame {
+            0% { filter: drop-shadow(0 0 10px var(--glow-locked)); }
+            100% { filter: drop-shadow(0 0 40px var(--glow-locked)); }
+        }
+
+        .hex-outer:hover { transform: scale(1.1); z-index: 20; }
+
+        /* --- RPG Tooltip --- */
+        .tooltip {
+            position: absolute;
+            top: 50%;
+            left: 150px; /* offset from hex */
+            transform: translateY(-50%);
+            width: 350px;
+            background: rgba(10,10,10,0.95);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        /* Tooltip alignment for different nodes */
+        .align-right .tooltip { left: auto; right: 150px; }
+        .align-center .tooltip { left: 160px; }
+
+        .hex-outer:hover + .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tt-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .tt-status {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .status-unlocked .tt-status { background: rgba(6, 182, 212, 0.2); color: var(--color-unlocked); }
+        .status-progress .tt-status { background: rgba(245, 158, 11, 0.2); color: var(--color-progress); }
+        .status-locked .tt-status, .status-endgame .tt-status { background: rgba(234, 88, 12, 0.2); color: var(--color-locked); }
+
+        .tt-reqs {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            margin-bottom: 1rem;
+        }
+        
+        .tt-reqs span { color: #fff; }
+
+        .tt-desc {
+            font-size: 0.95rem;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .node-row { flex-direction: column; gap: 2rem; }
+            .tooltip { position: relative; top: auto; left: auto !important; right: auto !important; transform: none; width: 300px; margin-top: 1rem; opacity: 1; visibility: visible; display: none; }
+            .node-wrapper:hover .tooltip { display: block; }
+            .tree-svg { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The Robotics Tech Tree</h1>
+        <p class="subtitle">Mapping the civilizational milestones required to finish the game and unlock Physical Artificial General Intelligence.</p>
+    </header>
+
+    <div class="tree-container">
+        
+        <!-- Background Connecting Lines -->
+        <!-- Note: Hardcoded coordinates for the 1000x800 viewBox to match the CSS grid layout approx -->
+        <svg class="tree-svg" viewBox="0 0 1000 800">
+            <!-- Tier 1 to Tier 2 -->
+            <path class="line-unlocked" d="M 500 120 L 500 180" />
+            <path class="line-unlocked" d="M 500 150 L 300 150 L 300 200" />
+            <path class="line-unlocked" d="M 500 150 L 700 150 L 700 200" />
+
+            <!-- Tier 2 to Tier 3 -->
+            <path class="line-progress" d="M 300 320 L 300 380 L 500 380 L 500 420" />
+            <path class="line-progress" d="M 700 320 L 700 380 L 500 380 L 500 420" />
+
+            <!-- Tier 3 to Tier 4 (The Endgame Nodes) -->
+            <path class="line-locked" d="M 500 540 L 500 620" />
+            <path class="line-locked" d="M 500 580 L 250 580 L 250 620" />
+            <path class="line-locked" d="M 500 580 L 750 580 L 750 620" />
+        </svg>
+
+        <!-- Tier 1: Foundation -->
+        <div class="node-row">
+            <div class="node-wrapper status-unlocked align-center">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        <div class="node-label">Internet Models</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">Internet Scale VLM</div>
+                        <div class="tt-status">Unlocked (2023)</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>10T+ Tokens, Vision Encoders</span></div>
+                    <div class="tt-desc">Models capable of understanding images, text, and basic visual physics. The foundation for all higher-order reasoning.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 2: Physical Entry -->
+        <div class="node-row">
+            <div class="node-wrapper status-unlocked align-center">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        <div class="node-label">Sim-to-Real</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">Sim-to-Real Locomotion</div>
+                        <div class="tt-status">Unlocked (2024)</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>GPU Physics Engines, RL</span></div>
+                    <div class="tt-desc">The ability for quadruped and bipedal robots to learn walking dynamics in simulation and immediately apply them in reality without falling over.</div>
+                </div>
+            </div>
+
+            <div class="node-wrapper status-unlocked align-right">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                        <div class="node-label">Action Chunking</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">Teleop Action Chunking</div>
+                        <div class="tt-status">Unlocked (2024)</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>10k+ Teleop Trajectories</span></div>
+                    <div class="tt-desc">Behavioral cloning that smooths out jerky movements, allowing robots to perform specific tasks (like cooking) but only in controlled environments.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 3: Current Frontier -->
+        <div class="node-row">
+            <div class="node-wrapper status-progress align-center">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        <div class="node-label">General W.A.M.</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">World Action Models</div>
+                        <div class="tt-status">In Progress</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>1M+ Ego-Video Hours, 50Hz Control</span></div>
+                    <div class="tt-desc">Natively multimodal models that skip the text bottleneck, outputting motor torques directly from visual inputs with superhuman latency.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 4: The Endgame -->
+        <div class="node-row">
+            <!-- Node 1 -->
+            <div class="node-wrapper status-locked align-center">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <div class="node-label">Physical Turing Test</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">Physical Turing Test</div>
+                        <div class="tt-status">Locked (Endgame)</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>Emergent Tactile Generalization</span></div>
+                    <div class="tt-desc">The point where watching a robot interact with the world (folding laundry, assembling a chair) is indistinguishable in fluidity and adaptability from a human.</div>
+                </div>
+            </div>
+
+            <!-- Node 2 (Center Endgame) -->
+            <div class="node-wrapper status-endgame align-center">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                        <div class="node-label">Physical Auto-Research</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">Physical Auto-Research</div>
+                        <div class="tt-status">Singularity Node</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>Physical API + High Intelligence</span></div>
+                    <div class="tt-desc">Robots designing better robot hardware, manufacturing it in factories run by robots, and training the software. The physical intelligence explosion.</div>
+                </div>
+            </div>
+
+            <!-- Node 3 -->
+            <div class="node-wrapper status-locked align-right">
+                <div class="hex-outer">
+                    <div class="hex-inner">
+                        <svg class="node-icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        <div class="node-label">Physical API</div>
+                    </div>
+                </div>
+                <div class="tooltip">
+                    <div class="tt-header">
+                        <div class="tt-title">The Physical API</div>
+                        <div class="tt-status">Locked (Endgame)</div>
+                    </div>
+                    <div class="tt-reqs">Requires: <span>10M+ Real-World Deployments</span></div>
+                    <div class="tt-desc">The physical world becomes programmable. You can write software to "clean the kitchen" and the robot executes it flawlessly, just like calling a software function.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

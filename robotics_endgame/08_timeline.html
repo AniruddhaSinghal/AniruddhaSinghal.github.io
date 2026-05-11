@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 2040 Ascent | Robotics Timeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #020202;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            /* Gradient colors for the curve */
+            --color-1: #3B82F6; /* Blue (2012) */
+            --color-2: #06B6D4; /* Cyan (2020) */
+            --color-3: #F59E0B; /* Yellow (2026) */
+            --color-4: #EA580C; /* Orange (2040) */
+            --color-5: #EF4444; /* Red (Singularity) */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            
+            /* Subtle grid background */
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center bottom;
+        }
+
+        /* Starry background effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 100px 100px;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        header {
+            position: absolute;
+            top: 3rem;
+            left: 4rem;
+            max-width: 600px;
+            z-index: 20;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* --- The Timeline SVG --- */
+        .timeline-wrapper {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            z-index: 10;
+        }
+
+        svg.curve-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .exp-curve {
+            fill: none;
+            stroke: url(#curveGradient);
+            stroke-width: 6;
+            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.5));
+            stroke-linecap: round;
+            
+            /* Drawing animation */
+            stroke-dasharray: 3000;
+            stroke-dashoffset: 3000;
+            animation: drawCurve 4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        @keyframes drawCurve {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* --- Nodes & Labels --- */
+        .node-group {
+            opacity: 0;
+            animation: popNode 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            cursor: pointer;
+        }
+
+        .ng-2012 { animation-delay: 1.0s; }
+        .ng-2020 { animation-delay: 1.8s; }
+        .ng-2026 { animation-delay: 2.6s; }
+        .ng-2040 { animation-delay: 3.8s; }
+
+        @keyframes popNode {
+            to { opacity: 1; }
+        }
+
+        .node-point {
+            fill: #000;
+            stroke-width: 4;
+            transition: all 0.3s ease;
+        }
+
+        .ng-2012 .node-point { stroke: var(--color-1); }
+        .ng-2020 .node-point { stroke: var(--color-2); }
+        .ng-2026 .node-point { stroke: var(--color-3); }
+        .ng-2040 .node-point { 
+            stroke: var(--color-5); 
+            animation: pulse-singularity 1s infinite alternate; 
+        }
+
+        @keyframes pulse-singularity {
+            0% { filter: drop-shadow(0 0 10px var(--color-5)); transform: scale(1); transform-origin: 850px 100px; }
+            100% { filter: drop-shadow(0 0 40px var(--color-5)); transform: scale(1.3); transform-origin: 850px 100px; }
+        }
+
+        .node-group:hover .node-point {
+            fill: currentColor;
+            transform: scale(1.5);
+            /* Handle transform origins manually via JS or CSS classes */
+        }
+
+        .year-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 800;
+            fill: #fff;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .title-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            fill: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: fill 0.3s ease;
+        }
+
+        .node-group:hover .year-label { opacity: 1; }
+        .node-group:hover .title-label { fill: #fff; }
+
+        /* --- Interactive Fact Panel --- */
+        .fact-panel {
+            position: absolute;
+            bottom: 4rem;
+            right: 4rem;
+            width: 400px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-default {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .panel-content {
+            display: none;
+            animation: slideUp 0.3s ease forwards;
+        }
+
+        .panel-content.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pc-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Color classes for panel text */
+        .text-2012 { color: var(--color-1); text-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .text-2020 { color: var(--color-2); text-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
+        .text-2026 { color: var(--color-3); text-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+        .text-2040 { color: var(--color-5); text-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+
+        .pc-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .pc-stat {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .pc-stat span {
+            color: #e5e7eb;
+            font-weight: 700;
+        }
+
+        .pc-desc {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1000px) {
+            header { top: 2rem; left: 2rem; }
+            h1 { font-size: 2.5rem; }
+            .fact-panel { bottom: 2rem; right: 2rem; left: 2rem; width: auto; max-width: 500px; }
+            svg.curve-svg { display: none; } /* On mobile, we might need a purely vertical stack fallback, but this is an infographic tool best viewed wide */
+            body { overflow-y: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The 2040 Ascent</h1>
+        <p class="subtitle">The exponential trajectory of intelligence: From recognizing basic pixels to mastering the physical universe.</p>
+    </header>
+
+    <div class="timeline-wrapper">
+        <!-- The SVG canvas is 1000x600 for coordinate mapping -->
+        <svg class="curve-svg" viewBox="0 0 1000 600" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="curveGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#3B82F6" />   <!-- 2012 -->
+                    <stop offset="30%" stop-color="#06B6D4" />  <!-- 2020 -->
+                    <stop offset="60%" stop-color="#F59E0B" />  <!-- 2026 -->
+                    <stop offset="90%" stop-color="#EA580C" />  <!-- Accelerated -->
+                    <stop offset="100%" stop-color="#EF4444" /> <!-- 2040 -->
+                </linearGradient>
+            </defs>
+
+            <!-- Exponential Curve Path (Flat start, steep end) -->
+            <path class="exp-curve" d="M 100 500 C 300 495, 450 480, 550 400 C 650 320, 750 200, 850 100" />
+
+            <!-- Node 2012 -->
+            <g class="node-group ng-2012" data-target="info-2012">
+                <circle class="node-point" cx="100" cy="500" r="8" />
+                <text class="year-label" x="90" y="530">2012</text>
+                <text class="title-label" x="90" y="550">AlexNet</text>
+            </g>
+
+            <!-- Node 2020 -->
+            <g class="node-group ng-2020" data-target="info-2020">
+                <circle class="node-point" cx="400" cy="486" r="8" />
+                <text class="year-label" x="390" y="516">2020</text>
+                <text class="title-label" x="390" y="536">GPT-3</text>
+            </g>
+
+            <!-- Node 2026 -->
+            <g class="node-group ng-2026" data-target="info-2026">
+                <circle class="node-point" cx="620" cy="345" r="8" />
+                <text class="year-label" x="640" y="350">2026</text>
+                <text class="title-label" x="640" y="370">Agentic AI</text>
+            </g>
+
+            <!-- Node 2040 -->
+            <g class="node-group ng-2040" data-target="info-2040">
+                <circle class="node-point" cx="850" cy="100" r="10" />
+                <text class="year-label" x="780" y="90">2040</text>
+                <text class="title-label" x="780" y="110">End Game</text>
+            </g>
+        </svg>
+    </div>
+
+    <!-- The Information Panel -->
+    <div class="fact-panel">
+        <div class="panel-default" id="panel-default">
+            Hover over the timeline milestones to view the exponential leaps in AI capability.
+        </div>
+
+        <!-- 2012 -->
+        <div class="panel-content" id="info-2012">
+            <div class="pc-year text-2012">2012</div>
+            <div class="pc-title">The Deep Learning Boom</div>
+            <div class="pc-stat">Milestone: <span>AlexNet</span></div>
+            <div class="pc-stat">Compute: <span>~0.0001 PetaFLOP/s-days</span></div>
+            <div class="pc-stat">Capability: <span>Pixel Recognition</span></div>
+            <p class="pc-desc">The catalyst. Using GPUs to train neural networks allows computers to accurately recognize cats and dogs in images. It is purely digital and entirely passive.</p>
+        </div>
+
+        <!-- 2020 -->
+        <div class="panel-content" id="info-2020">
+            <div class="pc-year text-2020">2020</div>
+            <div class="pc-title">Language Mastery</div>
+            <div class="pc-stat">Milestone: <span>GPT-3</span></div>
+            <div class="pc-stat">Compute: <span>~3,640 PetaFLOP/s-days</span></div>
+            <div class="pc-stat">Capability: <span>Text Generation</span></div>
+            <p class="pc-desc">The scale era begins. By predicting the next token across massive text datasets, models develop an emergent understanding of human grammar, logic, and facts. Still confined to digital text boxes.</p>
+        </div>
+
+        <!-- 2026 -->
+        <div class="panel-content" id="info-2026">
+            <div class="pc-year text-2026">2026</div>
+            <div class="pc-title">The Embodiment Era</div>
+            <div class="pc-stat">Milestone: <span>Agentic AI & General W.A.M.</span></div>
+            <div class="pc-stat">Data: <span>1M+ Hours of Human Video</span></div>
+            <div class="pc-stat">Capability: <span>Digital & Physical Action</span></div>
+            <p class="pc-desc">The knee of the curve. Intelligence transitions from thinking to doing. Agents navigate websites autonomously, and bipedal robots learn to walk and manipulate objects using Vision-Language-Action models.</p>
+        </div>
+
+        <!-- 2040 -->
+        <div class="panel-content" id="info-2040">
+            <div class="pc-year text-2040">2040</div>
+            <div class="pc-title">Physical A.G.I.</div>
+            <div class="pc-stat">Milestone: <span>The Singularity Node</span></div>
+            <div class="pc-stat">Scale: <span>Billions of deployed agents</span></div>
+            <div class="pc-stat">Capability: <span>Limitless Physical Agency</span></div>
+            <p class="pc-desc">The End Game. The physical world becomes a fully programmable API. Robots possess superhuman dexterity, dynamically updating their physical world models in real-time, and building the infrastructure for civilization.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const nodes = document.querySelectorAll('.node-group');
+        const contents = document.querySelectorAll('.panel-content');
+        const defaultMsg = document.getElementById('panel-default');
+
+        nodes.forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                defaultMsg.style.display = 'none';
+                contents.forEach(c => c.classList.remove('active'));
+                
+                const targetId = node.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+
+            node.addEventListener('click', () => {
+                defaultMsg.style.display = 'none';
+                contents.forEach(c => c.classList.remove('active'));
+                
+                const targetId = node.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

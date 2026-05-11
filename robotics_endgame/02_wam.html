@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Action Models | The Paradigm Shift</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0a0a0a;
+            --bg-panel: #111111;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #222222;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            /* VLA Colors (Muted) */
+            --vla-lang: #b45309; /* Muted Yellow/Orange */
+            --vla-vis: #1e3a8a;  /* Muted Blue */
+            --vla-act: #7f1d1d;  /* Muted Red */
+            
+            /* WAM Colors (Vibrant) */
+            --wam-lang: #F59E0B; /* Vibrant Yellow */
+            --wam-vis: #3B82F6;  /* Vibrant Blue */
+            --wam-act: #EF4444;  /* Vibrant Red/Orange */
+            
+            --border-color: #27272a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            max-width: 800px;
+            margin: 4rem 0 3rem 0;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            height: calc(100vh - 15rem);
+            min-height: 700px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .panel {
+            padding: 3rem 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .panel.vla {
+            background: linear-gradient(to bottom right, #0d0d0d, #050505);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .panel.wam {
+            background: linear-gradient(to bottom left, #111, #080808);
+        }
+
+        .panel-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .panel-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* --- Graphics Area --- */
+        .graphic-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+        }
+
+        /* VLA Graphic: Unbalanced */
+        .vla-system {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            animation: wobble 6s ease-in-out infinite;
+        }
+
+        .node {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .vla-lang-node {
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle at 30% 30%, rgba(180,83,9,0.8), rgba(67,20,7,0.9));
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            z-index: 2;
+        }
+
+        .vla-vis-node {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, rgba(30,58,138,0.8), rgba(23,37,84,0.9));
+            top: 10%;
+            left: 10%;
+            font-size: 0.9rem;
+            z-index: 3;
+        }
+
+        .vla-act-node {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, rgba(127,29,29,0.8), rgba(69,10,10,0.9));
+            bottom: 15%;
+            right: 5%;
+            font-size: 0.8rem;
+            z-index: 3;
+        }
+
+        /* WAM Graphic: Balanced */
+        .wam-system {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .wam-node {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            mix-blend-mode: screen;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Arranged in a triangle/Venn diagram */
+        .wam-lang-node {
+            background: radial-gradient(circle, rgba(245,158,11,0.8) 0%, rgba(245,158,11,0.2) 70%, transparent 100%);
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 40px rgba(245,158,11,0.4);
+        }
+
+        .wam-vis-node {
+            background: radial-gradient(circle, rgba(59,130,246,0.8) 0%, rgba(59,130,246,0.2) 70%, transparent 100%);
+            bottom: 30px;
+            left: 20px;
+            box-shadow: 0 0 40px rgba(59,130,246,0.4);
+        }
+
+        .wam-act-node {
+            background: radial-gradient(circle, rgba(239,68,68,0.8) 0%, rgba(239,68,68,0.2) 70%, transparent 100%);
+            bottom: 30px;
+            right: 20px;
+            box-shadow: 0 0 40px rgba(239,68,68,0.4);
+        }
+
+        /* Core center light in WAM */
+        .wam-core {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            box-shadow: 0 0 50px #fff;
+            z-index: 10;
+            opacity: 0.8;
+            animation: pulse-core 3s infinite alternate;
+        }
+
+        /* --- Info Cards (Bottom) --- */
+        .info-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 450px;
+            margin-top: 2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .panel.vla .info-card:hover {
+            border-color: #555;
+            background-color: var(--bg-card-hover);
+        }
+
+        .panel.wam .info-card:hover {
+            border-color: #fff;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+            background-color: var(--bg-card-hover);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .fact-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .info-card:hover .fact-list {
+            max-height: 300px;
+            opacity: 1;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .fact-list li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+
+        .fact-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #666;
+        }
+        
+        .panel.wam .fact-list li::before { color: #fff; }
+
+        .stat {
+            font-family: 'JetBrains Mono', monospace;
+            background: #2a2a2a;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        /* --- Animations --- */
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-2deg) translateX(-5px); }
+            50% { transform: rotate(2deg) translateX(5px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes pulse-core {
+            0% { transform: translate(-50%, -40%) scale(0.9); opacity: 0.6; }
+            100% { transform: translate(-50%, -40%) scale(1.1); opacity: 1; }
+        }
+
+        /* --- Central Divider --- */
+        .divider {
+            position: absolute;
+            left: 50%;
+            top: 15rem;
+            bottom: 0;
+            width: 60px;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .arrow-right {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .panel.vla { border-right: none; border-bottom: 1px solid var(--border-color); }
+            .divider {
+                top: 50%;
+                left: auto;
+                right: 20px;
+                transform: translateY(-50%) rotate(90deg);
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>World Action Models (WAM)</h1>
+        <p class="subtitle">The Paradigm Shift: From "Head-Heavy" text-thinkers to balanced, embodied actors perfectly tuned for the physical world.</p>
+    </header>
+
+    <div class="container">
+        <!-- Central Arrow -->
+        <div class="divider">
+            <div class="arrow-right">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+        </div>
+
+        <!-- Left Panel: VLA -->
+        <div class="panel vla">
+            <div class="panel-header">
+                <h2>The Past: VLA</h2>
+                <p>Vision-Language-Action Models</p>
+            </div>
+
+            <div class="graphic-container">
+                <div class="vla-system">
+                    <div class="node vla-lang-node">Language</div>
+                    <div class="node vla-vis-node">Vision</div>
+                    <div class="node vla-act-node">Action</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-title">
+                    The "Head-Heavy" Bottleneck
+                    <span>Hover for stats</span>
+                </div>
+                <ul class="fact-list">
+                    <li><strong>Architecture:</strong> Takes a massive LLM (e.g., PaLM-E, RT-2) and simply bolts on a vision encoder and an action output head.</li>
+                    <li><strong>Latency:</strong> Operates at roughly <span class="stat">1-5 Hz</span> (too slow to catch a falling object or react dynamically).</li>
+                    <li><strong>Inefficiency:</strong> Wastes vast compute cycles reasoning through text space just to move a motor joint 2 degrees.</li>
+                    <li><strong>Result:</strong> Smart, but slow and clumsy in real-time.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Panel: WAM -->
+        <div class="panel wam">
+            <div class="panel-header">
+                <h2>The Future: WAM</h2>
+                <p>World Action Models</p>
+            </div>
+
+            <div class="graphic-container">
+                <div class="wam-system">
+                    <div class="wam-node wam-lang-node">Language</div>
+                    <div class="wam-node wam-vis-node">Vision</div>
+                    <div class="wam-node wam-act-node">Action</div>
+                    <div class="wam-core"></div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-title">
+                    Embodied Equilibrium
+                    <span>Hover for stats</span>
+                </div>
+                <ul class="fact-list">
+                    <li><strong>Architecture:</strong> Natively multimodal from the ground up. Vision, Language, and Action are processed jointly in the same latent space.</li>
+                    <li><strong>Latency:</strong> Operates at <span class="stat">50-100+ Hz</span>, enabling fluid, human-like reaction times and dynamic recovery.</li>
+                    <li><strong>Efficiency:</strong> Pixel-to-torque predictions bypass the text bottleneck, allowing direct spatial and physical reasoning.</li>
+                    <li><strong>Result:</strong> Fast, dexterous, and fully aware.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fallback for touch devices to toggle hover state
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const list = card.querySelector('.fact-list');
+                if (list.style.maxHeight) {
+                    list.style.maxHeight = null;
+                    list.style.opacity = null;
+                    list.style.paddingTop = null;
+                    list.style.marginTop = null;
+                    list.style.borderTop = null;
+                } else {
+                    list.style.maxHeight = '300px';
+                    list.style.opacity = '1';
+                    list.style.paddingTop = '1rem';
+                    list.style.marginTop = '1rem';
+                    list.style.borderTop = '1px solid #333';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

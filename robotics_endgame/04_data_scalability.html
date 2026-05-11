@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Scalability Pyramid | Robotics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0a0a0a;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --tier-top: #52525b; /* Zinc 600 */
+            --tier-mid: #ea580c; /* Orange 600 */
+            --tier-base: #f59e0b; /* Amber 500 */
+            
+            --panel-bg: #111111;
+            --panel-border: #27272a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            max-width: 900px;
+            margin: 4rem 0 3rem 0;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            gap: 4rem;
+            padding: 0 2rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Pyramid Layout --- */
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .tier {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111;
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Glow effect on hover */
+        .tier::before {
+            content: '';
+            position: absolute;
+            top: 0;left: 0;right: 0;bottom: 0;
+            background: linear-gradient(rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tier:hover {
+            transform: scale(1.02);
+            z-index: 10;
+        }
+
+        .tier:hover::before { opacity: 1; }
+
+        .tier-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Top Tier: Teleoperation */
+        .tier-top {
+            width: 30%;
+            height: 100px;
+            background-color: var(--tier-top);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+            color: #fff;
+        }
+        
+        /* Middle Tier: Data Wearables */
+        .tier-mid {
+            width: 65%;
+            height: 120px;
+            background-color: var(--tier-mid);
+            clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+            color: #fff;
+        }
+
+        /* Base Tier: Egocentric Video */
+        .tier-base {
+            width: 100%;
+            height: 140px;
+            background-color: var(--tier-base);
+            clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+        }
+
+
+        /* --- Data Fact Terminal (Right Panel) --- */
+        .fact-terminal {
+            flex: 1;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 500px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .terminal-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid #333;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Default state before hover */
+        .default-msg {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            margin-top: 3rem;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Dynamic Content Wrapper */
+        .fact-content {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .fact-content.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fact-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .fact-scale {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .fact-scale.scale-top { background: rgba(82, 82, 91, 0.2); color: #a1a1aa; border: 1px solid #52525b; }
+        .fact-scale.scale-mid { background: rgba(234, 88, 12, 0.2); color: var(--tier-mid); border: 1px solid var(--tier-mid); }
+        .fact-scale.scale-base { background: rgba(245, 158, 11, 0.2); color: var(--tier-base); border: 1px solid var(--tier-base); }
+
+        .fact-desc {
+            color: #d1d5db;
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tradeoff-box {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-left: 4px solid #444;
+            border-radius: 4px;
+        }
+        
+        .tradeoff-box.trade-top { border-left-color: var(--tier-top); }
+        .tradeoff-box.trade-mid { border-left-color: var(--tier-mid); }
+        .tradeoff-box.trade-base { border-left-color: var(--tier-base); }
+
+        .tradeoff-box strong { color: #fff; }
+
+        @media (max-width: 900px) {
+            .container { flex-direction: column; }
+            .pyramid-container { width: 100%; max-width: none; }
+            .tier-top { width: 50%; }
+            .tier-mid { width: 80%; }
+            .tier-base { width: 100%; }
+            .fact-terminal { width: 100%; max-width: none; min-height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Data Scalability</h1>
+        <p class="subtitle">Solving the robotics bottleneck: Shifting from precise but unscalable teleoperation to massive, internet-scale passive video.</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- The Pyramid -->
+        <div class="pyramid-container">
+            <!-- Top -->
+            <div class="tier tier-top" data-target="info-top">
+                <svg class="tier-icon" viewBox="0 0 24 24"><path d="M22 12v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M2 12a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4"></path><path d="M12 16v4"></path><path d="M8 20h8"></path><circle cx="9" cy="12" r="2"></circle><circle cx="15" cy="12" r="2"></circle></svg>
+                Teleop
+            </div>
+            
+            <!-- Mid -->
+            <div class="tier tier-mid" data-target="info-mid">
+                <svg class="tier-icon" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6"></path><path d="M18 11v5a6 6 0 0 1-6 6v0a6 6 0 0 1-6-6v-5"></path><path d="M6 12V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v5a8 8 0 0 0 8 8v0a8 8 0 0 0 8-8v-3.5a2.5 2.5 0 0 0-5 0V11"></path></svg>
+                Data Wearables
+            </div>
+            
+            <!-- Base -->
+            <div class="tier tier-base" data-target="info-base">
+                <svg class="tier-icon" viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"></path><path d="M10 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4"></path><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line></svg>
+                Egocentric Video
+            </div>
+        </div>
+
+        <!-- The Fact Terminal -->
+        <div class="fact-terminal">
+            <div class="terminal-header">Data Analytics Terminal v2.1</div>
+            
+            <div class="default-msg" id="default-msg">
+                Hover over a pyramid tier to analyze the data modality.
+            </div>
+
+            <!-- Content: Top -->
+            <div class="fact-content" id="info-top">
+                <h2 class="fact-title">Teleoperation</h2>
+                <div class="fact-scale scale-top">Scale: ~3 hours / day</div>
+                <p class="fact-desc">Using VR headsets and custom rigs (like ALOHA) to manually pilot the robot. This gives the model explicit motor-torque data for specific tasks.</p>
+                <div class="tradeoff-box trade-top">
+                    <strong>Trade-off:</strong> Highest quality, but lowest quantity. Impossible to scale to the millions of hours needed for generalized intelligence.
+                </div>
+            </div>
+
+            <!-- Content: Mid -->
+            <div class="fact-content" id="info-mid">
+                <h2 class="fact-title">Data Wearables</h2>
+                <div class="fact-scale scale-mid">Scale: 100,000+ hours</div>
+                <p class="fact-desc">Humans wearing haptic gloves or exoskeletons while doing their normal jobs. This captures human-scale physical dexterity and force-feedback.</p>
+                <div class="tradeoff-box trade-mid">
+                    <strong>Trade-off:</strong> Medium quality, high quantity. Requires translating human hand kinematics (5 fingers) into robot gripper logic (2 fingers).
+                </div>
+            </div>
+
+            <!-- Content: Base -->
+            <div class="fact-content" id="info-base">
+                <h2 class="fact-title">Egocentric Video</h2>
+                <div class="fact-scale scale-base">Scale: 10,000,000+ hours</div>
+                <p class="fact-desc">First-person video from Smart Glasses, GoPros, and YouTube. Models learn physics, object permanence, and task sequencing just by watching.</p>
+                <div class="tradeoff-box trade-base">
+                    <strong>Trade-off:</strong> Lowest specific motor control, but massive, internet-scale quantity. The foundation of general World Action Models.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const tiers = document.querySelectorAll('.tier');
+        const contents = document.querySelectorAll('.fact-content');
+        const defaultMsg = document.getElementById('default-msg');
+
+        tiers.forEach(tier => {
+            // Mouse Enter
+            tier.addEventListener('mouseenter', () => {
+                defaultMsg.style.display = 'none';
+                contents.forEach(c => c.classList.remove('active'));
+                
+                const targetId = tier.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+
+            // Touch support for mobile
+            tier.addEventListener('click', () => {
+                defaultMsg.style.display = 'none';
+                contents.forEach(c => c.classList.remove('active'));
+                
+                const targetId = tier.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

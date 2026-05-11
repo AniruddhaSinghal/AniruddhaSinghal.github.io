@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EgoScale | The Law of Robot Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #080808;
+            --bg-panel: #121212;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --graph-grid: #27272a;
+            --graph-line: #F59E0B; /* Yellow */
+            --graph-line-glow: rgba(245, 158, 11, 0.4);
+            --graph-fill: rgba(245, 158, 11, 0.05);
+            
+            --point-color: #EA580C; /* Orange */
+            --point-glow: rgba(234, 88, 12, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 3rem;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .graph-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            background: var(--bg-panel);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 3rem 2rem 5rem 4rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-bottom: 2rem;
+        }
+
+        /* --- SVG Graph Styling --- */
+        svg.chart {
+            width: 100%;
+            height: 450px;
+            overflow: visible;
+        }
+
+        /* Grid lines */
+        .grid-line {
+            stroke: var(--graph-grid);
+            stroke-width: 1;
+        }
+        
+        /* Axis text */
+        .axis-label {
+            fill: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+        
+        .axis-title {
+            fill: var(--text-main);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* The Data Line */
+        .data-line {
+            fill: none;
+            stroke: url(#lineGradient);
+            stroke-width: 4;
+            filter: drop-shadow(0 0 10px var(--graph-line-glow));
+            /* Animation setup */
+            stroke-dasharray: 1500;
+            stroke-dashoffset: 1500;
+            animation: drawLine 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Shaded Area Under Curve */
+        .data-area {
+            fill: url(#areaGradient);
+            opacity: 0;
+            animation: fadeArea 1s ease 2s forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        @keyframes fadeArea {
+            to { opacity: 1; }
+        }
+
+        /* Interactive Data Points */
+        .data-point {
+            fill: var(--bg-panel);
+            stroke: var(--point-color);
+            stroke-width: 3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Stagger point animations */
+        .pt-1 { animation-delay: 0.5s; }
+        .pt-2 { animation-delay: 1.0s; }
+        .pt-3 { animation-delay: 1.5s; }
+        .pt-4 { animation-delay: 2.0s; }
+
+        @keyframes popIn {
+            to { opacity: 1; }
+        }
+
+        .data-point:hover, .data-point.active {
+            fill: var(--point-color);
+            filter: drop-shadow(0 0 15px var(--point-glow));
+            transform: scale(1.5);
+            transform-origin: center;
+        }
+
+        /* --- Fact Tooltip Panel --- */
+        .fact-panel {
+            width: 100%;
+            max-width: 900px;
+            background: #111;
+            border: 1px solid #333;
+            border-left: 4px solid var(--graph-line);
+            border-radius: 8px;
+            padding: 2rem;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .fact-default {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .fact-content {
+            display: none;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .fact-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .fact-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .fact-stats {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--graph-line);
+            font-size: 0.9rem;
+        }
+
+        .fact-desc {
+            color: #d1d5db;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .graph-container { padding: 2rem 1rem 3rem 2rem; }
+            svg.chart { height: 300px; }
+            .axis-title { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>EgoScale</h1>
+        <p class="subtitle">The Law of Robot Learning: Mathematical proof that physical dexterity scales predictably with volume of human-centric video data.</p>
+    </header>
+
+    <div class="graph-container">
+        
+        <svg class="chart" viewBox="0 0 800 450" preserveAspectRatio="none">
+            <defs>
+                <!-- Gradients -->
+                <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#F59E0B" />
+                    <stop offset="100%" stop-color="#EA580C" />
+                </linearGradient>
+                <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(234, 88, 12, 0.2)" />
+                    <stop offset="100%" stop-color="rgba(245, 158, 11, 0)" />
+                </linearGradient>
+            </defs>
+
+            <!-- Y-Axis Grid Lines (Success Rate) -->
+            <line class="grid-line" x1="0" y1="400" x2="800" y2="400" /> <!-- 0% -->
+            <line class="grid-line" x1="0" y1="300" x2="800" y2="300" /> <!-- 25% -->
+            <line class="grid-line" x1="0" y1="200" x2="800" y2="200" /> <!-- 50% -->
+            <line class="grid-line" x1="0" y1="100" x2="800" y2="100" /> <!-- 75% -->
+            <line class="grid-line" x1="0" y1="0"   x2="800" y2="0" />   <!-- 100% -->
+
+            <!-- Y-Axis Labels -->
+            <text class="axis-label" x="-35" y="405">0%</text>
+            <text class="axis-label" x="-43" y="305">25%</text>
+            <text class="axis-label" x="-43" y="205">50%</text>
+            <text class="axis-label" x="-43" y="105">75%</text>
+            <text class="axis-label" x="-50" y="5">100%</text>
+
+            <!-- Y-Axis Title -->
+            <text class="axis-title" x="-225" y="-70" transform="rotate(-90)">Dexterity Success Rate</text>
+
+            <!-- X-Axis Grid Lines (Log Scale: Data Hours) -->
+            <line class="grid-line" x1="100" y1="0" x2="100" y2="400" />
+            <line class="grid-line" x1="300" y1="0" x2="300" y2="400" />
+            <line class="grid-line" x1="500" y1="0" x2="500" y2="400" />
+            <line class="grid-line" x1="750" y1="0" x2="750" y2="400" />
+
+            <!-- X-Axis Labels -->
+            <text class="axis-label" x="85"  y="425">1K</text>
+            <text class="axis-label" x="280" y="425">10K</text>
+            <text class="axis-label" x="480" y="425">100K</text>
+            <text class="axis-label" x="730" y="425">1M+</text>
+
+            <!-- X-Axis Title -->
+            <text class="axis-title" x="300" y="460">Training Data (Hours) - Log Scale</text>
+
+            <!-- Data Area (Under Curve) -->
+            <path class="data-area" d="M 0 400 L 100 350 Q 300 280, 500 120 T 750 40 L 750 400 Z" />
+
+            <!-- Data Line (The Curve) -->
+            <path class="data-line" d="M 0 400 L 100 350 Q 300 280, 500 120 T 750 40" />
+
+            <!-- Interactive Points -->
+            <circle class="data-point pt-1" cx="100" cy="350" r="8" data-target="info-1" />
+            <circle class="data-point pt-2" cx="300" cy="275" r="8" data-target="info-2" />
+            <circle class="data-point pt-3" cx="500" cy="120" r="8" data-target="info-3" />
+            <circle class="data-point pt-4" cx="750" cy="40"  r="8" data-target="info-4" />
+
+        </svg>
+
+    </div>
+
+    <!-- Interactive Fact Panel -->
+    <div class="fact-panel">
+        <div class="fact-default" id="fact-default">
+            Hover over a data point on the graph to view the scaling milestones.
+        </div>
+
+        <div class="fact-content" id="info-1">
+            <div class="fact-header">
+                <div class="fact-title">Basic Grasping</div>
+                <div class="fact-stats">~1,000 Hours | Success: 12%</div>
+            </div>
+            <div class="fact-desc">
+                The model can perform simple pick-and-place tasks but is brittle. If lighting changes, or the object is rotated slightly, the robot fails completely. The internal "World Model" is barely formed.
+            </div>
+        </div>
+
+        <div class="fact-content" id="info-2">
+            <div class="fact-header">
+                <div class="fact-title">Robust Perception</div>
+                <div class="fact-stats">~10,000 Hours | Success: 31%</div>
+            </div>
+            <div class="fact-desc">
+                The robot stops failing due to visual distractors. It understands "what" an object is regardless of lighting or background, but still struggles with dynamic, multi-step physical interactions (like pouring liquid).
+            </div>
+        </div>
+
+        <div class="fact-content" id="info-3">
+            <div class="fact-header">
+                <div class="fact-title">Zero-Shot Generalization</div>
+                <div class="fact-scale scale-mid"></div>
+                <div class="fact-stats">~100,000 Hours | Success: 70%</div>
+            </div>
+            <div class="fact-desc">
+                The critical tipping point. The model begins to understand physics and object affordances. It can successfully manipulate objects it has never explicitly seen in training because it understands the generalized rules of the physical world.
+            </div>
+        </div>
+
+        <div class="fact-content" id="info-4">
+            <div class="fact-header">
+                <div class="fact-title">Emergent Dexterity</div>
+                <div class="fact-stats">~1,000,000+ Hours | Success: 90%+</div>
+            </div>
+            <div class="fact-desc">
+                Human-level and superhuman dexterity. The model exhibits dynamic recovery (catching a slipping object), tool use without explicit programming, and complex bimanual coordination. This is the "ChatGPT moment" for robotics.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const points = document.querySelectorAll('.data-point');
+        const contents = document.querySelectorAll('.fact-content');
+        const defaultMsg = document.getElementById('fact-default');
+
+        points.forEach(point => {
+            // Mouse Enter
+            point.addEventListener('mouseenter', () => {
+                // Reset states
+                defaultMsg.style.display = 'none';
+                contents.forEach(c => c.classList.remove('active'));
+                points.forEach(p => p.classList.remove('active'));
+                
+                // Activate target
+                point.classList.add('active');
+                const targetId = point.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+
+            // Touch support
+            point.addEventListener('click', () => {
+                defaultMsg.style.display = 'none';
+                contents.forEach(c => c.classList.remove('active'));
+                points.forEach(p => p.classList.remove('active'));
+                
+                point.classList.add('active');
+                const targetId = point.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

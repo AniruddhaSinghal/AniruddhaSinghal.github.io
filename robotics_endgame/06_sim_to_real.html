@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-to-Sim-to-Real | The Digital Cousin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #050505;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --color-real: #EA580C; /* Orange */
+            --glow-real: rgba(234, 88, 12, 0.4);
+            
+            --color-sim: #06b6d4;  /* Cyan */
+            --glow-sim: rgba(6, 182, 212, 0.4);
+
+            --panel-bg: #111111;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* --- Cycle Layout --- */
+        .cycle-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        /* Animated Connecting Arrows */
+        .arrows {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .arrow-path {
+            fill: none;
+            stroke: #333;
+            stroke-width: 4;
+            stroke-dasharray: 10 10;
+            animation: dashLoop 20s linear infinite;
+        }
+
+        .arrow-head {
+            fill: #333;
+        }
+
+        @keyframes dashLoop {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* --- Cycle Nodes (Cards) --- */
+        .node-card {
+            background: var(--panel-bg);
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .node-card:hover {
+            transform: translateY(-5px);
+            border-color: #555;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+        }
+
+        .node-card:hover::before { opacity: 1; }
+
+        .node-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Real nodes vs Sim nodes */
+        .node-real { border-top: 3px solid var(--color-real); }
+        .node-real .node-header { color: var(--color-real); background: rgba(234, 88, 12, 0.1); border: 1px solid var(--color-real); }
+        .node-real:hover { box-shadow: 0 10px 40px var(--glow-real); }
+
+        .node-sim { border-top: 3px solid var(--color-sim); }
+        .node-sim .node-header { color: var(--color-sim); background: rgba(6, 182, 212, 0.1); border: 1px solid var(--color-sim); }
+        .node-sim:hover { box-shadow: 0 10px 40px var(--glow-sim); }
+
+        .node-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        /* Info Overlay on Hover */
+        .node-info {
+            position: absolute;
+            bottom: -100%;
+            left: 0; right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
+            text-align: left;
+            transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top: 1px solid #333;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .node-card:hover .node-info {
+            bottom: 0;
+        }
+
+        .node-info p {
+            color: #d1d5db;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .fact-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #fff;
+            background: #222;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .node-real .fact-tag { border-left: 2px solid var(--color-real); }
+        .node-sim .fact-tag { border-left: 2px solid var(--color-sim); }
+
+        /* --- Visual Icons / Graphics inside cards --- */
+        .icon-container {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Step 1: Scanner */
+        .graphic-phone {
+            width: 40px;
+            height: 70px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            position: absolute;
+            top: 10px; left: 20px;
+            transform: rotate(-15deg);
+        }
+        .graphic-laser {
+            position: absolute;
+            top: 40px; left: 50px;
+            width: 60px; height: 40px;
+            background: linear-gradient(to right, rgba(234, 88, 12, 0.8), transparent);
+            clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
+            transform: rotate(-15deg);
+        }
+
+        /* Step 2: Wireframe */
+        .graphic-mesh {
+            width: 80px; height: 80px;
+            background-image: 
+                linear-gradient(var(--color-sim) 1px, transparent 1px),
+                linear-gradient(90deg, var(--color-sim) 1px, transparent 1px);
+            background-size: 10px 10px;
+            transform: perspective(200px) rotateX(45deg) rotateZ(20deg);
+            box-shadow: 0 0 20px var(--glow-sim);
+        }
+
+        /* Step 3: Variations */
+        .graphic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        .grid-item {
+            width: 20px; height: 20px;
+            border: 1px solid var(--color-sim);
+            opacity: 0.7;
+        }
+        .grid-item:nth-child(even) { background: rgba(6, 182, 212, 0.3); }
+        .grid-item:nth-child(3n) { transform: scale(0.8); }
+
+        /* Step 4: Virtual Robot */
+        .graphic-bot {
+            width: 60px; height: 60px;
+            border: 3px solid var(--color-real);
+            border-radius: 5px;
+            position: relative;
+        }
+        .graphic-bot::after {
+            content: '';
+            position: absolute;
+            bottom: -20px; left: 20px;
+            width: 14px; height: 30px;
+            background: var(--color-real);
+        }
+
+
+        @media (max-width: 900px) {
+            .cycle-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .arrows { display: none; } /* Hide complex SVG arrows on mobile */
+            .node-info { position: relative; bottom: 0; padding: 1.5rem 0 0 0; background: transparent; border-top: none; height: auto; }
+            .node-card:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Real-to-Sim-to-Real</h1>
+        <p class="subtitle">The Digital Cousin: Scaling physical experience by scanning real objects, proceduralizing them in simulation, and transferring the mastery back to reality.</p>
+    </header>
+
+    <div class="cycle-container">
+        
+        <!-- Animated Background Arrows (Desktop only) -->
+        <svg class="arrows" viewBox="0 0 1000 700" preserveAspectRatio="none">
+            <!-- Top Right Arrow (1 -> 2) -->
+            <path class="arrow-path" d="M 450 150 Q 500 150 550 150" />
+            <polygon class="arrow-head" points="540,140 560,150 540,160" />
+
+            <!-- Right Down Arrow (2 -> 3) -->
+            <path class="arrow-path" d="M 750 350 Q 750 400 750 450" />
+            <polygon class="arrow-head" points="740,440 750,460 760,440" />
+
+            <!-- Bottom Left Arrow (3 -> 4) -->
+            <path class="arrow-path" d="M 550 550 Q 500 550 450 550" />
+            <polygon class="arrow-head" points="460,540 440,550 460,560" />
+
+            <!-- Left Up Arrow (4 -> 1) -->
+            <path class="arrow-path" d="M 250 450 Q 250 400 250 350" />
+            <polygon class="arrow-head" points="240,360 250,340 260,360" />
+        </svg>
+
+        <!-- Step 1: Physical Scan -->
+        <div class="node-card node-real" style="grid-column: 1; grid-row: 1;">
+            <div class="node-header">Step 1: Physical Space</div>
+            <div class="icon-container">
+                <div class="graphic-phone"></div>
+                <div class="graphic-laser"></div>
+            </div>
+            <h2 class="node-title">Object Scanning</h2>
+            
+            <div class="node-info">
+                <p>A simple smartphone camera captures multi-view video of a real-world object (e.g., a screwdriver on a desk).</p>
+                <div class="fact-tag">Tech: Gaussian Splatting / NeRF</div>
+            </div>
+        </div>
+
+        <!-- Step 2: Digitization -->
+        <div class="node-card node-sim" style="grid-column: 2; grid-row: 1;">
+            <div class="node-header">Step 2: Digital Space</div>
+            <div class="icon-container">
+                <div class="graphic-mesh"></div>
+            </div>
+            <h2 class="node-title">3D Reconstruction</h2>
+            
+            <div class="node-info">
+                <p>The video is converted into a highly accurate 3D mesh with embedded physical properties (friction, weight distribution).</p>
+                <div class="fact-tag">Tech: Automated Mesh Generation</div>
+            </div>
+        </div>
+
+        <!-- Step 3: Domain Randomization -->
+        <div class="node-card node-sim" style="grid-column: 2; grid-row: 2;">
+            <div class="node-header">Step 3: Digital Space</div>
+            <div class="icon-container">
+                <div class="graphic-grid">
+                    <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
+                    <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
+                    <div class="grid-item"></div><div class="grid-item"></div><div class="grid-item"></div>
+                </div>
+            </div>
+            <h2 class="node-title">The "Digital Cousins"</h2>
+            
+            <div class="node-info">
+                <p>The single object is procedurally multiplied into thousands of variations (different lighting, colors, sizes, and camera angles) to prevent overfitting.</p>
+                <div class="fact-tag">Tech: Domain Randomization</div>
+            </div>
+        </div>
+
+        <!-- Step 4: Virtual Practice -->
+        <div class="node-card node-real" style="grid-column: 1; grid-row: 2;">
+            <div class="node-header">Step 4: Real Transfer</div>
+            <div class="icon-container">
+                <div class="graphic-bot"></div>
+            </div>
+            <h2 class="node-title">Zero-Shot Mastery</h2>
+            
+            <div class="node-info">
+                <p>The robot agent practices interacting with the 1,000 digital cousins in GPU-accelerated simulation. When deployed to the physical robot, it handles the real screwdriver perfectly on the first try.</p>
+                <div class="fact-tag">Tech: Sim-to-Real Transfer RL</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script to add a little mobile fallback behavior if needed, though CSS handles most hover states -->
+    <script>
+        document.querySelectorAll('.node-card').forEach(card => {
+            card.addEventListener('click', () => {
+                // For touch devices, ensure hover state triggers or toggles
+                card.classList.toggle('active-mobile');
+            });
+        });
+    </script>
+</body>
+</html>
