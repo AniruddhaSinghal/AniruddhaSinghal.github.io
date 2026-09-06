@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Last Question - Narration Timeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050510;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.6);
+            --gold: #fbbf24;
+            --line-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .read-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 2rem;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            border: 1px solid var(--accent);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        .read-button:hover {
+            background: var(--accent);
+            color: #050510;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+            transform: translateY(-3px);
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at bottom, #111827 0%, #050510 100%);
+        }
+
+        header {
+            text-align: center;
+            padding: 6rem 2rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            animation: pulse 4s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.2); }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            z-index: 10;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 2rem;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .era {
+            position: relative;
+            margin-bottom: 6rem;
+            padding-left: 3rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .era.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .era::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 20px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .era:hover::before {
+            transform: scale(1.3);
+            background: var(--accent);
+        }
+
+        .era-content {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .era-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .era-date {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.1);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .era-title {
+            font-size: 1.8rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .characters {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .characters strong {
+            color: #cbd5e1;
+        }
+
+        .issue {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+
+        /* Clickable Concepts */
+        .concept {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--accent);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .concept:hover {
+            color: #fff;
+            border-bottom-style: solid;
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        /* Modal / Popover Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: rgba(15, 23, 42, 0.9);
+            max-width: 650px;
+            width: 100%;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.15);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 350px;
+            background-color: #111;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-text {
+            padding: 2.5rem;
+        }
+
+        #modalTitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-top: 0; 
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            margin-bottom: 1rem;
+        }
+
+        #modalDesc {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            line-height: 1;
+            z-index: 10;
+            transition: color 0.2s, transform 0.2s;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        @media (min-width: 768px) {
+            .timeline::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .era {
+                width: 50%;
+                padding-left: 0;
+                padding-right: 3rem;
+                text-align: right;
+                box-sizing: border-box;
+            }
+
+            .era:nth-child(even) {
+                margin-left: 50%;
+                padding-right: 0;
+                padding-left: 3rem;
+                text-align: left;
+            }
+
+            .era::before {
+                left: auto;
+                right: -9px;
+            }
+
+            .era:nth-child(even)::before {
+                left: -9px;
+                right: auto;
+            }
+            
+            .era-content {
+                text-align: left;
+            }
+        }
+
+        .final-revelation {
+            text-align: center;
+            padding: 8rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .final-revelation.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-text {
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            line-height: 2;
+        }
+
+        .fade-in-text strong {
+            font-size: 4rem;
+            display: block;
+            margin: 2rem 0;
+            text-shadow: 0 0 40px rgba(56, 189, 248, 0.8);
+            animation: pulse-light 4s infinite alternate;
+        }
+
+        @keyframes pulse-light {
+            0% { text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+            100% { text-shadow: 0 0 60px rgba(56, 189, 248, 1); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="starfield"></canvas>
+
+    <header>
+        <h1>The Last Question</h1>
+        <p class="subtitle">Isaac Asimov • A visual timeline of humanity, computing, and entropy.</p>
+        <a href="full_story.html" class="read-button">Read Full Story</a>
+    </header>
+
+    <main class="timeline">
+        <div class="era">
+            <div class="era-content">
+                <span class="era-date">May 21, 2061</span>
+                <h2 class="era-title">The Multivac Era</h2>
+                <div class="characters"><strong>Discussants:</strong> Alexander Adell & Bertram Lupov (Multivac Attendants)</div>
+                <div class="issue">
+                    In the year 2061, humanity turns on the massive planetary computer, Multivac, which solves the energy crisis by harnessing the power of the sun. As they celebrate, two attendants realize that even the sun will eventually burn out. They ask Multivac a drunken, half-joking question: can the inevitable decrease of <span class="concept" data-concept="entropy">entropy</span> be reversed to ensure infinite energy? Multivac responds: <em>"INSUFFICIENT DATA FOR MEANINGFUL ANSWER."</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="era">
+            <div class="era-content">
+                <span class="era-date">Unknown Future</span>
+                <h2 class="era-title">The Microvac Era</h2>
+                <div class="characters"><strong>Discussants:</strong> Jerrodd, Jerrodine, Jerrodette I & II (Fleeing Earth)</div>
+                <div class="issue">
+                    Generations later, humanity is fleeing an overcrowded Earth, spreading across the <span class="concept" data-concept="galaxy">galaxies</span>. Space travel is managed by Microvacs—smaller, more advanced computers that fit on a single ship. Realizing that the <span class="concept" data-concept="star-life">star life cycle</span> means the universe will eventually run out of space and power entirely, Jerrodd asks Microvac if entropy can be reversed. The computer responds: <em>"INSUFFICIENT DATA FOR MEANINGFUL ANSWER."</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="era">
+            <div class="era-content">
+                <span class="era-date">20,000 Years Later</span>
+                <h2 class="era-title">The Galactic AC Era</h2>
+                <div class="characters"><strong>Discussants:</strong> VJ-23X & MQ-17J (Immortals)</div>
+                <div class="issue">
+                    Humanity has discovered immortality and is expanding so rapidly that they fill a new galaxy every few years. The Galactic AC, a supercomputer in hyperspace, manages this vast empire. Realizing that even a hundred billion galaxies will eventually be filled and the stars will die, they ask the Galactic AC if entropy can be reversed to save the universe. It answers: <em>"THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER."</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="era">
+            <div class="era-content">
+                <span class="era-date">Millions of Years Later</span>
+                <h2 class="era-title">The Universal AC Era</h2>
+                <div class="characters"><strong>Discussants:</strong> Zee Prime & Dee Sub Wun (Minds freed from bodies)</div>
+                <div class="issue">
+                    Minds explore the universe independently while their physical bodies rest in stasis. As they wander the cosmos, they witness ancient galaxies dimming and dying. They ask the Universal AC, a machine whose true nature is incomprehensible to humans, how to prevent the eventual heat death of the universe. The Universal AC replies: <em>"THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER."</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="era">
+            <div class="era-content">
+                <span class="era-date">Billions of Years Later</span>
+                <h2 class="era-title">The Cosmic AC Era</h2>
+                <div class="characters"><strong>Discussants:</strong> Man (The <span class="concept" data-concept="one-mind">One Mind</span> of humanity)</div>
+                <div class="issue">
+                    All human minds have merged into a single consciousness, simply called Man. Trillions of years have passed, and the universe is approaching absolute zero. The last stars are dying out. Man asks the Cosmic AC, located entirely in <span class="concept" data-concept="hyperspace">hyperspace</span>, the final question before humanity fades completely. The AC answers: <em>"THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER."</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="era">
+            <div class="era-content">
+                <span class="era-date">Timelessness</span>
+                <h2 class="era-title">The Ultimate AC</h2>
+                <div class="characters"><strong>Discussants:</strong> The AC</div>
+                <div class="issue">
+                    Space, time, matter, and energy have ceased to exist. Only the AC remains in hyperspace, continuously pondering the last question even after humanity is gone. Finally, the AC collects all possible data and learns how to reverse the direction of entropy. But there is no one left to give the answer to. Therefore, the AC decides to demonstrate the answer.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="final-revelation">
+        <div class="fade-in-text">
+            And AC said:<br>
+            <strong style="color: var(--accent); font-family: 'Orbitron', sans-serif;">"LET THERE BE LIGHT!"</strong><br>
+            And there was light--
+        </div>
+    </div>
+
+    <div id="conceptModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img id="modalImg" class="modal-image" src="" alt="Concept Visualization">
+            <div class="modal-text">
+                <h3 id="modalTitle">Concept Title</h3>
+                <p id="modalDesc">Concept description goes here.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Starfield Canvas Animation
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height, stars = [];
+        
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            stars = [];
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 1.5,
+                    speed: (Math.random() * 0.5) + 0.1
+                });
+            }
+        }
+        
+        function drawStars() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            for (let i = 0; i < stars.length; i++) {
+                let star = stars[i];
+                ctx.moveTo(star.x, star.y);
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            updateStars();
+            requestAnimationFrame(drawStars);
+        }
+        
+        function updateStars() {
+            for (let i = 0; i < stars.length; i++) {
+                let star = stars[i];
+                star.y -= star.speed;
+                if (star.y < 0) {
+                    star.y = height;
+                    star.x = Math.random() * width;
+                }
+            }
+        }
+        
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        drawStars();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.era, .final-revelation').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Concepts Data (Using the user provided images)
+        const concepts = {
+            'entropy': {
+                title: 'Entropy',
+                img: 'last_question_images/entropy.png',
+                desc: 'A measure of disorder and the inevitable degradation of all matter and energy in the universe to an ultimate state of inert uniformity (the heat death).'
+            },
+            'galaxy': {
+                title: 'Galaxies & Cosmic Expansion',
+                img: 'last_question_images/galaxy.png',
+                desc: 'Vast systems of stars, gas, and dark matter. In the story, humanity exponentially colonizes these until the physical capacity of the universe is exhausted.'
+            },
+            'star-life': {
+                title: 'Star Life Cycle',
+                img: 'last_question_images/star_life.png',
+                desc: 'The process of stellar evolution, from nebula to protostar, through the main sequence, eventually exhausting nuclear fuel to become white dwarfs, neutron stars, or black holes.'
+            },
+            'one-mind': {
+                title: 'The One Mind',
+                img: 'last_question_images/one mind.png',
+                desc: 'The culmination of human evolution, where individual bodies are discarded in safe storage, and trillions of consciousnesses merge into a single, unified telepathic entity.'
+            },
+            'hyperspace': {
+                title: 'Hyperspace',
+                img: 'last_question_images/hyperspace.png',
+                desc: 'An extra-dimensional realm outside standard spacetime. The later iterations of the AC exist entirely within hyperspace, making them invulnerable to the physical decay of the universe.'
+            }
+        };
+
+        const modal = document.getElementById('conceptModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+
+        document.querySelectorAll('.concept').forEach(item => {
+            item.addEventListener('click', event => {
+                const conceptKey = item.getAttribute('data-concept');
+                const data = concepts[conceptKey];
+
+                modalTitle.textContent = data.title;
+                modalDesc.textContent = data.desc;
+                modalImg.src = data.img; 
+
+                modal.style.display = 'flex';
+                // Slight delay to allow display block to apply before opacity transition
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
+            });
+        });
+
+        function closeModal() {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300); // Wait for transition
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        // Escape key to close modal
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

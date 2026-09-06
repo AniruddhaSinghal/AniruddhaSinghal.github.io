@@ -353,6 +353,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .chip-ro    { background:rgba(251,146,60,.08);  color:var(--orange); border:1px solid rgba(251,146,60,.2);  }
     .snum-ro    { background:rgba(251,146,60,.07);  color:var(--orange); border:1px solid rgba(251,146,60,.18); }
 
+
+    /* Interactive Art */
+    .ia  { --ca:rgba(236,72,153,.28);  --cg:linear-gradient(90deg,#ec4899,#8b5cf6); }
+    .chip-ia    { background:rgba(236,72,153,.08);  color:#ec4899; border:1px solid rgba(236,72,153,.2);  }
+    .snum-ia    { background:rgba(236,72,153,.07);  color:#ec4899; border:1px solid rgba(236,72,153,.18); }
+
     /* ── ABOUT SECTION ──────────────────────────────────── */
     .about-wrap {
       max-width:1280px; margin:0 auto 80px;
@@ -501,6 +507,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
   </style>
 </head>
+
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T7QMNJNK"
@@ -522,7 +529,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="nav-dot"></div>
       <span class="nav-logo">Visual Learning Lab</span>
     </div>
-    <span class="nav-pill">10 Interactive Modules</span>
+    <span class="nav-pill">12 Interactive Modules</span>
   </nav>
 
   <!-- ── HERO ───────────────────────────────────────────── -->
@@ -537,9 +544,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       statistics to blockchain.
     </p>
     <div class="hero-stats">
-      <div class="hstat"><span class="v">10</span> Learning Modules</div>
+      <div class="hstat"><span class="v">12</span> Learning Modules</div>
       <span class="hstat-sep">·</span>
-      <div class="hstat"><span class="v">5</span> Subject Areas</div>
+      <div class="hstat"><span class="v">6</span> Subject Areas</div>
       <span class="hstat-sep">·</span>
       <div class="hstat"><span class="v">100%</span> Browser-Based</div>
       <span class="hstat-sep">·</span>
@@ -726,6 +733,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <div class="grid">
 
+        <a href="./robot_armature.html" class="card ro">
+          <div class="card-top"></div>
+          <span class="card-icon">🏗️</span>
+          <span class="card-chip chip-ro">3D Studio</span>
+          <h3 class="card-title">ARMATURE Robot Studio</h3>
+          <p class="card-desc">A complete, browser-based 3D robot learning studio. Simulate kinematics and dynamics for multi-DOF arms, script pick-and-place tasks, and collect training data for embodied AI entirely offline.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Kinematics</span>
+              <span class="tag">Simulation</span>
+              <span class="tag">Embodied AI</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+
         <a href="./IAR_teaching_tool.html" class="card ro">
           <div class="card-top"></div>
           <span class="card-icon">🏭</span>
@@ -777,7 +801,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+
+    <!-- 06 · Interactive Fiction & Art -->
+    <div class="cat-wrap fi">
+      <div class="sec-hd">
+        <span class="sec-num snum-ia">06</span>
+        <h2 class="sec-title">Interactive Fiction &amp; Art</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="grid">
+
+        <a href="./thelastquestion.html" class="card ia">
+          <div class="card-top"></div>
+          <span class="card-icon">🌌</span>
+          <span class="card-chip chip-ia">Immersive Story</span>
+          <h3 class="card-title">The Last Question</h3>
+          <p class="card-desc">Experience Isaac Asimov's profound sci-fi masterpiece in a fully interactive, scroll-driven visual timeline. Explore concepts like entropy and hyperspace with contextual popups and dynamic glassmorphism aesthetics.</p>
+          <div class="card-foot">
+            <div class="card-tags">
+              <span class="tag">Sci-Fi</span>
+              <span class="tag">Asimov</span>
+              <span class="tag">Entropy</span>
+            </div>
+            <div class="arrow">→</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
   </main>
+
 
   <!-- ── ABOUT ───────────────────────────────────────────── -->
   <section class="about-wrap fi">
