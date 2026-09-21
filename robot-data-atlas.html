@@ -1,0 +1,915 @@
+<title>Robot Data Atlas</title>
+<meta name="description" content="How the data that trains robots changed from 1961 to today, and where it could go next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#090C17; --bg2:#0E1322; --panel:#111829; --panel2:#161E33;
+  --line:#212A45; --line2:#2E3960;
+  --ink:#ECEEF6; --ink2:#B9C0D8; --muted:#7E88A7;
+  --sim:#8B7CFF; --real:#FFB547; --video:#FF6F91; --gen:#3DDCC4; --code:#9AA4BF; --touch:#F4F1A8;
+  --display:'Bricolage Grotesque','Avenir Next Condensed','Arial Narrow',system-ui,sans-serif;
+  --body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:var(--gen)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gen);outline-offset:2px;border-radius:6px}
+
+.wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;padding-block:10px}
+.brand{font:800 15px/1 var(--display);letter-spacing:.01em;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand i{width:10px;height:10px;border-radius:50%;background:conic-gradient(var(--sim),var(--real),var(--video),var(--gen),var(--sim));display:inline-block}
+.navlinks{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font:500 12.5px/1 var(--body);color:var(--ink2);text-decoration:none;padding:7px 10px;border-radius:99px;white-space:nowrap}
+.navlinks a:hover{background:var(--panel2);color:var(--ink)}
+
+/* hero */
+.hero{padding-block:clamp(28px,5vw,56px) 12px}
+.eyebrow,.kicker{font:600 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font:800 clamp(2.3rem,6.2vw,5.2rem)/0.98 var(--display);letter-spacing:-.025em;margin:.35em 0 .3em;text-wrap:balance;max-width:16ch}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--sim),var(--video) 55%,var(--real));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:var(--ink2);font-size:clamp(1rem,1.6vw,1.13rem);max-width:64ch;margin:0}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;margin-top:26px;align-items:stretch}
+.stage{background:radial-gradient(120% 90% at 50% 40%,var(--panel2),var(--panel) 60%,var(--bg2));border:1px solid var(--line);border-radius:16px;position:relative;overflow:hidden}
+canvas{display:block;width:100%;touch-action:pan-y}
+#orbit{height:clamp(340px,52vw,560px)}
+.legend{display:flex;flex-direction:column;gap:12px}
+.lg{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:baseline}
+.lg .dot{width:10px;height:10px;border-radius:50%;grid-row:span 3;align-self:start;margin-top:6px;box-shadow:0 0 14px currentColor}
+.lg .nm{font:600 12px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.lg .big{font:700 clamp(1.5rem,3vw,2.1rem)/1.1 var(--display);font-variant-numeric:tabular-nums}
+.lg .big small{font:500 .5em var(--mono);color:var(--muted);margin-left:6px;letter-spacing:0}
+.lg .cap{font-size:13.5px;color:var(--ink2);line-height:1.45}
+.tag{display:inline-block;font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:4px 7px;border-radius:99px;border:1px dashed var(--muted);color:var(--ink2);vertical-align:middle}
+.scrub{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.scrub input[type=range]{flex:1;min-width:180px}
+.yearbig{font:800 28px/1 var(--display);font-variant-numeric:tabular-nums;min-width:4.2ch}
+
+/* sections */
+section.view{padding-block:clamp(48px,8vw,96px) 0;scroll-margin-top:60px}
+section.view h2{font:800 clamp(1.8rem,4vw,3rem)/1.02 var(--display);letter-spacing:-.02em;margin:.3em 0 .35em;text-wrap:balance;max-width:22ch}
+.kicker{display:flex;align-items:center;gap:8px}
+.kicker b{width:8px;height:8px;border-radius:50%;display:inline-block}
+.split{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin-top:22px;align-items:start}
+.split.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.note b{color:var(--ink2);font-weight:600}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.chip{border:1px solid var(--line2);background:transparent;border-radius:99px;padding:7px 13px;font:500 13px/1 var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .2s,border-color .2s,color .2s}
+.chip:hover{border-color:var(--ink2)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .sw{width:9px;height:9px;border-radius:50%}
+.chip.off{opacity:.4}
+.btn{border:0;background:var(--ink);color:var(--bg);border-radius:99px;padding:9px 16px;font:600 13px/1 var(--body);cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+input[type=range]{accent-color:var(--gen);height:28px}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+
+/* timeline */
+.tl-scroll{overflow-x:auto;overflow-y:hidden;border-radius:16px;border:1px solid var(--line);background:var(--panel);scrollbar-color:var(--line2) transparent}
+#tl{display:block;height:500px}
+.tl-node{cursor:pointer}
+.tl-node:focus{outline:none}
+.tl-node:focus-visible circle.hit{stroke:var(--gen);stroke-width:2}
+.lane-off{opacity:.1}
+.tl-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;margin-top:14px}
+.tl-card .yr{font:800 44px/1 var(--display);font-variant-numeric:tabular-nums}
+.tl-card h3{font:700 22px/1.2 var(--display);margin:0}
+.tl-card .n{font:600 14px/1.4 var(--mono);color:var(--ink)}
+.tl-card p{margin:4px 0 0;color:var(--ink2);max-width:70ch}
+.tl-nav{display:flex;gap:8px;align-items:start}
+
+/* dilation */
+.dil{display:flex;flex-direction:column;gap:10px}
+.drow{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.dial{width:54px;height:54px;border-radius:50%;position:relative;border:1px solid var(--line2)}
+.dial::after{content:"";position:absolute;inset:4px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 70%,var(--c) 100%);transform:rotate(var(--r,0deg))}
+.drow .who{font:600 15px/1.25 var(--body)}
+.drow .who small{display:block;font:400 12.5px/1.4 var(--body);color:var(--muted)}
+.drow .odo{font:600 clamp(15px,2.2vw,20px)/1.1 var(--mono);text-align:right;font-variant-numeric:tabular-nums;min-width:10ch}
+.drow .odo small{display:block;font:400 11px var(--mono);color:var(--muted)}
+.wall{font:600 13px var(--mono);color:var(--ink2)}
+
+/* tanks */
+.tanks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+.tank{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.vessel{height:220px;border-radius:12px;border:1px solid var(--line2);position:relative;overflow:hidden;background:repeating-linear-gradient(0deg,transparent 0 21px,var(--line) 21px 22px)}
+.fill{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(180deg,var(--c),color-mix(in srgb,var(--c) 40%,var(--bg)));}
+.fill::before{content:"";position:absolute;left:-50%;width:200%;top:-8px;height:16px;background:radial-gradient(12px 8px at 12px 8px,var(--c) 98%,transparent) 0 0/24px 16px repeat-x;animation:wave 2.4s linear infinite;opacity:.9}
+@keyframes wave{to{transform:translateX(24px)}}
+.pct{position:absolute;inset:auto 0 10px 0;text-align:center;font:700 22px var(--mono);mix-blend-mode:difference;color:#fff}
+.tank h4{margin:0;font:700 16px/1.2 var(--display)}
+.tank .rate{font:500 12.5px/1.4 var(--mono);color:var(--muted)}
+.tank .eta{font:600 14px/1.3 var(--mono)}
+.simclock{font:700 clamp(22px,3.4vw,34px)/1 var(--display);font-variant-numeric:tabular-nums}
+
+/* sensor */
+#wheel{width:100%;height:auto;max-width:560px;display:block;margin:0 auto}
+.slist{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.slist li{font-size:14px;color:var(--ink2)}
+
+/* futures */
+.fcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fcard{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;transition:border-color .2s,transform .2s}
+.fcard:hover{border-color:var(--line2);transform:translateY(-2px)}
+.fcard[aria-pressed=true]{border-color:var(--ink);background:var(--panel2)}
+.fcard h4{margin:0 0 4px;font:700 17px/1.2 var(--display)}
+.fcard p{margin:0;font-size:13.5px;color:var(--ink2);line-height:1.45}
+.fdetail h4{font:600 11px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.fdetail ul{margin:0;padding-left:18px;color:var(--ink2);font-size:14.5px}
+
+/* quiz */
+.quiz{display:grid;gap:14px}
+.qq{font:700 clamp(1.2rem,2.4vw,1.6rem)/1.25 var(--display);margin:0}
+.guess{font:700 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.verdict{font-size:15px;color:var(--ink2);min-height:3em}
+
+footer{padding-block:80px 60px;color:var(--muted);font-size:13.5px}
+footer h2{font:800 28px var(--display);color:var(--ink);margin:0 0 10px}
+footer ol{padding-left:20px;columns:2 340px;column-gap:40px}
+footer li{margin-bottom:6px;break-inside:avoid}
+footer a{color:var(--ink2)}
+.cav{max-width:72ch}
+
+@media (max-width:860px){
+  .hero-grid,.split,.split.even{grid-template-columns:minmax(0,1fr)}
+  .tanks{grid-template-columns:minmax(0,1fr)}
+  .vessel{height:120px}
+  .fcards{grid-template-columns:minmax(0,1fr)}
+  .tl-card{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){ .fill::before{animation:none} *{scroll-behavior:auto!important} }
+</style>
+
+<nav class="nav" aria-label="Views">
+  <div class="wrap">
+    <div class="brand"><i></i>Robot Data Atlas</div>
+    <div class="navlinks">
+      <a href="index.html">← Back</a><a href="#orbits">Orbits</a><a href="#timeline">Timeline</a><a href="#powers">Scale</a><a href="#river">River</a><a href="#shape">Shape</a><a href="#fidelity">Fidelity</a><a href="#dilation">Sim speed</a><a href="#tanks">Collection speed</a><a href="#sensors">Sensors</a><a href="#lastmile">Last mile</a><a href="#scaling">Scaling</a><a href="#diversity">Diversity</a><a href="#futures">Futures</a><a href="#quiz">Quiz</a><a href="#sources">Sources</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- HERO / ORBITS -->
+<header class="hero" id="orbits">
+  <div class="eyebrow">How robots learn · 1961 → 2030</div>
+  <h1>One robot hand practised for <em>13,000 simulated years.</em></h1>
+  <p class="lede">The largest real-robot dataset reported in 2025 holds about 31 years of experience. This atlas shows how the data that trains robots changed: where it comes from, how big it is, what it records, and how much a robot still needs before it works somewhere new.</p>
+  <div class="hero-grid">
+    <div>
+      <div class="stage"><canvas id="orbit" aria-label="Three orbits showing the largest known corpus of simulated, real-robot and video data for the selected year, on a log scale"></canvas></div>
+      <div class="scrub">
+        <button class="btn" id="orbitPlay" type="button">▶ Replay 1989 → 2030</button>
+        <input type="range" id="orbitYear" min="1989" max="2030" step="0.05" value="2026.7" aria-label="Year">
+        <span class="yearbig" id="orbitYearLbl">2026</span>
+      </div>
+      <p class="note"><b>How to read it.</b> Each ring is one kind of data. Ring radius is the log of the largest known corpus in hours (dashed guides at 10², 10⁴, 10⁶, 10⁸ h). Values step at each published milestone; they are not interpolated. After Sept 2026 the rings are projections.</p>
+    </div>
+    <div class="legend" id="orbitLegend"></div>
+  </div>
+</header>
+
+<!-- TIMELINE -->
+<section class="view" id="timeline">
+  <div class="kicker"><b style="background:var(--ink)"></b>Interactive timeline</div>
+  <h2>Five lanes of data, one story</h2>
+  <p class="lede">Each lane is a kind of training data. Node size follows the log of the milestone’s scale. Curves between lanes mark a transfer, such as a policy trained in simulation that ran on a real robot. Scroll sideways, tap a node, or step through with the arrows. The hatched area on the right is projection.</p>
+  <div class="controls" id="tlFilters"></div>
+  <div class="tl-scroll" id="tlScroll" style="margin-top:12px"><svg id="tl" role="img" aria-label="Timeline of robot data milestones by data type"></svg></div>
+  <div class="tl-card card" id="tlCard"></div>
+</section>
+
+<!-- POWERS OF TEN -->
+<section class="view" id="powers">
+  <div class="kicker"><b style="background:var(--real)"></b>Powers of ten</div>
+  <h2>Zoom out through eight orders of magnitude</h2>
+  <p class="lede">Every circle’s area is proportional to hours of experience. Dashed circles are human yardsticks. Drag the slider, or press play and watch a single teleop hour disappear beside simulated millennia.</p>
+  <div class="stage" style="margin-top:22px"><canvas id="pow" style="height:clamp(360px,50vw,520px)" aria-label="Nested circles comparing dataset sizes in hours"></canvas></div>
+  <div class="controls">
+    <button class="btn" id="powPlay" type="button">▶ Zoom out</button>
+    <input type="range" id="powZ" min="0" max="8.3" step="0.01" value="4.1" style="flex:1;min-width:200px" aria-label="Zoom level in powers of ten">
+    <span class="mono num" id="powLbl" style="font-size:13px;color:var(--ink2)"></span>
+  </div>
+</section>
+
+<!-- RIVER -->
+<section class="view" id="river">
+  <div class="kicker"><b style="background:var(--video)"></b>The data river</div>
+  <h2>Where a robot’s learning comes from, 2012 → 2030</h2>
+  <p class="lede">A decade ago, most of a robot’s competence was written by engineers. Simulation took over dexterity and locomotion, then real teleoperation took over manipulation, and now human video and generated worlds are widening the river. Move across it to read the mix.</p>
+  <div class="split">
+    <div>
+      <div class="stage"><canvas id="riv" style="height:clamp(300px,40vw,440px)" aria-label="Stream chart of data-source shares over time"></canvas></div>
+      <div class="controls" id="rivLegend"></div>
+    </div>
+    <div class="card" id="rivRead"></div>
+  </div>
+  <p class="note"><b>Editorial estimate.</b> Shares describe the typical source of learning signal for a frontier robot policy in each year. They are a judgement drawn from the milestones in this atlas, not a measured statistic.</p>
+</section>
+
+<!-- SHAPE -->
+<section class="view" id="shape">
+  <div class="kicker"><b style="background:var(--gen)"></b>The shape of a training set</div>
+  <h2>From a pillar to a pyramid</h2>
+  <p class="lede">The layers of a training set show where the cheap, broad data sits and where the scarce, precise data sits. NVIDIA’s GR00T N1 paper calls the 2025 version a “data pyramid”: web and human video at the base, synthetic trajectories in the middle, real teleoperation at the peak.</p>
+  <div class="split">
+    <div class="stage"><canvas id="pyr" style="height:clamp(300px,38vw,400px)" aria-label="Layered shape of a typical training set for the selected era"></canvas></div>
+    <div class="card" id="pyrText"></div>
+  </div>
+  <div class="controls" id="pyrEras"></div>
+  <p class="note"><b>Width</b> is relative volume, log-compressed, and editorial. The 2030 shape is a projection.</p>
+</section>
+
+<!-- FIDELITY -->
+<section class="view" id="fidelity">
+  <div class="kicker"><b style="background:var(--sim)"></b>Simulation fidelity</div>
+  <h2>Then and now, side by side</h2>
+  <p class="lede">Drag the divider. On the left, a 2012-style simulation: one environment, rigid boxes, flat shading. On the right, the 2026 toolkit: thousands of parallel worlds, cloth, fluids and lighting. One axis has barely moved: <b>contact</b>, the physics of touching things.</p>
+  <div class="split">
+    <div>
+      <div class="stage"><canvas id="fid" style="height:clamp(300px,40vw,430px);touch-action:none" aria-label="Split-screen comparison of simulation fidelity in 2012 and 2026"></canvas></div>
+      <input type="range" id="fidSplit" min="0.05" max="0.95" step="0.01" value="0.5" style="width:100%" aria-label="Divider position">
+    </div>
+    <div class="card">
+      <svg id="radar" viewBox="-44 0 448 330" style="width:100%;height:auto" role="img" aria-label="Radar chart of simulator capability by era"></svg>
+      <div class="controls" id="radEras" style="margin-top:6px"></div>
+      <p class="note" id="radNote"></p>
+    </div>
+  </div>
+  <p class="note"><b>Editorial scores</b> (0–5) based on the milestones cited. The contact gap is documented: a 2026 world-simulator roadmap notes that existing simulators “still struggle with contact dynamics, deformable objects, fine-grained visual appearance, and even the robot’s own actuation.”</p>
+</section>
+
+<!-- DILATION -->
+<section class="view" id="dilation">
+  <div class="kicker"><b style="background:var(--sim)"></b>Time dilation</div>
+  <h2>How much experience fits in one real second?</h2>
+  <p class="lede">A real robot lives in real time. A simulator does not. Press run and watch four clocks drift apart. The speeds are the published ratios of experience to wall-clock time.</p>
+  <div class="controls"><button class="btn" id="dilRun" type="button">▶ Run</button><button class="btn ghost" id="dilReset" type="button">Reset</button><span class="wall" id="dilWall">Wall clock 0.0 s</span></div>
+  <div class="dil" id="dil" style="margin-top:14px"></div>
+  <p class="note"><b>Caveats.</b> Genesis reached 430,000× on a single arm and a plane on one GPU; richer scenes run slower. The GR00T figure measures trajectory generation (6,500 demo-hours in 11 hours), not physics speed.</p>
+</section>
+
+<!-- TANKS -->
+<section class="view" id="tanks">
+  <div class="kicker"><b style="background:var(--real)"></b>Collection speed</div>
+  <h2>Fill the tank: three ways to collect robot data</h2>
+  <p class="lede">Pick a target size. The clock below runs on an exponential scale, so seconds become days, then years. Each tank fills at its real published rate.</p>
+  <div class="controls" id="tankTargets"></div>
+  <div class="controls" style="justify-content:space-between">
+    <div><div class="kicker">Simulated elapsed time</div><div class="simclock" id="tankClock">0 h</div></div>
+    <div class="controls" style="margin:0"><button class="btn" id="tankRun" type="button">▶ Start</button><button class="btn ghost" id="tankReset" type="button">Reset</button></div>
+  </div>
+  <div class="tanks" id="tankWrap"></div>
+  <p class="note"><b>Rates.</b> Academic: DROID, 350 h over 12 months by 50 collectors. Industrial fleet: Generalist, 10,000 h per week (Nov 2025). Synthetic: NVIDIA’s GR00T blueprint, 780K trajectories ≈ 6,500 demo-hours in 11 hours. Synthetic hours are demonstration equivalents, not interchangeable with real ones.</p>
+</section>
+
+<!-- SENSORS -->
+<section class="view" id="sensors">
+  <div class="kicker"><b style="background:var(--video)"></b>Anatomy of a data point</div>
+  <h2>What one sample records, then and now</h2>
+  <p class="lede">The type of real data has changed as much as its size. It started as one grainy camera and a steering label. Today a sample can hold three synchronized video streams, language, joint angles and tactile images. Or the robot is absent altogether, and a person wearing a headset provides the demonstration.</p>
+  <div class="split">
+    <div class="stage" style="padding:10px"><svg id="wheel" viewBox="-270 -230 540 460" role="img" aria-label="Sensor wheel showing which data channels a sample contains in the selected year"></svg></div>
+    <div class="card" id="sensText"></div>
+  </div>
+  <div class="controls" id="sensYears"></div>
+</section>
+
+<!-- LAST MILE -->
+<section class="view" id="lastmile">
+  <div class="kicker"><b style="background:var(--real)"></b>Impact on real-world deployment</div>
+  <h2>Bigger pretraining, shorter last mile</h2>
+  <p class="lede">What matters on a factory floor is how much new data a robot needs before it does your task. In 2016 every skill needed its own data farm. By 2026 a model pretrained on hundreds of thousands of hours is reported to adapt to a new robot in about an hour.</p>
+  <div class="split">
+    <div class="stage"><canvas id="hg" style="height:clamp(320px,40vw,440px)" aria-label="Hourglass: pretraining data on top, task-specific data below"></canvas></div>
+    <div class="card" id="hgText"></div>
+  </div>
+  <div class="controls" id="hgModels"></div>
+  <p class="note"><b>Scale.</b> Top bulb is log-scaled pretraining hours. The bottom bulb is relative and editorial because early systems count grasps and episodes, not hours.</p>
+</section>
+
+<!-- SCALING -->
+<section class="view" id="scaling">
+  <div class="kicker"><b style="background:var(--gen)"></b>Scaling behaviour</div>
+  <h2>More data only helps a big enough brain</h2>
+  <p class="lede">Generalist reported that GEN-0’s downstream error falls on a predictable power law as pretraining data grows. Below about 7 billion parameters, the models “ossify” and stop absorbing new data. Slide the data volume and compare.</p>
+  <div class="split">
+    <div class="stage" style="padding:12px"><svg id="scal" viewBox="0 0 600 340" style="width:100%;height:auto" role="img" aria-label="Illustrative scaling curves for a small and a large model"></svg></div>
+    <div class="card">
+      <label class="kicker" for="scalD">Pretraining data</label>
+      <div class="guess" id="scalDLbl" style="margin:8px 0">10,000 h</div>
+      <input type="range" id="scalD" min="2" max="6" step="0.01" value="4" style="width:100%">
+      <div id="scalRead" style="margin-top:12px;display:grid;gap:8px"></div>
+      <p class="note"><b>Illustrative shape.</b> The curves follow the reported behaviour (power-law decline, ossification below ~7B). They do not reproduce Generalist’s measured values.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIVERSITY -->
+<section class="view" id="diversity">
+  <div class="kicker"><b style="background:var(--real)"></b>Diversity vs volume</div>
+  <h2>564 rooms beat 20 rooms</h2>
+  <p class="lede">Each square is one real scene in DROID: a kitchen, office, bedroom or lab across 52 buildings. The authors trained on a 20-scene slice (7,362 trajectories) and on the full 564 scenes, and found that scene diversity improves robustness. RT-1 reached a similar result earlier: removing tasks hurt more than halving the data.</p>
+  <div class="stage" style="margin-top:22px"><canvas id="mos" style="height:clamp(200px,26vw,280px)" aria-label="Mosaic of 564 scenes"></canvas></div>
+  <div class="controls" id="mosCtl"></div>
+</section>
+
+<!-- FUTURES -->
+<section class="view" id="futures">
+  <div class="kicker"><b style="background:var(--touch)"></b>Projection · 2030</div>
+  <h2>Four ways the next five years could go</h2>
+  <p class="lede">These scenarios take today’s trends seriously and follow each one to its end. They are not predictions. Pick one to see the data mix it implies, what would have to be true, and the signal that would tell you it is happening.</p>
+  <div class="split">
+    <div class="fcards" id="fCards"></div>
+    <div class="card fdetail">
+      <svg id="donut" viewBox="-150 -150 300 300" style="width:100%;max-width:300px;height:auto;display:block;margin:0 auto" role="img" aria-label="Projected 2030 data mix for the selected scenario"></svg>
+      <div id="fDetail"></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="view" id="quiz">
+  <div class="kicker"><b style="background:var(--gen)"></b>Guess the scale</div>
+  <h2>Test your intuition</h2>
+  <div class="card quiz" style="margin-top:20px">
+    <div class="kicker" id="qCount"></div>
+    <p class="qq" id="qText"></p>
+    <div class="guess" id="qGuess"></div>
+    <input type="range" id="qSlider" min="0" max="8" step="0.01" value="3" aria-label="Your guess, log scale">
+    <svg id="qRuler" viewBox="0 0 600 70" style="width:100%;height:auto"></svg>
+    <div class="controls" style="margin-top:0"><button class="btn" id="qLock" type="button">Lock in guess</button><button class="btn ghost" id="qNext" type="button">Next question →</button></div>
+    <div class="verdict" id="qVerdict"></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap" id="sources">
+  <h2>Sources &amp; method</h2>
+  <p class="cav">Every hard number links to its source. Stepped values change only at published milestones. Items marked <b>reported</b> come from secondary coverage. Shares, pyramid widths, radar scores and scenario mixes are editorial estimates, and anything after September 2026 is projection.</p>
+  <ol>
+    <li>Pomerleau, <a href="https://papers.neurips.cc/paper_files/paper/1988/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf">ALVINN</a> (1989), 1,200 simulated road images; generation time via <a href="https://en.wikipedia.org/wiki/Navlab">Navlab</a>.</li>
+    <li>Pinto &amp; Gupta, 50K grasps / 700 robot-hours, summarised <a href="https://danieltakeshi.github.io/2018/09/29/three-grasping-papers/">here</a>.</li>
+    <li>Levine et al., <a href="https://arxiv.org/pdf/1603.02199">hand-eye coordination</a>, ~800K grasps, 6–14 robots, 2 months.</li>
+    <li>QT-Opt, 560K+ grasps, 7 robots, via <a href="https://link.springer.com/article/10.1007/s43154-020-00021-6">survey</a>.</li>
+    <li>OpenAI Dactyl: <a href="https://spectrum.ieee.org/openai-demonstrates-complex-manipulation-transfer-from-simulation-to-real-world">100 years in 50 hours</a>; <a href="https://venturebeat.com/ai/openai-teaches-a-robotic-hand-to-solve-a-rubiks-cube">13,000 years (Rubik’s cube)</a>.</li>
+    <li>Tobin et al., <a href="https://arxiv.org/abs/1703.06907">Domain randomization</a> (2017); Makoviychuk et al., <a href="https://arxiv.org/abs/2108.10470">Isaac Gym</a> (2021).</li>
+    <li><a href="https://robotics-transformer1.github.io/">RT-1</a>, 130K episodes, 13 robots, 17 months; <a href="https://arxiv.org/abs/2307.15818">RT-2</a>.</li>
+    <li><a href="https://arxiv.org/pdf/2310.08864">Open X-Embodiment</a>, 1M+ trajectories, 22 embodiments.</li>
+    <li><a href="https://www.roboticsproceedings.org/rss20/p120.pdf">DROID</a>, 76K trajectories, 350 h, 564 scenes; 20-scene ablation in <a href="https://arxiv.org/html/2403.12945v2">arXiv v2</a>.</li>
+    <li>π0: <a href="https://www.deeplearning.ai/the-batch/p0-a-machine-learning-system-for-household-robotics">10,000 h</a>; OXE share and 1–20 h fine-tuning via <a href="https://aiwiki.ai/wiki/physical_intelligence">AI Wiki</a> (reported).</li>
+    <li><a href="https://genesis-embodied-ai.github.io/">Genesis</a>, 43M FPS, 430,000× real time.</li>
+    <li><a href="https://blogs.nvidia.com/blog/cosmos-world-foundation-models">NVIDIA Cosmos</a>, 20M hours of video.</li>
+    <li><a href="https://nvidianews.nvidia.com/news/nvidia-isaac-gr00t-n1-open-humanoid-robot-foundation-model-simulation-frameworks">GR00T N1</a>, 780K trajectories in 11 h, +40%; <a href="https://arxiv.org/pdf/2503.14734">data pyramid paper</a>.</li>
+    <li><a href="https://arxiv.org/abs/2503.06669">AgiBot World</a>, 1M+ trajectories, 100 robots, 217 tasks.</li>
+    <li>EgoDex, 829 h, 338K demos, via <a href="https://arxiv.org/pdf/2606.17846">Qwen-RobotManip report</a>.</li>
+    <li><a href="https://generalistai.com/blog/nov-04-2025-GEN-0">GEN-0</a>, 270,000+ h, +10,000 h/week, 5.6 h post-training; GEN-1 via <a href="https://aiwiki.ai/wiki/generalist_ai">AI Wiki</a> (reported).</li>
+    <li><a href="https://arxiv.org/abs/2603.08546">Interactive World Simulator</a> (2026); <a href="https://arxiv.org/pdf/2602.06949">DreamDojo</a>, sim–real correlation r = 0.995.</li>
+    <li><a href="https://arxiv.org/abs/2606.20521">HumanScale</a> (2026), egocentric video vs teleop at matched scale.</li>
+    <li>EgoScale, 20,000+ h egocentric, via <a href="https://unidata.pro/blog/egocentric-data-collection-for-robot-training/">Unidata</a> (reported).</li>
+    <li><a href="https://arxiv.org/pdf/2605.27491">GE-Sim 2.0</a> roadmap, on the contact-dynamics gap in simulators.</li>
+  </ol>
+</footer>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C={sim:'#8B7CFF',real:'#FFB547',video:'#FF6F91',gen:'#3DDCC4',code:'#9AA4BF',touch:'#F4F1A8',ink:'#ECEEF6',ink2:'#B9C0D8',muted:'#7E88A7',line:'#212A45',line2:'#2E3960',bg:'#090C17',panel:'#111829'};
+const TYPE={code:'Hand-coded',sim:'Simulation',real:'Real robot',video:'Human & web video',gen:'Generated worlds',touch:'Touch & force'};
+const NS='http://www.w3.org/2000/svg';
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function el(tag,cls,html,parent){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(parent)parent.appendChild(e);return e}
+const lerp=(a,b,t)=>a+(b-a)*t, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+function rgba(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
+function fmtN(n){return Math.round(n).toLocaleString('en-US')}
+function fmtH(h){if(h>=1e6){const m=h/1e6;return (m>=10?Math.round(m):m.toFixed(1).replace(/\.0$/,''))+'M h'}if(h>=1e4)return fmtN(h/1e3)+'K h';return fmtN(h)+' h'}
+function fmtDur(h){ // hours → readable
+  if(h<1/60)return (h*3600).toFixed(1)+' s';
+  if(h<1)return (h*60).toFixed(1)+' min';
+  if(h<48)return h.toFixed(1)+' h';
+  const d=h/24; if(d<60)return d.toFixed(1)+' days';
+  const y=h/8766; if(y<1)return (d/7).toFixed(1)+' weeks';
+  if(y<100)return y.toFixed(1)+' years';
+  return fmtN(y)+' years';
+}
+function yrs(h){const y=h/8766;return y>=100?fmtN(y)+' years':y>=1?y.toFixed(1).replace(/\.0$/,'')+' years':fmtDur(h)}
+const SUP={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};
+const sup=s=>String(s).split('').map(c=>SUP[c]||c).join('');
+
+/* canvas + visibility plumbing */
+function fit(cv){const st={cv,ctx:cv.getContext('2d'),w:1,h:1};const rs=()=>{const r=cv.getBoundingClientRect();const d=Math.min(2,window.devicePixelRatio||1);cv.width=Math.max(1,Math.round(r.width*d));cv.height=Math.max(1,Math.round(r.height*d));st.ctx.setTransform(d,0,0,d,0,0);st.w=r.width;st.h=r.height;st.resized=true};rs();const ro=new ResizeObserver(rs);ro.observe(cv);return st}
+const mods=[];
+const io=new IntersectionObserver(es=>es.forEach(e=>{const m=mods.find(m=>m.el===e.target);if(m)m.vis=e.isIntersecting}),{rootMargin:'100px'});
+function reg(elm,draw){const m={el:elm,draw,vis:true};mods.push(m);io.observe(elm);return m}
+let T0=performance.now();
+function loop(now){const t=(now-T0)/1000;for(const m of mods)if(m.vis&&m.el.clientWidth>40){try{m.draw(t,now)}catch(e){console.error(e)}}requestAnimationFrame(loop)}
+function mkChip(parent,label,color,pressed,onClick){const b=el('button','chip',(color?`<span class="sw" style="background:${color}"></span>`:'')+label,parent);b.type='button';b.setAttribute('aria-pressed',pressed?'true':'false');b.addEventListener('click',onClick);return b}
+function press(group,btn){group.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',b===btn?'true':'false'))}
+
+/* ============ 1. ORBITS ============ */
+(()=>{
+  const st=fit($('#orbit'));
+  const SER=[
+    {k:'sim',name:'Simulated experience',A:[[1989.1,null,0.6,'1,200 simulated road images, ALVINN (1989)','1,200 frames'],[2018.5,876600,null,'Dactyl: 100 simulated years for one cube-turning hand'],[2019.8,1.14e8,null,'≈13,000 simulated years to solve a Rubik’s cube one-handed']]},
+    {k:'real',name:'Real robot data',A:[[2016.05,700,null,'700 robot-hours of self-labelled grasps, one Baxter arm'],[2024.83,1e4,null,'π0: 10,000+ h across 7 robot configurations'],[2025.84,2.7e5,null,'GEN-0: 270,000+ h from homes, warehouses and workplaces'],[2026.25,5e5,null,'GEN-1: 500,000+ h (reported)'],[2027.5,1.2e6,null,'If fleets keep adding ≥10,000 h per week',1],[2029,4e6,null,'If collection keeps accelerating',1]]},
+    {k:'video',name:'Video for world models',A:[[2025.02,2e7,null,'Cosmos: 20M h of driving, robotics and human video']]}
+  ];
+  const MAXV=8.5;
+  SER.forEach(s=>{s.disp=0;s.P=[];for(let i=0;i<340;i++)s.P.push({a:Math.random()*Math.PI*2,dr:(Math.random()+Math.random()+Math.random()-1.5),sp:(0.25+Math.random())*(Math.random()<.5?-1:1),sz:Math.random()*1.6+0.5})});
+  let year=2026.7, playing=false, pStart=0;
+  const slider=$('#orbitYear'), lbl=$('#orbitYearLbl'), leg=$('#orbitLegend');
+  SER.forEach(s=>{s.card=el('div','lg',`<span class="dot" style="color:${C[s.k]};background:${C[s.k]}"></span><div class="nm">${s.name}</div><div class="big num">–</div><div class="cap"></div>`,leg)});
+  const cur=s=>{let a=null;for(const x of s.A)if(x[0]<=year)a=x;return a};
+  const val=a=>a?(a[1]?Math.log10(a[1]):a[2]):0;
+  function upd(){
+    lbl.textContent=Math.floor(year);
+    SER.forEach(s=>{const a=cur(s),b=s.card.querySelector('.big'),c=s.card.querySelector('.cap');
+      if(!a){b.innerHTML='—';c.textContent=s.k==='real'?'No large real-robot corpus yet. Robots are programmed, not trained.':'Not yet part of robot training.';return}
+      b.innerHTML=(a[1]?fmtH(a[1]):a[4])+(a[1]?`<small>≈ ${yrs(a[1])}</small>`:'');
+      c.innerHTML=(a[5]?'<span class="tag">projection</span> ':'')+a[3];});
+  }
+  slider.addEventListener('input',()=>{playing=false;year=+slider.value;upd();$('#orbitPlay').textContent='▶ Replay 1989 → 2030'});
+  $('#orbitPlay').addEventListener('click',()=>{playing=!playing;if(playing){if(year>=2029.9)year=1989;pStart=performance.now()}$('#orbitPlay').textContent=playing?'❚❚ Pause':'▶ Replay 1989 → 2030'});
+  upd();
+  let last=performance.now();
+  reg($('#orbit'),(t,now)=>{
+    const dt=Math.min(.05,(now-last)/1000);last=now;
+    if(playing){year+= (year<2012?7:year<2016?2:1.1)*dt;if(year>=2030){year=2030;playing=false;$('#orbitPlay').textContent='▶ Replay 1989 → 2030'}slider.value=year;upd()}
+    const {ctx,w,h}=st;ctx.clearRect(0,0,w,h);
+    const cx=w/2,cy=h/2,R=Math.max(40,Math.min(w,h)/2-16),r0=R*.1,rad=v=>r0+v/MAXV*(R-r0);
+    // guides
+    ctx.save();ctx.setLineDash([2,5]);ctx.lineWidth=1;ctx.font='10px JetBrains Mono, monospace';ctx.fillStyle=C.muted;
+    [2,4,6,8].forEach(v=>{ctx.strokeStyle=rgba(C.ink,.12);ctx.beginPath();ctx.arc(cx,cy,rad(v),0,7);ctx.stroke();const a=-Math.PI*0.62;ctx.fillText('10'+sup(v)+' h',cx+Math.cos(a)*rad(v)+4,cy+Math.sin(a)*rad(v)-3)});
+    ctx.restore();
+    // core
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r0*2.2);g.addColorStop(0,rgba(C.ink,.35));g.addColorStop(1,rgba(C.ink,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r0*2.2,0,7);ctx.fill();
+    ctx.globalCompositeOperation='lighter';
+    SER.forEach((s,si)=>{
+      const target=val(cur(s));s.disp+=(target-s.disp)*(RM?1:.06);
+      if(s.disp<0.05)return;
+      const r=rad(s.disp),col=C[s.k];
+      ctx.strokeStyle=rgba(col,.55);ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
+      const n=Math.floor(s.P.length*clamp(s.disp/MAXV,.08,1));
+      ctx.fillStyle=col;
+      for(let i=0;i<n;i++){const p=s.P[i];const a=p.a+(RM?0:t*p.sp*0.18*(1.2-s.disp/12));const rr=r+p.dr*(3+s.disp*1.1);
+        ctx.globalAlpha=.35+.5*(p.sz/2.1);ctx.fillRect(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,p.sz,p.sz)}
+      ctx.globalAlpha=1;
+    });
+    ctx.globalCompositeOperation='source-over';
+    // year in core
+    ctx.fillStyle=C.ink;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`800 ${Math.max(16,r0*.62)}px "Bricolage Grotesque", sans-serif`;ctx.fillText(Math.floor(year),cx,cy);
+    if(year>2026.72){ctx.font='600 10px JetBrains Mono, monospace';ctx.fillStyle=C.touch;ctx.fillText('PROJECTION',cx,cy+r0*.62)}
+    ctx.textAlign='start';ctx.textBaseline='alphabetic';
+  });
+})();
+
+/* ============ 2. TIMELINE ============ */
+const MS=[
+ {y:1961,l:'code',t:'Unimate joins the line',n:'0 hours of learning',m:1,d:'The first industrial robot arm starts work at a General Motors plant. Every motion is taught point by point. Nothing is learned from data.'},
+ {y:1989.1,l:'sim',t:'ALVINN',n:'1,200 simulated road images',m:1.5,d:'A three-layer network learns to steer CMU’s Navlab from simulated road snapshots, which took 6 hours of Sun-4 CPU time to generate. Simulation came first and real roads came second, 35 years before “sim-to-real” was a buzzword.',s:'https://papers.neurips.cc/paper_files/paper/1988/file/812b4ba287f5ee0bc9d43bbf5bbe87fb-Paper.pdf',to:'real'},
+ {y:2012,l:'sim',t:'MuJoCo',n:'fast contact physics for research',m:1.5,d:'A simulator built for model-based control and contact. It became the workhorse behind a decade of sim-trained policies, including OpenAI’s Dactyl.'},
+ {y:2016.02,l:'real',t:'Pinto & Gupta',n:'50K grasps · 700 robot-hours',m:2.85,d:'A Baxter labels its own grasps: did the object lift or not? That was 40× more data than prior work, and it was still one robot learning one skill.',s:'https://danieltakeshi.github.io/2018/09/29/three-grasping-papers/'},
+ {y:2016.35,l:'real',t:'The grasping farm',n:'800K attempts · 6–14 arms · 2 months',m:3.3,d:'Levine et al. run a room of arms around the clock with no human labels. Wear and tear, camera drift and different objects make the data diverse by accident.',s:'https://arxiv.org/pdf/1603.02199'},
+ {y:2017.25,l:'sim',t:'Domain randomization',n:'variety instead of realism',m:2,d:'Tobin et al. train on wildly unrealistic renders with random textures and lighting, and the model still transfers to real cameras. Variety stands in for fidelity.',s:'https://arxiv.org/abs/1703.06907'},
+ {y:2018.5,l:'sim',t:'Dactyl learns dexterity',n:'100 years of experience in 50 hours',m:5.94,d:'6,144 CPU cores and 8 GPUs simulate a Shadow hand reorienting a cube. The policy runs on the real hand with no real training data.',s:'https://spectrum.ieee.org/openai-demonstrates-complex-manipulation-transfer-from-simulation-to-real-world',to:'real'},
+ {y:2018.62,l:'real',t:'QT-Opt',n:'560K+ grasps · 7 robots',m:3.2,d:'Large-scale reinforcement learning on real robots over several weeks. It marks the high point of the real “grasping farm” era.',s:'https://link.springer.com/article/10.1007/s43154-020-00021-6'},
+ {y:2019.8,l:'sim',t:'Rubik’s cube, one hand',n:'≈13,000 years of simulated practice',m:8.06,d:'Automatic domain randomization widens the simulator as the policy improves. The real hand still solves the cube with two fingers tied together or inside a rubber glove.',s:'https://venturebeat.com/ai/openai-teaches-a-robotic-hand-to-solve-a-rubiks-cube'},
+ {y:2021.6,l:'sim',t:'Isaac Gym',n:'thousands of robots per GPU',m:3,d:'Physics and learning both run on the GPU, so locomotion policies train in minutes instead of days. Parallel worlds become cheap.',s:'https://arxiv.org/abs/2108.10470'},
+ {y:2022.95,l:'real',t:'RT-1',n:'130K episodes · 13 robots · 17 months',m:4,d:'Teleoperators record 700+ tasks in office kitchens, and one transformer reaches 97% on seen instructions. This starts the “collect broadly, train once” era.',s:'https://robotics-transformer1.github.io/'},
+ {y:2023.55,l:'video',t:'RT-2',n:'web knowledge → robot actions',m:3,d:'A vision-language model pretrained on internet images and text is fine-tuned to output actions. Robots inherit concepts that never appeared in robot data.',s:'https://arxiv.org/abs/2307.15818',to:'real'},
+ {y:2023.8,l:'real',t:'Open X-Embodiment',n:'1M+ trajectories · 22 robot types',m:4.6,d:'21 institutions pool 60 datasets into one format. For the first time, robot data is a shared commons rather than private lab logs.',s:'https://arxiv.org/pdf/2310.08864'},
+ {y:2024.22,l:'real',t:'DROID',n:'76K trajectories · 350 h · 564 scenes',m:2.55,d:'50 collectors carry the same Franka setup into 52 buildings on three continents. The goal is scene diversity, not raw volume.',s:'https://www.roboticsproceedings.org/rss20/p120.pdf'},
+ {y:2024.83,l:'real',t:'π0',n:'10,000+ h · 7 robot configs · 68 tasks',m:4,d:'Physical Intelligence pretrains a 3B flow-matching VLA. Open datasets are about 9% of training timesteps. The rest is in-house teleoperation.',s:'https://www.deeplearning.ai/the-batch/p0-a-machine-learning-system-for-household-robotics'},
+ {y:2024.97,l:'sim',t:'Genesis',n:'43M FPS · 430,000× real time',m:5.2,d:'On one GPU, a single-arm scene runs 430,000 times faster than reality, and a transferable walking policy trains in 26 seconds.',s:'https://genesis-embodied-ai.github.io/'},
+ {y:2025.02,l:'gen',t:'Cosmos',n:'world models trained on 20M h of video',m:7.3,d:'NVIDIA trains world foundation models on 20 million hours of driving, robotics and human video. They generate physics-aware futures on demand.',s:'https://blogs.nvidia.com/blog/cosmos-world-foundation-models',from:'video'},
+ {y:2025.19,l:'real',t:'AgiBot World',n:'1M+ trajectories · 100 robots · 217 tasks',m:4.6,d:'Dual-arm humanoids with dexterous hands and visuo-tactile sensors, recorded in 100+ replicated real-life scenes with human-in-the-loop checks.',s:'https://arxiv.org/abs/2503.06669'},
+ {y:2025.3,l:'gen',t:'GR00T N1',n:'780K synthetic trajectories in 11 h',m:3.8,d:'That is about 6,500 hours of demonstration equivalents, generated in 11 hours. Mixed with real data, it lifted performance 40% over real data alone.',s:'https://nvidianews.nvidia.com/news/nvidia-isaac-gr00t-n1-open-humanoid-robot-foundation-model-simulation-frameworks',to:'real'},
+ {y:2025.5,l:'video',t:'EgoDex',n:'829 h · 3D hand pose from Vision Pro',m:2.9,d:'338K human demonstrations with 25 tracked joints per hand. There is no robot in the loop: the human hand is the teacher.',s:'https://arxiv.org/pdf/2606.17846'},
+ {y:2025.84,l:'real',t:'GEN-0',n:'270,000+ h · +10,000 h per week',m:5.43,d:'Thousands of collection devices in homes, warehouses and workplaces. Generalist reports predictable scaling laws, and that models below ~7B parameters “ossify”.',s:'https://generalistai.com/blog/nov-04-2025-GEN-0'},
+ {y:2026.2,l:'gen',t:'Interactive World Simulator',n:'10+ min rollouts · 15 FPS · one GPU',m:3,d:'Policies trained on world-model demonstrations perform comparably to policies trained on the same amount of real data. The world model also works as a test bench.',s:'https://arxiv.org/abs/2603.08546'},
+ {y:2026.27,l:'real',t:'GEN-1',n:'500,000+ h · ~1 h to adapt (reported)',m:5.7,d:'Reported to adapt to a new robot with about one hour of robot-specific data. These figures come from secondary coverage.',s:'https://aiwiki.ai/wiki/generalist_ai'},
+ {y:2026.47,l:'video',t:'HumanScale',n:'ego video beats matched robot data',m:4,d:'At equal data size, pretraining on filtered human egocentric video gave lower action-prediction loss and higher real-robot success than teleoperation data.',s:'https://arxiv.org/abs/2606.20521',to:'real'},
+ {y:2027.3,l:'gen',t:'World models as the test bench',n:'projection',m:3.5,p:1,d:'Checkpoints are scored inside learned simulators before they touch hardware. DreamDojo already reports r = 0.995 between simulated and real success on one task.'},
+ {y:2028.2,l:'real',t:'Touch joins the corpus',n:'projection',m:3.5,p:1,d:'Force and tactile streams become standard channels, because vision-only data cannot teach how hard to press. The contact gap in simulators pushes this data to come from the real world.'},
+ {y:2029.2,l:'real',t:'Fleets out-collect data farms',n:'projection',m:4,p:1,d:'Robots deployed for paid work log their own episodes. Collection stops being a separate cost and becomes a by-product of work.'},
+ {y:2030.2,l:'video',t:'Million-hour egocentric corpora',n:'projection',m:4,p:1,d:'Glasses and phones record everyday manipulation at internet scale, and robot data mainly aligns the action space.'}
+];
+(()=>{
+  const LANES=['code','sim','real','video','gen'];
+  const svg=$('#tl'),scroller=$('#tlScroll');
+  const W=3040,H=500,TODAY=2026.72;
+  const X=y=>y<2012?80+(y-1958)*4.4:80+54*4.4+(y-2012)*140;
+  const LY=l=>118+LANES.indexOf(l)*76;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.style.width=W+'px';
+  const defs=S('defs',{},svg);
+  const pat=S('pattern',{id:'hatch',width:8,height:8,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);S('line',{x1:0,y1:0,x2:0,y2:8,stroke:C.touch,'stroke-width':1,opacity:.14},pat);
+  const glow=S('filter',{id:'glow',x:'-50%',y:'-50%',width:'200%',height:'200%'},defs);S('feGaussianBlur',{stdDeviation:4,result:'b'},glow);const mg=S('feMerge',{},glow);S('feMergeNode',{in:'b'},mg);S('feMergeNode',{in:'SourceGraphic'},mg);
+  // eras
+  const ERAS=[[1958,2015.6,'Programmed by hand'],[2015.6,2020.5,'Grasping farms & sim RL'],[2020.5,2024.4,'Transformers & pooled data'],[2024.4,TODAY,'Foundation-model scale'],[TODAY,2031,'Projection']];
+  ERAS.forEach((e,i)=>{S('rect',{x:X(e[0]),y:22,width:X(e[1])-X(e[0])-3,height:30,rx:8,fill:i===4?'url(#hatch)':rgba(C.ink,i%2?.05:.08)},svg);const tx=S('text',{x:X(e[0])+12,y:42,fill:i===4?C.touch:C.ink2,'font-size':12,'font-family':'JetBrains Mono, monospace','letter-spacing':'.06em'},svg);tx.textContent=e[2].toUpperCase()});
+  S('rect',{x:X(TODAY),y:60,width:W-X(TODAY),height:H-60,fill:'url(#hatch)'},svg);
+  // axis
+  const ax=S('g',{},svg);
+  [1960,1970,1980,1990,2000,2010].forEach(y=>{S('line',{x1:X(y),x2:X(y),y1:62,y2:H-30,stroke:C.line,'stroke-width':1},ax);const t=S('text',{x:X(y),y:H-12,fill:C.muted,'font-size':11,'text-anchor':'middle','font-family':'JetBrains Mono, monospace'},ax);t.textContent=y});
+  for(let y=2012;y<=2030;y++){S('line',{x1:X(y),x2:X(y),y1:62,y2:H-30,stroke:C.line,'stroke-width':1,opacity:.7},ax);const t=S('text',{x:X(y),y:H-12,fill:y>2026?C.touch:C.muted,'font-size':11,'text-anchor':'middle','font-family':'JetBrains Mono, monospace'},ax);t.textContent=y}
+  S('path',{d:`M${X(2011.2)} 62 l6 -4 l6 8 l6 -8 l6 4`,stroke:C.muted,fill:'none'},ax);
+  // today
+  S('line',{x1:X(TODAY),x2:X(TODAY),y1:60,y2:H-30,stroke:C.touch,'stroke-width':1.5,'stroke-dasharray':'3 4'},svg);
+  const tt=S('text',{x:X(TODAY)+6,y:76,fill:C.touch,'font-size':11,'font-family':'JetBrains Mono, monospace'},svg);tt.textContent='TODAY · SEPT 2026';
+  // lanes
+  const laneG={};
+  LANES.forEach(l=>{const g=S('g',{'data-lane':l},svg);laneG[l]=g;const items=MS.filter(m=>m.l===l);const real=items.filter(m=>!m.p),proj=items.filter(m=>m.p);
+    const x0=X(items[0].y),x1=X(real[real.length-1].y);
+    S('line',{x1:x0,x2:Math.max(x1,X(TODAY)),y1:LY(l),y2:LY(l),stroke:C[l],'stroke-width':3,'stroke-linecap':'round',opacity:.55},g);
+    S('line',{x1:Math.max(x1,X(TODAY)),x2:X(2030.6),y1:LY(l),y2:LY(l),stroke:C[l],'stroke-width':2,'stroke-dasharray':'2 7','stroke-linecap':'round',opacity:.6},g);
+    const lt=S('text',{x:14,y:LY(l)-12,fill:C[l],'font-size':12,'font-weight':600,'font-family':'JetBrains Mono, monospace'},g);lt.textContent=TYPE[l].toUpperCase();
+  });
+  // transfer arcs
+  MS.forEach(m=>{const pairs=[];if(m.to)pairs.push([m.l,m.to]);if(m.from)pairs.push([m.from,m.l]);pairs.forEach(([a,b])=>{const x=X(m.y),ya=LY(a),yb=LY(b);const p=S('path',{d:`M${x} ${ya} C ${x+70} ${ya}, ${x+70} ${yb}, ${x+8} ${yb}`,fill:'none',stroke:C[a],'stroke-width':1.6,'stroke-dasharray':'4 4',opacity:.8,'data-arc':'1'},svg);p.dataset.a=a;p.dataset.b=b;S('circle',{cx:x+8,cy:yb,r:3,fill:C[a]},svg).dataset.arcdot=a+','+b})});
+  // nodes
+  const nodes=[];const alt={};
+  MS.forEach((m,i)=>{const x=X(m.y),y=LY(m.l),r=5+m.m*1.55;alt[m.l]=(alt[m.l]||0)+1;const up=alt[m.l]%2===1;
+    const g=S('g',{class:'tl-node',tabindex:0,role:'button','aria-label':`${Math.floor(m.y)}: ${m.t}`},laneG[m.l]);
+    S('circle',{cx:x,cy:y,r:r+7,fill:rgba(C[m.l],.08),class:'halo'},g);
+    S('circle',{cx:x,cy:y,r,fill:m.p?C.bg:C[m.l],stroke:C[m.l],'stroke-width':m.p?2:0,'stroke-dasharray':m.p?'3 3':'',filter:m.p?'':'url(#glow)',class:'hit'},g);
+    const tx=S('text',{x,y:up?y-r-9:y+r+17,fill:C.ink,'font-size':12.5,'font-weight':600,'text-anchor':'middle','font-family':'Instrument Sans, sans-serif'},g);tx.textContent=m.t;
+    const sel=S('circle',{cx:x,cy:y,r:r+5,fill:'none',stroke:C.ink,'stroke-width':2,opacity:0},g);
+    g.addEventListener('click',()=>select(i,true));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(i,true)}});
+    nodes.push({g,sel,x});
+  });
+  // filters
+  const off=new Set();const f=$('#tlFilters');
+  LANES.forEach(l=>{const b=mkChip(f,TYPE[l],C[l],true,()=>{off.has(l)?off.delete(l):off.add(l);b.setAttribute('aria-pressed',off.has(l)?'false':'true');laneG[l].classList.toggle('lane-off',off.has(l));svg.querySelectorAll('[data-arc],[data-arcdot]').forEach(p=>{const [a,b2]=p.dataset.arcdot?p.dataset.arcdot.split(','):[p.dataset.a,p.dataset.b];p.style.opacity=(off.has(a)||off.has(b2))?.08:''})})});
+  // card
+  const card=$('#tlCard');let idx=MS.findIndex(m=>m.t==='Rubik’s cube, one hand');
+  function select(i,scroll){idx=(i+MS.length)%MS.length;const m=MS[idx];nodes.forEach((n,j)=>n.sel.setAttribute('opacity',j===idx?1:0));
+    card.innerHTML=`<div><div class="kicker"><b style="background:${C[m.l]}"></b>${TYPE[m.l]}${m.p?' · <span class="tag" style="margin-left:4px">projection</span>':''}</div>
+      <div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-top:6px"><span class="yr">${Math.floor(m.y)}</span><h3>${m.t}</h3></div>
+      <div class="n" style="color:${C[m.l]};margin-top:6px">${m.n}</div><p>${m.d}</p>${m.s?`<p style="margin-top:8px;font-size:13px"><a href="${m.s}" target="_blank" rel="noopener">Source ↗</a></p>`:''}</div>
+      <div class="tl-nav"><button class="btn ghost" type="button" id="tlPrev" aria-label="Previous milestone">←</button><button class="btn" type="button" id="tlNext" aria-label="Next milestone">→</button></div>`;
+    $('#tlPrev').onclick=()=>select(idx-1,true);$('#tlNext').onclick=()=>select(idx+1,true);
+    if(scroll){scroller.scrollTo({left:nodes[idx].x-scroller.clientWidth/2,behavior:RM?'auto':'smooth'})}}
+  select(idx,false);
+  requestAnimationFrame(()=>{scroller.scrollLeft=nodes[idx].x-scroller.clientWidth*0.35});
+})();
+
+/* ============ 3. POWERS OF TEN ============ */
+(()=>{
+  const st=fit($('#pow'));
+  const IT=[
+    [1,'One hour of teleoperation','ref'],[350,'DROID (2024)','real'],[700,'Pinto & Gupta grasps (2016)','real'],[829,'EgoDex human video (2025)','video'],[2000,'One human working year','ref'],[6500,'GR00T synthetic demos, made in 11 h','gen'],[1e4,'π0 pretraining (2024)','real'],[2e4,'EgoScale egocentric (reported, 2026)','video'],[8e4,'A 40-year career','ref'],[2.7e5,'GEN-0 (2025)','real'],[5e5,'GEN-1 (reported, 2026)','real'],[7.01e5,'A human lifetime (80 years)','ref'],[8.766e5,'Dactyl: 100 sim years (2018)','sim'],[2e7,'Cosmos training video (2025)','video'],[1.14e8,'Rubik’s cube hand: 13,000 sim years (2019)','sim']
+  ];
+  const z=$('#powZ'),lbl=$('#powLbl');let playing=false;
+  $('#powPlay').onclick=()=>{playing=!playing;if(playing&&+z.value>8.2)z.value=0;$('#powPlay').textContent=playing?'❚❚ Pause':'▶ Zoom out'};
+  z.oninput=()=>{playing=false;$('#powPlay').textContent='▶ Zoom out'};
+  let last=performance.now();
+  reg($('#pow'),(t,now)=>{const dt=Math.min(.05,(now-last)/1000);last=now;
+    if(playing){z.value=Math.min(8.3,+z.value+dt*0.62);if(+z.value>=8.3){playing=false;$('#powPlay').textContent='▶ Zoom out'}}
+    const Z=+z.value,{ctx,w,h}=st;ctx.clearRect(0,0,w,h);
+    const R0=Math.min(w*0.42,h*0.42),cx=w/2,base=h-14;
+    let best=null,bd=1e9;
+    for(let i=IT.length-1;i>=0;i--){const [hr,name,k]=IT[i];const r=R0*Math.sqrt(hr/Math.pow(10,Z));if(r<0.6)continue;if(r>w*6)continue;
+      const col=k==='ref'?C.ink:C[k];
+      ctx.beginPath();ctx.arc(cx,base-r,r,0,7);
+      if(k!=='ref'&&r>R0*3){ctx.strokeStyle=rgba(col,.6);ctx.lineWidth=1.5;ctx.stroke()}else if(k==='ref'){ctx.setLineDash([4,5]);ctx.strokeStyle=rgba(col,.5);ctx.lineWidth=1.2;ctx.stroke();ctx.setLineDash([])}
+      else{ctx.fillStyle=rgba(col,.10);ctx.fill();ctx.strokeStyle=rgba(col,.85);ctx.lineWidth=1.5;ctx.stroke()}
+      const d=Math.abs(Math.log(r/R0));if(d<bd){bd=d;best=IT[i]}
+    }
+    // labels (second pass so they sit on top)
+    ctx.textAlign='center';
+    for(let i=0;i<IT.length;i++){const [hr,name,k]=IT[i];const r=R0*Math.sqrt(hr/Math.pow(10,Z));const top=base-2*r;if(r<14||top<24)continue;
+      const col=k==='ref'?C.ink2:C[k];
+      ctx.font='600 12px "Instrument Sans", sans-serif';ctx.fillStyle=col;ctx.fillText(name,cx,top+18);
+      ctx.font='11px "JetBrains Mono", monospace';ctx.fillStyle=C.muted;ctx.fillText(fmtH(hr)+' · '+yrs(hr),cx,top+33);}
+    ctx.textAlign='start';
+    lbl.textContent=best?`Frame ≈ 10${sup(Z.toFixed(1))} h · ${best[1]}`:'';
+  });
+})();
+
+/* ============ 4. RIVER ============ */
+(()=>{
+  const st=fit($('#riv'));
+  const K=['code','sim','real','video','gen'];
+  const KF=[[2012,[85,10,5,0,0]],[2014,[75,15,10,0,0]],[2016,[45,20,35,0,0]],[2018,[25,45,30,0,0]],[2019.5,[18,55,27,0,0]],[2021,[15,45,36,4,0]],[2022.5,[10,32,45,13,0]],[2023.6,[7,25,46,22,0]],[2024.8,[5,20,47,25,3]],[2025.6,[4,17,40,30,9]],[2026.7,[3,15,37,33,12]],[2028,[2,12,34,35,17]],[2030,[2,10,30,35,23]]];
+  const Y0=2012,Y1=2030,TODAY=2026.72;
+  function share(y){y=clamp(y,Y0,Y1);let i=0;while(i<KF.length-2&&KF[i+1][0]<y)i++;const a=KF[i],b=KF[i+1];const u=ease(clamp((y-a[0])/(b[0]-a[0]),0,1));return a[1].map((v,j)=>lerp(v,b[1][j],u))}
+  let cur=2024.8,iso=null;
+  const leg=$('#rivLegend');const chips={};
+  K.forEach(k=>{chips[k]=mkChip(leg,TYPE[k],C[k],false,()=>{iso=iso===k?null:k;K.forEach(j=>chips[j].setAttribute('aria-pressed',iso===j?'true':'false'))})});
+  const P=[];for(let i=0;i<260;i++)P.push({k:K[i%5],u:Math.random(),v:Math.random(),s:.02+Math.random()*.03});
+  const read=$('#rivRead');let lastY=-1;
+  function readout(){const y=Math.round(cur*2)/2;if(y===lastY)return;lastY=y;const s=share(cur);const order=K.map((k,i)=>[k,s[i]]).sort((a,b)=>b[1]-a[1]);
+    read.innerHTML=`<div class="kicker">${cur>TODAY?'<span class="tag">projection</span>':'Mix in'}</div><div class="guess" style="margin:6px 0 12px">${Math.floor(cur)}</div>`+
+    order.map(([k,v])=>`<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--line)"><span style="display:flex;gap:8px;align-items:center"><span class="sw" style="width:9px;height:9px;border-radius:50%;background:${C[k]}"></span>${TYPE[k]}</span><span class="mono num" style="color:${C[k]}">${Math.round(v)}%</span></div>`).join('')}
+  const cv=$('#riv');
+  function setFromEvt(e){const r=cv.getBoundingClientRect();const x=(e.clientX-r.left);cur=clamp(Y0+(x-14)/(r.width-28)*(Y1-Y0),Y0,Y1);readout()}
+  cv.addEventListener('pointermove',setFromEvt);cv.addEventListener('pointerdown',setFromEvt);
+  readout();
+  reg(cv,(t)=>{const {ctx,w,h}=st;ctx.clearRect(0,0,w,h);const L=14,Rr=w-14,top=22,bot=h-34;const X=y=>L+(y-Y0)/(Y1-Y0)*(Rr-L);
+    const N=120,cols=[];for(let i=0;i<=N;i++){const y=Y0+(Y1-Y0)*i/N;const s=share(y);let acc=0;const edges=[0];s.forEach(v=>{acc+=v;edges.push(acc)});cols.push({x:X(y),e:edges.map(v=>top+(v/100)*(bot-top))})}
+    // wobble for organic look
+    const wob=(i,j)=>RM?0:Math.sin(i*.18+t*.8+j)*1.2*(j>0&&j<5?1:0);
+    K.forEach((k,j)=>{ctx.beginPath();cols.forEach((c,i)=>{const yy=c.e[j]+wob(i,j);i?ctx.lineTo(c.x,yy):ctx.moveTo(c.x,yy)});for(let i=N;i>=0;i--){const c=cols[i];ctx.lineTo(c.x,c.e[j+1]+wob(i,j+1))}ctx.closePath();
+      const g=ctx.createLinearGradient(0,top,0,bot);g.addColorStop(0,rgba(C[k],iso&&iso!==k?.08:.55));g.addColorStop(1,rgba(C[k],iso&&iso!==k?.05:.35));ctx.fillStyle=g;ctx.fill()});
+    // particles
+    if(!RM){ctx.globalCompositeOperation='lighter';P.forEach(p=>{const j=K.indexOf(p.k);if(iso&&iso!==p.k)return;p.u+=p.s*.016;if(p.u>1)p.u-=1;const fi=p.u*N,i=Math.floor(fi),c=cols[i];const a=c.e[j],b=c.e[j+1];if(b-a<3)return;const yy=a+(b-a)*(.15+.7*p.v);ctx.fillStyle=rgba('#FFFFFF',.55);ctx.fillRect(c.x,yy,1.6,1.6)});ctx.globalCompositeOperation='source-over'}
+    // projection
+    ctx.fillStyle=rgba(C.bg,.35);ctx.fillRect(X(TODAY),top,Rr-X(TODAY),bot-top);ctx.strokeStyle=C.touch;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(X(TODAY),top-8);ctx.lineTo(X(TODAY),bot);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=C.touch;ctx.font='600 10px "JetBrains Mono", monospace';ctx.fillText('PROJECTION →',X(TODAY)+6,top-8);
+    // axis
+    ctx.fillStyle=C.muted;ctx.font='11px "JetBrains Mono", monospace';ctx.textAlign='center';for(let y=2012;y<=2030;y+=w<520?4:2)ctx.fillText(y,X(y),h-14);ctx.textAlign='start';
+    // cursor
+    const cx=X(cur);ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(cx,top);ctx.lineTo(cx,bot);ctx.stroke();ctx.fillStyle=C.ink;ctx.beginPath();ctx.arc(cx,bot+4,4,0,7);ctx.fill();
+  });
+})();
+
+/* ============ 5. SHAPE / PYRAMID ============ */
+(()=>{
+  const st=fit($('#pyr'));
+  const SLOTS=['code','video','sim','gen','real','touch'];
+  const ERAS=[
+   {n:'2016 · The pillar',L:{code:[.62,'Hand-built vision, planning and control'],real:[.22,'800K self-labelled grasps for one skill']},d:'<b>One robot, one skill.</b> Learning is a narrow column of real data sitting on a large base of engineering. Collecting it meant running a room full of arms for two months.'},
+   {n:'2019 · The iceberg',L:{sim:[.96,'≈13,000 simulated years, randomized'],real:[.05,'0 h of real training data']},d:'<b>All simulation, zero real data.</b> Dactyl’s cube-solving policy never trained on the real hand. Domain randomization makes the simulator so varied that reality looks like one more variation.'},
+   {n:'2023 · The pool',L:{video:[.9,'Internet images & text through a VLM backbone'],real:[.52,'1M+ pooled trajectories from 22 robot types']},d:'<b>Borrowed knowledge plus pooled robots.</b> RT-2 and Open X-Embodiment put web-scale concepts under a shared pool of lab data.'},
+   {n:'2025 · The pyramid',L:{video:[1,'Web data + human egocentric video'],gen:[.66,'Simulated + neural (generated) trajectories'],real:[.24,'Real teleoperation: 88 h grown ~10× to 827 h']},d:'<b>The GR00T N1 data pyramid.</b> Real teleoperation is the scarce peak. Generated video trajectories grew it about tenfold, from 88 to 827 hours, and simulation widens the middle.'},
+   {n:'2030 · The flywheel',p:1,L:{video:[1,'Human video at million-hour scale'],gen:[.8,'World-model rollouts, graded before use'],real:[.5,'Deployed fleets logging while they work'],touch:[.2,'Contact & force signals']},d:'<b>Projection.</b> If deployed robots log their own work, the real layer thickens without a separate collection budget. A new top layer, touch, becomes the scarce data that video and simulation cannot supply.'}
+  ];
+  const cur={};SLOTS.forEach(s=>cur[s]={w:0,h:0});
+  let era=3;const box=$('#pyrEras'),txt=$('#pyrText');
+  ERAS.forEach((e,i)=>mkChip(box,e.n+(e.p?' ◌':''),null,i===era,ev=>{era=i;press(box,ev.currentTarget);draw()}));
+  function draw(){const e=ERAS[era];txt.innerHTML=`<div class="kicker">${e.p?'<span class="tag">projection</span>':'Era'}</div><h3 style="font:800 26px/1.1 var(--display);margin:6px 0 10px">${e.n.split('·')[1].trim()}</h3><p style="margin:0;color:var(--ink2)">${e.d}</p><ul class="slist" style="margin-top:14px">${SLOTS.filter(s=>e.L[s]).reverse().map(s=>`<li><span class="sw" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${C[s]};margin-right:8px"></span><b style="color:var(--ink)">${TYPE[s]}</b>: ${e.L[s][1]}</li>`).join('')}</ul>`}
+  draw();
+  reg($('#pyr'),(t)=>{const {ctx,w,h}=st;ctx.clearRect(0,0,w,h);const e=ERAS[era];const act=SLOTS.filter(s=>e.L[s]);const Hh=Math.min(74,(h-40)/Math.max(2,act.length));
+    SLOTS.forEach(s=>{const tw=e.L[s]?e.L[s][0]:0,th=e.L[s]?Hh:0;const k=RM?1:.09;cur[s].w+=(tw-cur[s].w)*k;cur[s].h+=(th-cur[s].h)*k});
+    let y=h-20;const cx=w/2,maxW=w-40;
+    const vis=SLOTS.filter(s=>cur[s].h>0.5);
+    vis.forEach((s,i)=>{const L=cur[s];const next=vis[i+1];const bw=L.w*maxW;const tw=(next?Math.min(cur[next].w,L.w):L.w*.55)*maxW;const y0=y,y1=y-L.h;
+      ctx.beginPath();ctx.moveTo(cx-bw/2,y0);ctx.lineTo(cx+bw/2,y0);ctx.lineTo(cx+tw/2,y1);ctx.lineTo(cx-tw/2,y1);ctx.closePath();
+      const g=ctx.createLinearGradient(0,y1,0,y0);g.addColorStop(0,rgba(C[s],.85));g.addColorStop(1,rgba(C[s],.35));ctx.fillStyle=g;ctx.fill();
+      if(e.p&&s!=='video'){ctx.setLineDash([4,4]);ctx.strokeStyle=rgba(C.ink,.6);ctx.stroke();ctx.setLineDash([])}
+      // shimmer line
+      if(!RM){ctx.save();ctx.clip();const sx=cx-bw/2+((t*60+i*90)%(bw+40))-20;ctx.fillStyle=rgba('#FFFFFF',.1);ctx.fillRect(sx,y1,14,L.h);ctx.restore()}
+      if(L.h>18){ctx.fillStyle=C.bg;ctx.font=`600 ${w<500?11:13}px "Instrument Sans", sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';const lab=TYPE[s];if(ctx.measureText(lab).width<Math.max(bw,tw)-10)ctx.fillText(lab,cx,(y0+y1)/2);else{ctx.fillStyle=C[s];ctx.textAlign='left';ctx.fillText(lab,cx+Math.max(bw,tw)/2+8,(y0+y1)/2)}ctx.textAlign='start';ctx.textBaseline='alphabetic'}
+      y=y1-3});
+  });
+})();
+
+/* ============ 6. FIDELITY ============ */
+(()=>{
+  const st=fit($('#fid'));const cv=$('#fid'),rng=$('#fidSplit');let split=.5,drag=false;
+  const setX=e=>{const r=cv.getBoundingClientRect();split=clamp((e.clientX-r.left)/r.width,.05,.95);rng.value=split};
+  cv.addEventListener('pointerdown',e=>{drag=true;cv.setPointerCapture(e.pointerId);setX(e)});cv.addEventListener('pointermove',e=>{if(drag)setX(e)});cv.addEventListener('pointerup',()=>drag=false);
+  rng.oninput=()=>split=+rng.value;
+  // cloth
+  let cloth=null;function mkCloth(w,h){const cols=18,rows=12,sp=Math.min(w*0.34/cols,h*0.5/rows);const ox=w*0.56,oy=h*0.14;const P=[];for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const x=ox+i*sp,y=oy+j*sp*0.6;P.push({x,y,px:x,py:y,pin:j===0&&(i%4===0||i===cols-1)})}const Cn=[];for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const a=j*cols+i;if(i<cols-1)Cn.push([a,a+1,sp]);if(j<rows-1)Cn.push([a,a+cols,sp])}return{P,Cn,cols,rows}}
+  // fluid
+  const F=[];for(let i=0;i<220;i++)F.push({x:Math.random(),y:Math.random()*.5+.5,vx:0,vy:0});
+  // boxes (old)
+  const B=[{x:.18,y:2,vy:0,s:.075},{x:.26,y:2,vy:0,s:.06},{x:.14,y:2,vy:0,s:.05}];let lastDrop=0;
+  reg(cv,(t)=>{const {ctx,w,h}=st;if(st.resized||!cloth){cloth=mkCloth(w,h);st.resized=false}
+    ctx.clearRect(0,0,w,h);const sx=split*w;
+    // ---- NEW scene (right) full ----
+    ctx.save();ctx.beginPath();ctx.rect(sx,0,w-sx,h);ctx.clip();
+    const bg=ctx.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#141B33');bg.addColorStop(1,'#0B1020');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+    // parallel envs grid
+    const gc=Math.ceil(w/46),gr=Math.ceil(h/46);for(let j=0;j<gr;j++)for(let i=0;i<gc;i++){const x=i*46+23,y=j*46+30;const ph=t*1.7+i*.7+j*1.3;ctx.strokeStyle=rgba(C.sim,.22);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x,y+10);const a1=-1.2+Math.sin(ph)*.6,x1=x+Math.cos(a1)*10,y1=y+10+Math.sin(a1)*10;ctx.lineTo(x1,y1);const a2=a1+.9+Math.sin(ph*1.3)*.5;ctx.lineTo(x1+Math.cos(a2)*8,y1+Math.sin(a2)*8);ctx.stroke();ctx.fillStyle=rgba(C.gen,.3);ctx.fillRect(x+5,y+12,4,4)}
+    ctx.fillStyle=rgba(C.bg,.55);ctx.fillRect(0,0,w,h);
+    // light glow
+    const lg=ctx.createRadialGradient(w*.75,h*.05,0,w*.75,h*.05,h*.9);lg.addColorStop(0,rgba('#FFFFFF',.12));lg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=lg;ctx.fillRect(0,0,w,h);
+    // cloth sim
+    const {P,Cn,cols,rows}=cloth;const wind=RM?0:Math.sin(t*1.3)*0.35+Math.sin(t*3.1)*0.12;
+    if(!RM)P.forEach(p=>{if(p.pin)return;const vx=(p.x-p.px)*.985,vy=(p.y-p.py)*.985;p.px=p.x;p.py=p.y;p.x+=vx+wind*.5;p.y+=vy+.32});
+    for(let k=0;k<4;k++)Cn.forEach(([a,b,L])=>{const A=P[a],Bp=P[b];const dx=Bp.x-A.x,dy=Bp.y-A.y,d=Math.hypot(dx,dy)||1,df=(d-L)/d*.5;if(!A.pin){A.x+=dx*df;A.y+=dy*df}if(!Bp.pin){Bp.x-=dx*df;Bp.y-=dy*df}});
+    for(let j=0;j<rows-1;j++)for(let i=0;i<cols-1;i++){const a=P[j*cols+i],b=P[j*cols+i+1],c=P[(j+1)*cols+i],d=P[(j+1)*cols+i+1];const nx=(b.y-a.y)-(c.y-a.y);const sh=clamp(.55+nx*.04,.25,1);ctx.fillStyle=`rgba(${Math.round(139*sh+40)},${Math.round(124*sh+30)},255,${.85})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(d.x,d.y);ctx.lineTo(c.x,c.y);ctx.closePath();ctx.fill()}
+    // fluid basin
+    const bx=w*.56,bw=w*.38,by=h*.66,bh=h*.28,tilt=RM?0:Math.sin(t*.9)*.35;
+    ctx.strokeStyle=rgba(C.gen,.6);ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+    ctx.globalCompositeOperation='lighter';
+    F.forEach(p=>{if(!RM){p.vx+=tilt*.0006+(Math.random()-.5)*.0012;p.vy+=.0012;p.vx*=.99;p.vy*=.99;p.x+=p.vx;p.y+=p.vy;if(p.x<0){p.x=0;p.vx*=-.6}if(p.x>1){p.x=1;p.vx*=-.6}if(p.y>1){p.y=1;p.vy*=-.35;p.vx+=(Math.random()-.5)*.004}if(p.y<0){p.y=0;p.vy=0}}
+      const X=bx+4+p.x*(bw-8),Y=by+4+p.y*(bh-8);const g=ctx.createRadialGradient(X,Y,0,X,Y,11);g.addColorStop(0,rgba(C.gen,.45));g.addColorStop(1,rgba(C.gen,0));ctx.fillStyle=g;ctx.fillRect(X-11,Y-11,22,22)});
+    ctx.globalCompositeOperation='source-over';
+    ctx.fillStyle=C.ink;ctx.font='800 20px "Bricolage Grotesque", sans-serif';ctx.textAlign='right';ctx.fillText('2026',w-14,30);ctx.font='11px "JetBrains Mono", monospace';ctx.fillStyle=C.ink2;ctx.fillText('1000s of parallel worlds · cloth · fluids · light',w-14,48);ctx.textAlign='start';
+    ctx.restore();
+    // ---- OLD scene (left) ----
+    ctx.save();ctx.beginPath();ctx.rect(0,0,sx,h);ctx.clip();
+    ctx.fillStyle='#1A1D24';ctx.fillRect(0,0,w,h);
+    // perspective grid floor
+    const hor=h*.55;ctx.strokeStyle='rgba(160,170,190,.25)';ctx.lineWidth=1;for(let i=-12;i<=12;i++){ctx.beginPath();ctx.moveTo(w*.3+i*6,hor);ctx.lineTo(w*.3+i*70,h);ctx.stroke()}for(let k=0;k<8;k++){const yy=hor+(h-hor)*Math.pow(k/8,1.8);ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke()}
+    if(!RM&&t-lastDrop>12){lastDrop=t;B.forEach((b,i)=>{b.y=-.15-i*.22;b.vy=0})}
+    // boxes with simple bouncing
+    const floor=h*.86;
+    B.forEach((b,i)=>{if(!RM){b.vy+=.0009;b.y+=b.vy;const s=b.s*h;const lim=(floor-s*(i===0?1:i===1?2:3))/h+0.0;if(b.y>lim){b.y=lim;b.vy*=-.3;if(Math.abs(b.vy)<.0006)b.vy=0}}
+      const s=b.s*h,x=w*.2+(i-1)*s*0.3,y=b.y*h;ctx.fillStyle=['#6E7690','#7E8699','#8E96A8'][i];ctx.fillRect(x-s/2,y,s,s);ctx.strokeStyle='#C8CEDA';ctx.strokeRect(x-s/2,y,s,s)});
+    // stick arm
+    const ax=w*.36,ay=floor;const a1=-1.9+Math.sin(t*.9)*.35,a2=a1+1.1+Math.sin(t*1.4)*.4;const L1=h*.2,L2=h*.15;const ex=ax+Math.cos(a1)*L1,ey=ay+Math.sin(a1)*L1;ctx.strokeStyle='#D0D4DD';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(ex,ey);ctx.lineTo(ex+Math.cos(a2)*L2,ey+Math.sin(a2)*L2);ctx.stroke();ctx.fillStyle='#D0D4DD';[[ax,ay],[ex,ey]].forEach(([x,y])=>{ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill()});
+    ctx.fillStyle='#E6E8EE';ctx.font='800 20px "Bricolage Grotesque", sans-serif';ctx.fillText('2012',14,30);ctx.font='11px "JetBrains Mono", monospace';ctx.fillStyle='#A8AEBD';ctx.fillText('1 world · rigid boxes · flat shading',14,48);
+    ctx.restore();
+    // divider
+    ctx.fillStyle=C.ink;ctx.fillRect(sx-1,0,2,h);ctx.beginPath();ctx.arc(sx,h/2,15,0,7);ctx.fill();ctx.fillStyle=C.bg;ctx.font='700 13px "Instrument Sans", sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⇆',sx,h/2+1);ctx.textAlign='start';ctx.textBaseline='alphabetic';
+  });
+
+  // radar
+  const AX=['Visual realism','Contact accuracy','Cloth & fluids','Speed','Parallel worlds','Generates worlds'];
+  const E=[['2012',[1,3,.5,1,.5,0],'MuJoCo-era research sim: accurate for rigid contact, one world at a time.'],['2017',[2,3,.5,1.5,1,.7],'Domain randomization: realism matters less than variety, and the randomizer is an early world generator.'],['2021',[2.5,3,1,3.6,4.2,.7],'GPU simulation (Isaac Gym): thousands of worlds in parallel, same contact models.'],['2024',[3.6,3.3,3,5,4.5,2],'Genesis: 430,000× real time on simple scenes, with multiple solvers for soft bodies, fluids and granular matter.'],['2026',[4.6,3.4,3.2,4.6,4.6,4.2],'Learned world models generate photoreal, interactive rollouts, and sim scores correlate with real ones. Contact is still the weak axis.']];
+  const svg=$('#radar'),cx=180,cy=165,R=112;let cur=E[4][1].slice(),tgt=E[4][1];
+  for(let k=1;k<=5;k++){const pts=AX.map((_,i)=>{const a=-Math.PI/2+i*Math.PI*2/6;return [cx+Math.cos(a)*R*k/5,cy+Math.sin(a)*R*k/5].join(',')}).join(' ');S('polygon',{points:pts,fill:'none',stroke:C.line2,'stroke-width':1},svg)}
+  AX.forEach((n,i)=>{const a=-Math.PI/2+i*Math.PI*2/6;S('line',{x1:cx,y1:cy,x2:cx+Math.cos(a)*R,y2:cy+Math.sin(a)*R,stroke:C.line2},svg);const tx=S('text',{x:cx+Math.cos(a)*(R+16),y:cy+Math.sin(a)*(R+16)+4,'text-anchor':Math.abs(Math.cos(a))<.2?'middle':Math.cos(a)>0?'start':'end',fill:i===1?C.real:C.ink2,'font-size':11.5,'font-weight':i===1?700:500,'font-family':'Instrument Sans, sans-serif'},svg);tx.textContent=n});
+  const ghost=S('polygon',{fill:'none',stroke:C.muted,'stroke-dasharray':'3 3','stroke-width':1},svg);
+  const poly=S('polygon',{fill:rgba(C.sim,.28),stroke:C.sim,'stroke-width':2},svg);
+  const pts=v=>v.map((s,i)=>{const a=-Math.PI/2+i*Math.PI*2/6;return [cx+Math.cos(a)*R*s/5,cy+Math.sin(a)*R*s/5].join(',')}).join(' ');
+  ghost.setAttribute('points',pts(E[0][1]));
+  const box=$('#radEras'),note=$('#radNote');
+  E.forEach((e,i)=>mkChip(box,e[0],null,i===4,ev=>{tgt=e[1];note.textContent=e[2];press(box,ev.currentTarget)}));note.textContent=E[4][2];
+  reg(svg,()=>{let moved=false;cur=cur.map((v,i)=>{const n=v+(tgt[i]-v)*(RM?1:.1);if(Math.abs(n-v)>.001)moved=true;return n});poly.setAttribute('points',pts(cur))});
+})();
+
+/* ============ 7. DILATION ============ */
+(()=>{
+  const R=[
+    ['Real robot','Lives in real time',1,C.real],
+    ['GR00T blueprint · 2025','6,500 demo-hours generated in 11 h',6500/11,C.gen],
+    ['Dactyl cluster · 2018','100 years in 50 h on 6,144 CPU cores',100*8766/50,C.sim],
+    ['Genesis, one GPU · 2024','Single arm, 43M frames per second',430000,C.sim]
+  ];
+  const box=$('#dil');const rows=R.map(r=>{const d=el('div','drow',`<div class="dial" style="--c:${r[3]}"></div><div class="who">${r[0]}<small>${r[1]} · <span class="mono" style="color:${r[3]}">${fmtN(r[2])}×</span></small></div><div class="odo"><span>0.0 s</span><small>of experience</small></div>`,box);return {r,dial:d.querySelector('.dial'),odo:d.querySelector('.odo span'),rot:0}});
+  let run=false,wall=0,last=performance.now();
+  $('#dilRun').onclick=()=>{run=!run;$('#dilRun').textContent=run?'❚❚ Pause':'▶ Run'};
+  $('#dilReset').onclick=()=>{wall=0;rows.forEach(r=>r.rot=0);paint()};
+  function paint(){$('#dilWall').textContent='Wall clock '+wall.toFixed(1)+' s';rows.forEach(o=>{o.odo.textContent=fmtDur(wall*o.r[2]/3600);o.dial.style.setProperty('--r',o.rot+'deg')})}
+  reg(box,(t,now)=>{const dt=Math.min(.05,(now-last)/1000);last=now;if(!run)return;wall+=dt;rows.forEach(o=>o.rot+=dt*60*(1+Math.log10(o.r[2])*2.2)*6);paint()});
+  paint();
+})();
+
+/* ============ 8. TANKS ============ */
+(()=>{
+  const M=[['Academic, in the wild','DROID pace · 350 h per year',350/8766,C.real],['Industrial fleet','GEN-0 pace · 10,000 h per week',1e4/168,C.video],['Synthetic generation','GR00T blueprint · 6,500 h per 11 h',6500/11,C.gen]];
+  const TG=[[1e4,'10,000 h (π0)'],[2.7e5,'270,000 h (GEN-0)'],[1e6,'1,000,000 h']];let target=1e4;
+  const wrap=$('#tankWrap');const tanks=M.map(m=>{const d=el('div','tank',`<h4>${m[0]}</h4><div class="rate">${m[1]}</div><div class="vessel"><div class="fill" style="--c:${m[3]}"></div><div class="pct">0%</div></div><div class="eta"></div>`,wrap);return {m,fill:d.querySelector('.fill'),pct:d.querySelector('.pct'),eta:d.querySelector('.eta')}});
+  const tb=$('#tankTargets');TG.forEach((g,i)=>mkChip(tb,g[1],null,i===0,ev=>{target=g[0];press(tb,ev.currentTarget);reset()}));
+  let run=false,k=0,last=performance.now();// sim hours = 10^k - 1, k advances
+  function simH(){return Math.pow(10,k)-1}
+  function paint(){const H=simH();$('#tankClock').textContent=fmtDur(H);tanks.forEach(o=>{const need=target/o.m[2];const f=clamp(H/need,0,1);o.fill.style.height=(f*100)+'%';o.pct.textContent=Math.floor(f*100)+'%';o.eta.innerHTML=`Needs <span style="color:${o.m[3]}">${fmtDur(need)}</span>${f>=1?' · done':''}`})}
+  function reset(){k=0;run=false;$('#tankRun').textContent='▶ Start';paint()}
+  $('#tankRun').onclick=()=>{run=!run;$('#tankRun').textContent=run?'❚❚ Pause':'▶ Start'};$('#tankReset').onclick=reset;
+  reg(wrap,(t,now)=>{const dt=Math.min(.05,(now-last)/1000);last=now;if(!run)return;const maxK=Math.log10(target/M[0][2]*1.05+1);k=Math.min(maxK,k+dt*0.62);if(k>=maxK){run=false;$('#tankRun').textContent='▶ Start'}paint()});
+  paint();
+})();
+
+/* ============ 9. SENSORS ============ */
+(()=>{
+  const SEG=[['Camera (RGB)','video'],['Range / depth','sim'],['Multi-view','video'],['Wrist camera','video'],['Language','gen'],['Actions / joints','real'],['Success label','real'],['Tactile','touch'],['Dexterous hand','real'],['Human hand pose','video'],['Force field','touch']];
+  const Y=[
+    {y:'1989',on:[0,1,5],who:'A synthetic road generator with ~200 parameters',d:'ALVINN sees a 30×32 camera retina and an 8×32 laser range finder, and outputs a steering direction. All 1,200 training images were simulated.'},
+    {y:'2016',on:[0,5,6],who:'The robots themselves, with no human labels',d:'A monocular RGB image, a motor command, and one bit: did the grasp succeed?'},
+    {y:'2022',on:[0,4,5],who:'Human teleoperators',d:'RT-1 records camera images, a natural-language instruction and arm and base actions at 3 Hz across 700+ tasks.'},
+    {y:'2024',on:[0,1,2,3,4,5],who:'50 collectors in 52 real buildings',d:'DROID records three synchronized RGB streams (two stereo, one wrist), depth, camera calibration, language and 7-DoF joints.'},
+    {y:'2025',on:[0,1,2,3,4,5,7,8],who:'Skilled teleoperators with human-in-the-loop checks',d:'AgiBot World adds visuo-tactile sensors and 6-DoF dexterous hands on dual-arm humanoids.'},
+    {y:'2026',on:[0,4,9],who:'People wearing headsets. No robot involved.',d:'EgoDex-style data: egocentric 30 Hz video plus 25 tracked joints per hand. HumanScale reports it can beat matched robot data for pretraining.'},
+    {y:'2030 ◌',on:[0,1,2,3,4,5,7,8,9,10],who:'Deployed fleets and wearables',p:1,d:'Projection: contact and force become standard channels, captured where work happens, because vision alone cannot teach how hard to press.'}
+  ];
+  const svg=$('#wheel');const r1=92,r2=150;const n=SEG.length,gap=.035;
+  const arcs=SEG.map((s,i)=>{const a0=-Math.PI/2+i*2*Math.PI/n+gap,a1=-Math.PI/2+(i+1)*2*Math.PI/n-gap;const p=(r,a)=>[Math.cos(a)*r,Math.sin(a)*r];const [x0,y0]=p(r2,a0),[x1,y1]=p(r2,a1),[x2,y2]=p(r1,a1),[x3,y3]=p(r1,a0);
+    const path=S('path',{d:`M${x0} ${y0} A${r2} ${r2} 0 0 1 ${x1} ${y1} L${x2} ${y2} A${r1} ${r1} 0 0 0 ${x3} ${y3} Z`,fill:C.panel,stroke:C.line2,'stroke-width':1,style:'transition:fill .5s, filter .5s'},svg);
+    const am=(a0+a1)/2,[lx,ly]=p(r2+14,am);const ca=Math.cos(am);const t=S('text',{x:lx,y:ly+4,'text-anchor':Math.abs(ca)<.25?'middle':ca>0?'start':'end',fill:C.muted,'font-size':12.5,'font-family':'Instrument Sans, sans-serif',style:'transition:fill .5s'},svg);t.textContent=s[0];return {path,t,s}});
+  const ring=S('circle',{r:r1-14,fill:'none',stroke:C.line2,'stroke-dasharray':'2 5'},svg);
+  const yt=S('text',{y:-2,'text-anchor':'middle',fill:C.ink,'font-size':38,'font-weight':800,'font-family':'Bricolage Grotesque, sans-serif'},svg);
+  const ct=S('text',{y:24,'text-anchor':'middle',fill:C.muted,'font-size':12,'font-family':'JetBrains Mono, monospace'},svg);
+  const pulse=S('circle',{r:r1-24,fill:'none',stroke:C.gen,'stroke-width':1.5,opacity:.4},svg);
+  const txt=$('#sensText'),box=$('#sensYears');let yi=4;
+  function show(i){yi=i;const y=Y[i];arcs.forEach((a,j)=>{const on=y.on.includes(j);a.path.setAttribute('fill',on?rgba(C[a.s[1]],.8):C.panel);a.path.style.filter=on?`drop-shadow(0 0 8px ${C[a.s[1]]})`:'none';a.t.setAttribute('fill',on?C.ink:C.muted)});yt.textContent=y.y.replace(' ◌','');ct.textContent=y.on.length+' CHANNELS';
+    txt.innerHTML=`<div class="kicker">${y.p?'<span class="tag">projection</span>':'Sample anatomy'}</div><h3 style="font:800 26px/1.1 var(--display);margin:6px 0 10px">${y.y.replace(' ◌','')}</h3><p style="margin:0 0 12px;color:var(--ink2)">${y.d}</p><div class="kicker">Collected by</div><p style="margin:4px 0 12px">${y.who}</p><div class="kicker">Channels</div><ul class="slist">${y.on.map(j=>`<li><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${C[SEG[j][1]]};margin-right:8px"></span>${SEG[j][0]}</li>`).join('')}</ul>`}
+  Y.forEach((y,i)=>mkChip(box,y.y,null,i===yi,ev=>{press(box,ev.currentTarget);show(i)}));show(yi);
+  reg(svg,t=>{if(RM)return;const s=(t*.6)%1;pulse.setAttribute('r',(r1-40)+s*30);pulse.setAttribute('opacity',(1-s)*.5)});
+})();
+
+/* ============ 10. HOURGLASS ============ */
+(()=>{
+  const st=fit($('#hg'));
+  const MD=[
+    {n:'Grasping farm · 2016',pre:0,preT:'None',task:1,taskT:'~800K grasp attempts for one skill',d:'Everything is task data. A new skill means another farm run.'},
+    {n:'RT-1 · 2022',pre:0,preT:'No robot pretraining',task:.86,taskT:'130K teleop episodes over 17 months; a task must be in the set',d:'Broad multi-task data, but the robot mostly does what it has seen: 97% on seen instructions.'},
+    {n:'π0 · 2024',pre:4/5.8,preT:'10,000+ h',task:.46,taskT:'1–20 h to fine-tune a new task (reported)',d:'Pretrain once and fine-tune briefly. This is the shift that makes robots behave like software.'},
+    {n:'GEN-0 · 2025',pre:5.43/5.8,preT:'270,000+ h',task:.28,taskT:'5.6 h of task data in post-training',d:'Generalist reports that more pretraining steadily improves results after post-training on just 5.6 hours.'},
+    {n:'GEN-1 · 2026',pre:5.7/5.8,preT:'500,000+ h (reported)',task:.12,taskT:'~1 h to adapt to a new robot (reported)',d:'Reported to match GEN-0 with about 10× less task-specific data. The last mile is now an hour.'}
+  ];
+  let mi=3;const cur={pre:0,task:0};const box=$('#hgModels'),txt=$('#hgText');
+  function show(){const m=MD[mi];txt.innerHTML=`<div class="kicker">Model</div><h3 style="font:800 26px/1.1 var(--display);margin:6px 0 12px">${m.n}</h3>
+    <div style="display:grid;gap:12px"><div><div class="kicker"><b style="background:var(--real)"></b>Pretraining (top bulb)</div><div class="guess" style="font-size:24px;margin-top:4px">${m.preT}</div></div>
+    <div><div class="kicker"><b style="background:var(--gen)"></b>Task data needed (bottom)</div><div style="font:600 16px/1.35 var(--body);margin-top:4px">${m.taskT}</div></div>
+    <p style="margin:0;color:var(--ink2)">${m.d}</p></div>`}
+  MD.forEach((m,i)=>mkChip(box,m.n,null,i===mi,ev=>{mi=i;press(box,ev.currentTarget);show()}));show();
+  const sand=[];for(let i=0;i<60;i++)sand.push({y:Math.random(),x:(Math.random()-.5)});
+  reg($('#hg'),t=>{const {ctx,w,h}=st;ctx.clearRect(0,0,w,h);const m=MD[mi];const k=RM?1:.06;cur.pre+=(m.pre-cur.pre)*k;cur.task+=(m.task-cur.task)*k;
+    const cx=w/2,top=24,bot=h-24,mid=(top+bot)/2,hw=Math.min(w*.3,(bot-top)*.42),neck=7;
+    const bulb=(y0,y1,dir)=>{const p=new Path2D();p.moveTo(cx-hw,y0);p.lineTo(cx+hw,y0);p.bezierCurveTo(cx+hw,y0+dir*(y1-y0)*.55*dir,cx+neck,y1-dir*20,cx+neck,y1);p.lineTo(cx-neck,y1);p.bezierCurveTo(cx-neck,y1-dir*20,cx-hw,y0+dir*(y1-y0)*.55*dir,cx-hw,y0);p.closePath();return p};
+    const T=bulb(top,mid,1),B=bulb(bot,mid,-1);
+    // fills
+    const fillTo=(path,y0,y1,frac,col,fromBottom)=>{ctx.save();ctx.clip(path);const g=ctx.createLinearGradient(0,y0,0,y1);g.addColorStop(0,rgba(col,.9));g.addColorStop(1,rgba(col,.35));ctx.fillStyle=g;if(fromBottom){const yy=lerp(mid,top,frac);ctx.fillRect(0,yy,w,mid-yy)}else{const yy=lerp(bot,mid,frac);ctx.fillRect(0,yy,w,bot-yy)}ctx.restore()};
+    fillTo(T,top,mid,cur.pre,C.real,true);fillTo(B,mid,bot,cur.task,C.gen,false);
+    // stream
+    if(cur.pre>.05&&!RM){ctx.fillStyle=rgba(C.real,.8);sand.forEach(s=>{s.y+=.012;if(s.y>1)s.y-=1;const yy=mid+s.y*(bot-mid)*(1-cur.task*.9);ctx.fillRect(cx+s.x*3,yy,2,2)})}
+    ctx.lineWidth=2;ctx.strokeStyle=rgba(C.ink,.7);ctx.stroke(T);ctx.stroke(B);
+    ctx.strokeStyle=C.ink2;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(cx-hw-14,top-4);ctx.lineTo(cx+hw+14,top-4);ctx.moveTo(cx-hw-14,bot+4);ctx.lineTo(cx+hw+14,bot+4);ctx.stroke();
+    ctx.font='600 11px "JetBrains Mono", monospace';ctx.fillStyle=C.real;ctx.fillText('PRETRAINING',8,top+14);ctx.fillStyle=C.gen;ctx.fillText('TASK DATA',8,bot-6);
+    // log ticks for top bulb
+    ctx.fillStyle=C.muted;ctx.textAlign='right';[[2,'100 h'],[4,'10K h'],[5.7,'500K h']].forEach(([v,l])=>{const yy=lerp(mid,top,v/5.8);ctx.fillText(l,w-8,yy+4);ctx.fillRect(cx+hw+8,yy,8,1)});ctx.textAlign='start';
+  });
+})();
+
+/* ============ 11. SCALING ============ */
+(()=>{
+  const svg=$('#scal');const X=L=>60+(L-2)/4*510,Yv=e=>300-e*270;
+  const big=L=>.06+.9*Math.pow(10,-(L-2)*.28);
+  const small=L=>{const e4=.2+.76*Math.pow(10,-(2)*.2);return L<=4?.2+.76*Math.pow(10,-(L-2)*.2):e4-.02*(L-4)+.05*(L-4)*(L-4)};
+  for(let L=2;L<=6;L++){S('line',{x1:X(L),x2:X(L),y1:30,y2:300,stroke:C.line},svg);const t=S('text',{x:X(L),y:322,'text-anchor':'middle',fill:C.muted,'font-size':12,'font-family':'JetBrains Mono, monospace'},svg);t.textContent='10'+sup(L)+' h'}
+  S('line',{x1:60,x2:570,y1:300,y2:300,stroke:C.line2},svg);
+  const yl=S('text',{x:16,y:165,fill:C.muted,'font-size':12,transform:'rotate(-90 16 165)','text-anchor':'middle','font-family':'JetBrains Mono, monospace'},svg);yl.textContent='downstream error (lower is better)';
+  const path=f=>{let d='';for(let i=0;i<=100;i++){const L=2+4*i/100;d+=(i?'L':'M')+X(L)+' '+Yv(f(L))}return d};
+  S('path',{d:path(small),stroke:C.video,'stroke-width':3,fill:'none'},svg);
+  S('path',{d:path(big),stroke:C.gen,'stroke-width':3,fill:'none'},svg);
+  const l1=S('text',{x:X(4.35),y:Yv(small(4.35))-14,fill:C.video,'font-size':13,'font-weight':600,'font-family':'Instrument Sans, sans-serif'},svg);l1.textContent='< 7B params: ossifies';
+  const l2=S('text',{x:X(4.35),y:Yv(big(4.35))+26,fill:C.gen,'font-size':13,'font-weight':600,'font-family':'Instrument Sans, sans-serif'},svg);l2.textContent='≥ 7B params: keeps improving';
+  const vline=S('line',{y1:30,y2:300,stroke:C.ink,'stroke-dasharray':'3 4'},svg);
+  const d1=S('circle',{r:7,fill:C.video,stroke:C.bg,'stroke-width':2},svg),d2=S('circle',{r:7,fill:C.gen,stroke:C.bg,'stroke-width':2},svg);
+  // markers for real corpora
+  [[4,'π0'],[5.43,'GEN-0']].forEach(([L,n])=>{const t=S('text',{x:X(L),y:24,'text-anchor':'middle',fill:C.real,'font-size':11,'font-family':'JetBrains Mono, monospace'},svg);t.textContent='▼ '+n});
+  const r=$('#scalD'),rd=$('#scalRead');
+  function upd(){const L=+r.value,x=X(L);vline.setAttribute('x1',x);vline.setAttribute('x2',x);d1.setAttribute('cx',x);d1.setAttribute('cy',Yv(small(L)));d2.setAttribute('cx',x);d2.setAttribute('cy',Yv(big(L)));$('#scalDLbl').textContent=fmtH(Math.pow(10,L));
+    rd.innerHTML=`<div style="display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px"><span style="color:var(--video)">Small model</span><span class="mono num">${small(L).toFixed(2)}</span></div><div style="display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px"><span style="color:var(--gen)">Large model</span><span class="mono num">${big(L).toFixed(2)}</span></div>`}
+  r.oninput=upd;upd();
+})();
+
+/* ============ 12. DIVERSITY MOSAIC ============ */
+(()=>{
+  const st=fit($('#mos'));let mode=1;const N=564;const cells=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<N;i++)cells.push({h:rnd(),l:rnd(),a:0});
+  const pick=new Set();while(pick.size<20)pick.add(Math.floor(rnd()*N));
+  const box=$('#mosCtl');
+  mkChip(box,'20 scenes · 7,362 trajectories',null,false,ev=>{mode=0;press(box,ev.currentTarget)});
+  mkChip(box,'564 scenes · 76K trajectories',null,true,ev=>{mode=1;press(box,ev.currentTarget)});
+  const pal=[C.real,C.video,C.gen,C.sim,C.touch];
+  reg($('#mos'),t=>{const {ctx,w,h}=st;ctx.clearRect(0,0,w,h);const area=(w-24)*(h-24)/N;const s=Math.floor(Math.sqrt(area));const cols=Math.floor((w-24)/s);const ox=(w-cols*s)/2,oy=12;
+    cells.forEach((c,i)=>{const on=mode===1||pick.has(i);c.a+=((on?1:.07)-c.a)*(RM?1:.08);const x=ox+(i%cols)*s,y=oy+Math.floor(i/cols)*s;const col=pal[Math.floor(c.h*5)];ctx.fillStyle=rgba(col,c.a*(.35+.5*c.l));ctx.fillRect(x+1,y+1,s-2,s-2);if(pick.has(i)&&mode===0){ctx.strokeStyle=C.ink;ctx.strokeRect(x+.5,y+.5,s-1,s-1)}});
+  });
+})();
+
+/* ============ 13. FUTURES ============ */
+(()=>{
+  const K=['real','video','gen','sim','touch','code'];
+  const F=[
+    {n:'Fleet flywheel',p:'Deployed robots collect data as a by-product of paid work.',mix:{real:48,video:20,gen:14,sim:10,touch:4,code:4},need:['Robots earn their keep before they are fully general','Logging, consent and privacy norms for homes and workplaces','Automatic filtering of millions of mundane hours'],sig:'A company’s corpus grows faster from customers than from its own collection sites. GEN-0 already adds 10,000 h per week.'},
+    {n:'Watch and learn',p:'Human egocentric video carries pretraining. Robot data only aligns the action space.',mix:{video:52,real:16,gen:16,sim:9,touch:3,code:4},need:['Reliable 3D hand and object tracking from cheap wearables','Retargeting from human hands to robot grippers that holds up','Filtering pipelines that separate useful manipulation from noise'],sig:'Results like HumanScale, where egocentric video beats matched robot data, replicate across labs and tasks.'},
+    {n:'Dreamed worlds',p:'World models generate, vary and grade most training data.',mix:{gen:44,video:24,real:14,sim:10,touch:4,code:4},need:['World models that keep physics consistent over minutes, not seconds','Proof that generated contact is right, not just plausible-looking','Cheap enough inference to generate billions of frames'],sig:'Robots ship with policies that were mostly evaluated inside a world model, as DreamDojo’s r = 0.995 sim–real correlation hints.'},
+    {n:'Touch first',p:'Progress is gated by sensing contact, not by hours of video.',mix:{real:30,touch:22,gen:16,video:16,sim:12,code:4},need:['Durable, cheap tactile skins at robot scale','A shared representation for touch, as pixels are for vision','Simulators that close the contact gap, or real data that routes around it'],sig:'Leading datasets add force and tactile channels by default, and reported success on contact-rich tasks jumps when they do.'}
+  ];
+  const svg=$('#donut');const R=112,r=74;let cur={};K.forEach(k=>cur[k]=0);let fi=0;
+  const paths={};K.forEach(k=>paths[k]=S('path',{fill:C[k],stroke:C.panel,'stroke-width':2},svg));
+  const ttl=S('text',{y:-4,'text-anchor':'middle',fill:C.ink,'font-size':20,'font-weight':800,'font-family':'Bricolage Grotesque, sans-serif'},svg);
+  const sub=S('text',{y:18,'text-anchor':'middle',fill:C.muted,'font-size':11,'font-family':'JetBrains Mono, monospace'},svg);sub.textContent='2030 MIX · PROJECTION';
+  const box=$('#fCards'),det=$('#fDetail');
+  F.forEach((f,i)=>{const b=el('button','fcard',`<h4>${f.n}</h4><p>${f.p}</p>`,box);b.type='button';b.setAttribute('aria-pressed',i===0?'true':'false');b.onclick=()=>{fi=i;box.querySelectorAll('.fcard').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));show()}});
+  function show(){const f=F[fi];ttl.textContent=f.n;det.innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;justify-content:center">${K.map(k=>`<span style="font-size:12.5px;color:var(--ink2);display:inline-flex;gap:6px;align-items:center"><span style="width:9px;height:9px;border-radius:50%;background:${C[k]}"></span>${TYPE[k]} <span class="mono">${f.mix[k]}%</span></span>`).join('')}</div><h4>What would have to be true</h4><ul>${f.need.map(x=>`<li>${x}</li>`).join('')}</ul><h4>Signal to watch</h4><p style="margin:0;color:var(--ink2);font-size:14.5px">${f.sig}</p>`}
+  show();
+  reg(svg,()=>{const f=F[fi];let a=-Math.PI/2;K.forEach(k=>{cur[k]+=(f.mix[k]-cur[k])*(RM?1:.08)});const tot=K.reduce((s,k)=>s+cur[k],0);
+    K.forEach(k=>{const sw=cur[k]/tot*Math.PI*2;const a1=a+sw;const lg=sw>Math.PI?1:0;const p=(rr,aa)=>(Math.cos(aa)*rr).toFixed(2)+' '+(Math.sin(aa)*rr).toFixed(2);paths[k].setAttribute('d',sw<.001?'':`M${p(R,a)} A${R} ${R} 0 ${lg} 1 ${p(R,a1)} L${p(r,a1)} A${r} ${r} 0 ${lg} 0 ${p(r,a)} Z`);a=a1})});
+})();
+
+/* ============ 14. QUIZ ============ */
+(()=>{
+  const Q=[
+    {q:'How many hours of robot data trained π0 in 2024?',a:1e4,u:'h',ex:'10,000+ hours across 7 robot configurations and 68 tasks.'},
+    {q:'How many years of simulated practice went into OpenAI’s Rubik’s-cube hand?',a:13000,u:'years',ex:'About 13,000 years of simulated experience, longer than all of recorded human history.'},
+    {q:'How many hours of video trained NVIDIA’s Cosmos world models?',a:2e7,u:'h',ex:'20 million hours, about 2,300 years of footage.'},
+    {q:'How many hours did NVIDIA need to generate 780,000 synthetic trajectories?',a:11,u:'h',ex:'11 hours, about 6,500 hours of human demonstration equivalents.'},
+    {q:'How many hours of interaction are in DROID, the in-the-wild dataset from 564 scenes?',a:350,u:'h',ex:'350 hours from 76K trajectories. Diversity, not volume, was the point.'}
+  ];
+  let qi=0,locked=false;const sl=$('#qSlider'),ru=$('#qRuler');
+  const X=L=>30+L/8*540;
+  function ruler(g){ru.innerHTML='';S('line',{x1:30,x2:570,y1:36,y2:36,stroke:C.line2,'stroke-width':2},ru);for(let L=0;L<=8;L++){S('line',{x1:X(L),x2:X(L),y1:31,y2:41,stroke:C.muted},ru);const t=S('text',{x:X(L),y:62,'text-anchor':'middle',fill:C.muted,'font-size':11,'font-family':'JetBrains Mono, monospace'},ru);t.textContent='10'+sup(L)}
+    S('circle',{cx:X(g),cy:36,r:8,fill:C.ink},ru);if(locked){const a=Math.log10(Q[qi].a);S('line',{x1:X(g),x2:X(a),y1:36,y2:36,stroke:C.real,'stroke-width':3},ru);S('circle',{cx:X(a),cy:36,r:9,fill:C.real},ru);const t=S('text',{x:X(a),y:18,'text-anchor':'middle',fill:C.real,'font-size':12,'font-weight':700,'font-family':'Instrument Sans, sans-serif'},ru);t.textContent='answer'}}
+  const fmt=(v,u)=>u==='years'?fmtN(v)+' years':fmtH(v);
+  function paint(){const g=+sl.value,v=Math.pow(10,g),q=Q[qi];$('#qCount').textContent=`Question ${qi+1} of ${Q.length}`;$('#qText').textContent=q.q;$('#qGuess').textContent='Your guess: '+fmt(v,q.u);ruler(g)}
+  sl.oninput=()=>{if(!locked)paint()};
+  $('#qLock').onclick=()=>{if(locked)return;locked=true;const g=+sl.value,a=Math.log10(Q[qi].a),d=Math.abs(g-a);const f=Math.pow(10,d);$('#qVerdict').innerHTML=`<b style="color:var(--real)">${fmt(Q[qi].a,Q[qi].u)}.</b> ${Q[qi].ex} ${d<.3?'Spot on.':`You were off by ×${f<100?f.toFixed(1):fmtN(f)} (${g>a?'too high':'too low'}).`}`;ruler(g)};
+  $('#qNext').onclick=()=>{qi=(qi+1)%Q.length;locked=false;sl.value=3;$('#qVerdict').textContent='';paint()};
+  paint();
+})();
+
+requestAnimationFrame(loop);
+</script>
