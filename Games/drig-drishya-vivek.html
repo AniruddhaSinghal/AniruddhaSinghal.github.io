@@ -3,1108 +3,1319 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0820">
-<title>दृग्-दृश्य · तीरों की मुक्ति · भाग २</title>
+<meta name="theme-color" content="#f5ecdc">
+<title>दृग्-दृश्य · राम-बाण</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#ffcf6e;--saffron:#ff9d3c;--ink:#0b0820;--teal:#5fe0cf;--rose:#ff7d8c;--text:#fff4df;--muted:#e2d6f2;
-  --serif:'Tiro Devanagari Hindi','Noto Serif Devanagari','Mangal',serif;--sans:'Noto Sans Devanagari','Mangal','Segoe UI',sans-serif}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-html,body{margin:0;height:100%;background:var(--ink);color:var(--text);font-family:var(--sans);font-size:20px;overflow:hidden;touch-action:none}
-#cv{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+:root{
+  --paper:#f5ecdc;--paper2:#fbf6ec;--ink:#6e4f36;--ink2:#8a6a4e;--soft:#b39a7c;--line:#dccbab;
+  --gold:#cf8b25;--saffron:#d9822b;--blue:#5aa9e6;--rose:#c0392b;--teal:#3f8a7e;
+  --serif:'Tiro Devanagari Hindi','Noto Serif Devanagari',serif;
+  --sans:'Noto Sans Devanagari','Mangal','Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;touch-action:none;overscroll-behavior:none}
+#cv{position:fixed;inset:0;width:100vw;height:100vh;display:block;touch-action:none}
+#grain{position:fixed;inset:0;pointer-events:none;opacity:.32;mix-blend-mode:multiply;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .3 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .hidden{display:none!important}
-button{font-family:var(--sans);cursor:pointer;border:none;color:var(--text)}
-/* HUD */
-#hudTop{position:fixed;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top) + 8px) 10px 6px;display:flex;align-items:center;gap:8px;z-index:5;background:linear-gradient(#0b0820ee,#0b082000)}
-.iconBtn{min-width:54px;height:54px;border-radius:16px;background:rgba(255,255,255,.08);border:2px solid rgba(255,207,110,.45);font-size:24px;display:grid;place-items:center}
-.iconBtn:active{transform:scale(.93)}
-#lvlTitle{flex:1;min-width:0;text-align:center;line-height:1.2}
-#lvlTitle .ch{font-family:var(--serif);font-size:24px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#lvlTitle .sub{font-size:16px;color:var(--muted)}
-#lives{font-size:24px;letter-spacing:2px;white-space:nowrap}
-.diya.out{filter:grayscale(1) brightness(.4);opacity:.4}
-#progress{position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 72px);height:8px;border-radius:6px;background:rgba(255,255,255,.1);z-index:5;overflow:hidden}
-#progress>div{height:100%;width:0;background:linear-gradient(90deg,#ff9d3c,#ffe08a);transition:width .4s}
-#hudBot{position:fixed;left:0;right:0;bottom:0;padding:8px 8px calc(env(safe-area-inset-bottom) + 10px);display:flex;align-items:flex-end;justify-content:space-around;gap:4px;z-index:5;background:linear-gradient(#0b082000,#0b0820f0)}
-.tool{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:16px;color:var(--muted)}
-#ramBtn{width:84px;height:84px;border-radius:50%;font-family:var(--serif);font-size:34px;color:#2a1400;background:radial-gradient(circle at 40% 35%,#ffe7a8,#ff9d3c);border:3px solid #fff1c4;box-shadow:0 0 26px #ff9d3c88;position:relative}
-#ramBtn svg{position:absolute;inset:-7px;width:98px;height:98px;transform:rotate(-90deg);pointer-events:none}
-#micBtn.on{background:rgba(255,157,60,.35);border-color:var(--saffron);animation:pulse 1.6s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #ff9d3c88}50%{box-shadow:0 0 0 12px #ff9d3c00}}
-#japCount{font-family:var(--serif);color:var(--gold);font-size:18px}
-#zoomBox{position:fixed;right:10px;top:calc(env(safe-area-inset-top) + 92px);display:flex;flex-direction:column;gap:8px;z-index:5}
-#zoomBox .iconBtn{font-size:26px;font-weight:800}
-#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 92px);transform:translate(-50%,-10px);background:rgba(25,16,52,.96);border:2px solid rgba(255,207,110,.55);padding:12px 18px;border-radius:16px;font-size:20px;line-height:1.5;width:max-content;max-width:86vw;text-align:center;opacity:0;transition:.35s;z-index:8;pointer-events:none}
+button{font-family:var(--sans);cursor:pointer;border:none;background:none;color:var(--ink);padding:0}
+svg.ic{width:26px;height:26px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+#hud{position:fixed;inset:0;z-index:5;pointer-events:none}
+#hud button,#hud .pe{pointer-events:auto}
+#hdr{position:absolute;left:14px;right:14px;top:env(safe-area-inset-top);height:62px;display:flex;align-items:center;border-bottom:2px solid var(--line)}
+#hdr .hb{width:44px;height:44px;display:grid;place-items:center;border-radius:50%}
+#hdr .hb:active{background:rgba(110,79,54,.08)}
+#lvlT{flex:1;text-align:center;font-weight:800;color:var(--gold);font-size:23px;letter-spacing:.3px}
+#micBtn{position:relative}
+#micBtn.on::after{content:'';position:absolute;top:9px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--saffron);animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.25}}
+#row2{position:absolute;left:22px;right:22px;top:calc(env(safe-area-inset-top) + 74px);display:flex;align-items:center;gap:8px;height:32px}
+#drops{display:flex;gap:7px}
+#drops svg{width:20px;height:25px;transition:transform .35s}
+#drops .lost{transform:scale(.8)}
+#still{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2)}
+#stillBar{width:64px;height:4px;border-radius:3px;background:var(--line);overflow:hidden}
+#stillFill{height:100%;width:0;background:var(--teal)}
+#japMini{margin-left:auto;font-size:13px;color:var(--ink2);font-family:var(--serif)}
+#still + #japMini{margin-left:10px}
+
+#controls{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 64px);display:flex;justify-content:center;align-items:center;gap:30px;padding-bottom:14px}
+.round{width:62px;height:62px;border-radius:50%;background:#fff;box-shadow:0 3px 12px rgba(110,79,54,.13);display:grid;place-items:center;position:relative}
+.round:active{transform:scale(.94)}
+.round.on{box-shadow:0 0 0 2px var(--gold),0 3px 12px rgba(110,79,54,.13)}
+#malaBtn{width:70px;height:70px}
+#malaRing{position:absolute;inset:-5px;width:80px;height:80px;transform:rotate(-90deg);pointer-events:none}
+.lbl{position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--ink2);white-space:nowrap}
+#band{position:absolute;left:0;right:0;bottom:0;height:calc(env(safe-area-inset-bottom) + 58px);padding-bottom:env(safe-area-inset-bottom);
+  background:linear-gradient(#e6d3b1,#dcc59c);border-top:5px solid #c7a675;display:flex;align-items:center;justify-content:center;gap:12px}
+#bandT{font-family:var(--serif);font-size:24px;color:#7a5326;letter-spacing:.5px}
+#bandS{font-size:12px;color:#8f6b45}
+#band.climax #bandT{font-family:var(--sans);font-weight:800;font-size:27px;letter-spacing:1.5px;color:#7a4a17}
+
+#whisper{position:fixed;left:0;right:0;top:40%;text-align:center;font-family:var(--serif);font-size:clamp(20px,5.5vw,34px);color:rgba(122,83,38,.85);opacity:0;pointer-events:none;z-index:4;transition:opacity 2s ease}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 112px);transform:translate(-50%,-8px);background:var(--paper2);border:1px solid var(--line);color:var(--ink);padding:8px 16px;border-radius:12px;font-size:14px;max-width:92vw;text-align:center;opacity:0;transition:.3s;z-index:8;pointer-events:none;box-shadow:0 4px 16px rgba(110,79,54,.12)}
 #toast.show{opacity:1;transform:translate(-50%,0)}
-#whisper{position:fixed;left:0;right:0;top:40%;text-align:center;font-family:var(--serif);font-size:clamp(30px,8vw,48px);color:#fff0c8;opacity:0;pointer-events:none;z-index:4;text-shadow:0 0 30px #ffb347,0 2px 6px #000;transition:opacity 2s ease}
-.floatRam{position:fixed;font-family:var(--serif);color:var(--gold);font-size:34px;pointer-events:none;z-index:40;text-shadow:0 0 14px #ffb347;animation:rise 1.6s ease-out forwards}
-@keyframes rise{from{opacity:1;transform:translate(-50%,0) scale(.8)}to{opacity:0;transform:translate(-50%,-110px) scale(1.3)}}
-#heard{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 118px);transform:translateX(-50%);font-size:17px;color:var(--muted);z-index:5;opacity:0;transition:opacity .4s;white-space:nowrap}
-/* screens and cards */
-.screen{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;background:radial-gradient(ellipse at 50% 30%,rgba(60,30,90,.6),rgba(11,8,32,.94) 70%)}
-#title{background-size:cover;background-position:center 30%}
-#title h1{font-family:var(--serif);font-weight:400;font-size:clamp(46px,13vw,76px);margin:0;color:var(--gold);text-shadow:0 0 40px #ff9d3c88}
-#title h2{font-weight:400;font-size:22px;margin:4px 0 18px;color:#ffd9a0}
-.shloka{font-family:var(--serif);font-size:22px;line-height:1.75;color:#f3e8ff;max-width:560px;margin:6px 0}
-.btn{min-height:58px;padding:12px 28px;border-radius:30px;font-size:22px;background:linear-gradient(135deg,#ffc061,#e9761d);color:#2a1400;font-weight:800;box-shadow:0 6px 26px #ff9d3c55;margin:6px}
-.btn.ghost{background:rgba(255,255,255,.08);color:var(--text);border:2px solid rgba(255,207,110,.5);box-shadow:none;font-weight:600}
+.floatRam{position:fixed;font-family:var(--serif);color:var(--saffron);font-size:22px;pointer-events:none;z-index:9;animation:rise 1.5s ease-out forwards}
+@keyframes rise{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-70px)}}
+
+.screen{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#title{background:var(--paper)}
+#title .om{width:84px;height:84px;margin-bottom:10px}
+#title h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,12vw,64px);margin:0;color:var(--gold)}
+#title h2{font-weight:600;font-size:clamp(14px,4vw,18px);margin:2px 0 20px;color:var(--ink2)}
+.shloka{font-family:var(--serif);font-size:clamp(14px,3.9vw,17px);line-height:1.8;color:var(--ink);max-width:500px}
+.shM{font-size:12.5px;color:var(--ink2);max-width:460px;line-height:1.6;margin:6px 0 24px}
+.btn{padding:12px 30px;border-radius:28px;font-size:16px;background:var(--ink);color:var(--paper2);font-weight:700;margin:5px;box-shadow:0 4px 14px rgba(110,79,54,.25)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--soft);box-shadow:none;font-weight:600}
 .btn:active{transform:scale(.96)}
+.small{font-size:12px;color:var(--ink2);margin-top:16px;max-width:420px;line-height:1.65}
+#modal{z-index:30;background:rgba(80,58,38,.28);backdrop-filter:blur(2px)}
+.card{width:min(92vw,450px);max-height:86vh;overflow:auto;background:var(--paper2);border:1px solid var(--line);border-radius:20px;padding:22px 20px 18px;box-shadow:0 18px 50px rgba(80,58,38,.25);animation:cardIn .45s cubic-bezier(.2,.9,.3,1.15);touch-action:pan-y}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.card h3{font-family:var(--serif);font-weight:400;color:var(--gold);font-size:27px;margin:2px 0 4px}
+.card .tag{font-size:11px;letter-spacing:2px;color:var(--soft);font-weight:700}
+.card p{line-height:1.75;font-size:15px;margin:8px 0;color:var(--ink)}
+.card .story{font-family:var(--serif);font-size:16.5px;line-height:1.85;text-align:left}
+.box{border-radius:12px;padding:10px 12px;text-align:left;font-size:14px;line-height:1.65;margin:10px 0}
+.box.ddv{background:#f3e7d1;border-left:3px solid var(--gold)}
+.box.mech{background:#eef3ee;border-left:3px solid var(--teal)}
+.box b{color:#7a4a17}
+.kicon{width:66px;height:66px;margin:0 auto 4px;display:block}
+.opts{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.opt{padding:11px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:15px}
+.opt.right{background:#e3f0e8;border-color:var(--teal)}
+.opt.wrong{background:#f6e1dc;border-color:var(--rose)}
+.gateRam{font-family:var(--serif);font-size:58px;color:var(--saffron);margin:0}
+.gateProg{height:6px;border-radius:4px;background:var(--line);overflow:hidden;margin:10px 0}
+.gateProg>div{height:100%;width:0;background:var(--saffron);transition:width .3s}
+#kmap{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+.kt{border-radius:14px;padding:10px 8px;background:#fff;border:1px solid var(--line);font-size:14px;display:flex;align-items:center;gap:8px;text-align:left}
+.kt svg{width:34px;height:34px;flex:none}
+.kt small{display:block;color:var(--ink2);font-size:11px}
+.kt.locked{opacity:.38}
+.kt.done{border-color:var(--teal)}
 .row{display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
-#modal{z-index:30;background:rgba(6,4,18,.55);backdrop-filter:blur(3px);justify-content:flex-end}
-#modal.center{justify-content:center}
-.card{width:min(96vw,560px);max-height:88vh;overflow:auto;background:linear-gradient(170deg,#231a4a,#130e2c);border:2px solid rgba(255,207,110,.45);border-radius:24px;padding:22px 20px 18px;box-shadow:0 20px 60px #000c;animation:cardIn .5s cubic-bezier(.2,.9,.3,1.2);text-align:center}
-@keyframes cardIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
-.card h3{font-family:var(--serif);font-weight:400;color:var(--gold);font-size:32px;margin:2px 0 8px}
-.card .tag{font-size:16px;letter-spacing:1px;color:var(--saffron)}
-.card p{line-height:1.7;font-size:22px;margin:10px 0;color:#fff6e6}
-.card .msg{font-family:var(--serif);font-size:25px;line-height:1.7;color:#fff;background:rgba(255,207,110,.08);border:2px solid rgba(255,207,110,.3);border-radius:18px;padding:14px 16px;margin:12px 0}
-.term{color:#7ff0de;border-bottom:3px dotted #7ff0de;cursor:pointer;padding:0 2px;white-space:nowrap}
-.term::after{content:" ⓘ";font-size:.7em}
-.darshanPic{width:100%;max-height:34vh;border-radius:18px;overflow:hidden;margin:6px 0 10px;border:2px solid rgba(255,207,110,.5);box-shadow:0 0 40px #ff9d3c55}
-.darshanPic img{display:block;width:100%;height:34vh;object-fit:cover;object-position:center 25%;filter:blur(calc((1 - var(--p)) * 14px)) saturate(1.15) contrast(1.08) sepia(.15) brightness(calc(.55 + var(--p) * .5));transform:scale(calc(1.15 - var(--p) * .15));transition:filter .6s,transform .6s}
-.gateRam{font-family:var(--serif);font-size:64px;color:var(--gold);text-shadow:0 0 40px #ff9d3c;margin:0}
-.gateProg{height:16px;border-radius:10px;background:rgba(255,255,255,.1);overflow:hidden;margin:10px 0}
-.gateProg>div{height:100%;width:0;background:linear-gradient(90deg,#ffb04a,#ffe08a);transition:width .3s}
-.bigNum{font-family:var(--serif);font-size:30px;color:var(--gold)}
-.small{font-size:18px;color:var(--muted);line-height:1.6}
-.toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.1);font-size:20px}
-.toggle input[type=checkbox]{width:28px;height:28px;accent-color:var(--saffron)}
-input[type=range]{accent-color:var(--saffron);width:150px;height:30px}
-#termLayer{z-index:50;background:radial-gradient(ellipse at 50% 30%,rgba(20,70,80,.75),rgba(6,10,24,.97) 70%)}
-#termLayer .card{border-color:#7ff0de88}
-#termLayer h3{color:#7ff0de;font-size:38px}
-.tsec{text-align:left;background:rgba(255,255,255,.05);border-radius:16px;padding:12px 14px;margin:10px 0}
-.tsec b{color:#7ff0de;font-size:18px;display:block;margin-bottom:4px}
-.tsec span{font-size:22px;line-height:1.65}
-.glist{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-.glist button{min-height:54px;font-size:20px;border-radius:14px;background:rgba(127,240,222,.1);border:2px solid rgba(127,240,222,.35)}
-.glist button.done{border-color:#ffcf6e}
+.tg{display:flex;align-items:center;justify-content:space-between;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
+.tg input[type=checkbox]{width:20px;height:20px;accent-color:var(--ink)}
+input[type=range]{accent-color:var(--ink);width:130px}
 </style>
 </head>
 <body>
 <canvas id="cv"></canvas>
-<div id="hudTop" class="hidden">
-  <button class="iconBtn" id="menuBtn" aria-label="मेनू">☰</button>
-  <div id="lvlTitle"><div class="ch" id="chName">—</div><div class="sub" id="lvlSub">—</div></div>
-  <div id="lives"></div>
+<div id="grain"></div>
+
+<div id="hud" class="hidden">
+  <div id="hdr">
+    <button class="hb" id="backBtn" aria-label="काण्ड"><svg class="ic" viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></button>
+    <div id="lvlT">स्तर १</div>
+    <button class="hb" id="micBtn" aria-label="माइक"><svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/></svg></button>
+    <button class="hb" id="setBtn" aria-label="सेटिंग"><svg class="ic" viewBox="0 0 24 24"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5z"/><circle cx="12" cy="12" r="3"/></svg></button>
+  </div>
+  <div id="row2">
+    <div id="drops"></div>
+    <div id="still" class="hidden">स्थिरता<div id="stillBar"><div id="stillFill"></div></div></div>
+    <div id="japMini">राम ०</div>
+  </div>
+  <div id="controls">
+    <button class="round" id="gridBtn" aria-label="ग्रिड"><svg class="ic" viewBox="0 0 24 24" style="width:30px;height:30px"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M9.2 3.5v17M14.8 3.5v17M3.5 9.2h17M3.5 14.8h17"/></svg></button>
+    <button class="round" id="malaBtn" aria-label="माला"><svg id="malaRing" viewBox="0 0 80 80"><circle id="malaArc" cx="40" cy="40" r="37" fill="none" stroke="#d9822b" stroke-width="3" stroke-linecap="round" stroke-dasharray="232.5" stroke-dashoffset="232.5"/></svg><span style="font-family:var(--serif);font-size:24px;color:var(--saffron)">राम</span><span class="lbl">दबाकर रखें</span></button>
+    <button class="round" id="hintBtn" aria-label="विवेक"><svg class="ic" viewBox="0 0 24 24" style="width:30px;height:30px"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/><path d="M10 10.5l1 1.2 1-1.2 1 1.2 1-1.2"/></svg><span class="lbl">विवेक · ३ जप</span></button>
+  </div>
+  <div id="band"><span id="bandT">बालकाण्ड</span><span id="bandS"></span></div>
 </div>
-<div id="progress" class="hidden"><div id="progFill"></div></div>
-<div id="hudBot" class="hidden">
-  <div class="tool"><button class="iconBtn" id="micBtn">🎙️</button><span id="micLbl">माइक</span></div>
-  <div class="tool"><button class="iconBtn" id="zOut" aria-label="छोटा करें" style="font-size:30px;font-weight:800">－</button><span>छोटा</span></div>
-  <div class="tool"><button id="ramBtn">राम<svg viewBox="0 0 98 98"><circle cx="49" cy="49" r="45" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="5"/><circle id="ramArc" cx="49" cy="49" r="45" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283"/></svg></button><span id="japCount">जप ०</span></div>
-  <div class="tool"><button class="iconBtn" id="zIn" aria-label="बड़ा करें" style="font-size:30px;font-weight:800">＋</button><span>बड़ा</span></div>
-  <div class="tool"><button class="iconBtn" id="hintBtn">🪔</button><span>विवेक</span></div>
-</div>
-<div id="heard"></div>
+
 <div id="whisper"></div>
 <div id="toast"></div>
+
 <div id="title" class="screen">
+  <svg class="om" viewBox="0 0 100 100" fill="none" stroke="#cf8b25" stroke-width="2.2" stroke-linecap="round">
+    <path d="M18 70 Q50 6 82 70"/><path d="M18 70 L82 70" stroke-width="1.2"/><path d="M50 92 L50 22"/><path d="M43 30 L50 18 L57 30"/><path d="M45 86 L50 80 L55 86"/><circle cx="50" cy="50" r="45" stroke-width="1" stroke="#dccbab"/>
+  </svg>
   <h1>दृग्-दृश्य</h1>
-  <h2>तीरों की मुक्ति · भाग २ · जप-यात्रा</h2>
-  <div class="shloka">रूपं दृश्यं लोचनं दृक्<br>तद्दृश्यं दृक्तु मानसम्</div>
-  <p class="small" style="max-width:520px">रूप दिखता है, आँख देखती है। आँख दिखती है, मन देखता है। मन को जो देखता है — वही आप हैं।</p>
-  <div class="row" style="margin-top:14px">
-    <button class="btn" id="playBtn">आरम्भ करें</button>
-    <button class="btn ghost" id="glossBtn">शब्द-कोश</button>
-  </div>
-  <p class="small" style="max-width:520px;margin-top:16px">🎙️ "राम" बोलिए, या नीचे का <b style="color:var(--gold)">राम</b> बटन दबाकर रखिए।<br>हर स्तर जप से खुलता है।</p>
+  <h2>राम-बाण · तीरों की मुक्ति</h2>
+  <div class="shloka">रूपं दृश्यं लोचनं दृक् तद्दृश्यं दृक्तु मानसम् ।<br>दृश्या धीवृत्तयः साक्षी दृगेव न तु दृश्यते ॥</div>
+  <div class="shM">रूप दृश्य है, आँख देखने वाली। आँख दृश्य है, मन देखने वाला। मन की वृत्तियाँ दृश्य हैं — साक्षी देखने वाला है, वह कभी दृश्य नहीं बनता।</div>
+  <div class="row"><button class="btn" id="playBtn">आरम्भ</button><button class="btn ghost" id="mapBtn">काण्ड</button></div>
+  <div class="small">सात काण्ड · सत्तर स्तर · हर दसवाँ स्तर महासंग्राम।<br>🎙️ “राम” जप के लिए माइक · 📱 झुकाव के लिए गायरोस्कोप · दो उँगलियों से ज़ूम।</div>
 </div>
+
 <div id="modal" class="screen hidden"><div class="card" id="card"></div></div>
-<div id="termLayer" class="screen hidden"><div class="card" id="termCard"></div></div>
 <script>
 'use strict';
-/* ======================= CONTENT ======================= */
-// [[term]] = tappable word that opens its explanation level.
-const LESSONS = [
- 'जो दिखता है, वह [[दृश्य]] है। जो देखता है, वह [[दृक्]] है। बस इतना याद रखिए।',
- 'पेड़ दिखता है, आप देखते हैं। पेड़ दृश्य है, आप दृष्टा हैं।',
- 'आँख भी दर्पण में दिखती है। जो दिख सकता है, वह दृश्य है — आँख भी।',
- 'आँख धुंधली है या साफ़ — यह मन जानता है। मन आँख को देखता है।',
- 'मन उदास है या खुश — यह कौन जानता है? जो जानता है, वह [[साक्षी]] है।',
- 'साक्षी सबको देखता है, पर साक्षी को कोई नहीं देखता।',
- 'दीया सबको दिखाता है। दीये को देखने के लिए दूसरा दीया नहीं चाहिए।',
- 'जो बदलता है, वह दृश्य है। जो हर बदलाव को जानता है, वह नहीं बदलता।',
- 'बचपन गया, जवानी गई — पर "मैं हूँ" का भाव वही रहा।',
- 'गुस्सा आता है, चला जाता है। आप वहीं रहते हैं। गुस्सा एक [[वृत्ति]] है।',
- 'इच्छा, डर, शक, भरोसा, शर्म — ये सब मन की लहरें हैं। ये भी दृश्य हैं।',
- '"मेरा मन" — "मेरा" कहने वाला मन से अलग है।',
- '"मेरा शरीर", "मेरा घर" — जो "मेरा" है, वह "मैं" नहीं।',
- 'चेतना [[बुद्धि]] में चमकती है, जैसे सूरज पानी में। इसे [[चिदाभास]] कहते हैं।',
- 'पानी हिले तो सूरज हिलता दिखता है। सूरज नहीं हिलता।',
- 'मन चंचल हो तो "मैं" भी चंचल लगता है। असली "मैं" शांत है।',
- '[[माया]] के दो काम हैं: सच को ढकना, और झूठ को दिखाना।',
- '[[आवरण]] यानी ढकना। छोटा-सा बादल बड़े सूरज को ढक देता है।',
- '[[विक्षेप]] यानी गलत दिखाना। अँधेरे में रस्सी साँप लगती है।',
- 'साँप ने डराया, पर साँप कभी था ही नहीं। रस्सी हमेशा थी।',
- 'रस्सी [[अधिष्ठान]] है — वह आधार, जिस पर भ्रम टिका था।',
- 'हर चीज़ में पाँच बातें हैं: है, चमकती है, प्यारी है, नाम, और रूप।',
- '"है, चमकती है, प्यारी है" — ये तीन [[अस्ति-भाति-प्रिय]] हैं। ये ईश्वर के हैं।',
- 'नाम और रूप बदलते रहते हैं। यही [[नाम-रूप]] संसार है।',
- 'कंगन, हार, अँगूठी — नाम-रूप अलग, सोना एक।',
- 'लहरें अलग-अलग, पानी एक। रूप अलग-अलग, चेतना एक।',
- 'नाम-रूप से नज़र हटाइए, "है-पन" पर टिकिए — यही ध्यान है।',
- '[[समाधि]] का अर्थ है मन का एक ही बात पर टिक जाना।',
- 'पहले शब्द के साथ टिकना: "मैं साक्षी हूँ" — यह [[सविकल्प]] समाधि है।',
- 'फिर शब्द भी शांत, केवल होना — यह [[निर्विकल्प]] समाधि है।',
- 'बाहर भी अभ्यास है: फूल देखिए, फिर उसके "है" को देखिए।',
- '[[जप]] यही करता है: मन "राम" पर टिकता है, बाकी सब दृश्य बनकर गुज़रता है।',
- 'सच के तीन स्तर हैं: सपना, जागना, और जो दोनों को जानता है।',
- 'सपने का शेर सपने में डराता है, जागते ही मिट जाता है। यह [[प्रातिभासिक]] सच है।',
- 'जागते संसार में काम चलता है — रोटी पेट भरती है। यह [[व्यावहारिक]] सच है।',
- 'जो कभी नहीं बदलता, वह [[पारमार्थिक]] सच है।',
- 'घड़े के अंदर का आकाश और बाहर का आकाश — घड़ा टूटे तो एक ही आकाश।',
- 'जो [[आत्मा]] भीतर है, वही [[ब्रह्म]] सब ओर है।',
- '[[नेति-नेति]]: "यह नहीं, यह नहीं।" जो दिखा, छोड़ते जाइए। जो बचा, वही आप।',
- 'इस ग्रंथ का नाम [[विवेक]] है — देखने वाले को दिखने वाले से अलग पहचानना।',
- '[[जीव]] अपने को शरीर मानता है, इसलिए डरता है। साक्षी को कोई डर नहीं छूता।',
- '[[अहंकार]] कहता है "मैं कर रहा हूँ"। साक्षी केवल देखता है।',
- 'नींद में न शरीर था, न संसार। फिर भी सुबह आप कहते हैं — "अच्छी नींद आई।" किसने जाना?',
-];
-const SUTRAS = [
- 'आँखें बंद कीजिए। अब भी कुछ दिख रहा है — अँधेरा। उसे कौन देख रहा है?',
- 'विचार बादल हैं। आप आकाश हैं।',
- 'दर्द शरीर में है। दर्द को जानने वाला दर्द में नहीं।',
- 'आवाज़ आई, गई। सुनने वाला गया नहीं।',
- 'हर तीर जो उड़ा, एक दृश्य था। आप वहीं बैठे रहे।',
- 'राम का नाम लेते रहिए। नाम दृश्य है, नाम लेने वाला दृष्टा।',
- 'चिंता आए तो पूछिए: यह चिंता किसे दिख रही है?',
- 'जो कल था, वह याद है। याद भी दृश्य है।',
- 'खुशी भी आती-जाती है। जो उसे देखता है, वह आनंद है।',
- 'शरीर बूढ़ा होता है। देखने वाला बूढ़ा नहीं होता।',
- 'आईने में चेहरा बदलता है। आईना देखने वाला वही है।',
- 'हनुमान जी ने कहा: देह से मैं आपका दास, जीव से अंश, आत्मा से आप ही।',
- 'सीता जी को ढूँढ़ने हनुमान समुद्र लाँघ गए — एक नाम के भरोसे।',
- 'जहाँ राम का नाम, वहाँ भय नहीं।',
- 'शबरी ने बेर चखकर दिए। प्रेम में गिनती नहीं होती।',
- 'लक्ष्मण चौदह वर्ष जागे — सेवा भी साधना है।',
- 'केवट ने पैर धोए, फिर नाव में बैठाया। पहले शुद्धि, फिर पार।',
- 'भरत ने खड़ाऊँ को राजा बनाया। भाव ही सच्चा सिंहासन है।',
- 'सुग्रीव डरा हुआ था, राम मिले तो राजा बना। साथ बदलो, भाग्य बदलता है।',
- 'अंगद का पैर कोई न हिला सका। जो राम पर टिका, वह नहीं हिलता।',
- 'विभीषण ने शरण ली, राम ने तुरंत अपनाया। शरण का द्वार हमेशा खुला है।',
- 'जटायु ने अंत तक लड़ाई की। छोटा भी बड़ा काम कर सकता है।',
- 'राम ने सेतु बाँधा — पत्थर पर नाम लिखा, पत्थर तैरे।',
- 'जो नाम पत्थर को तिराता है, वह मन को भी तिराएगा।',
- 'शिव जी भी राम नाम जपते हैं।',
- 'एक "राम" — मन एक क्षण शांत। सौ "राम" — मन घर लौटता है।',
- 'माला का हर दाना एक वापसी है — बाहर से भीतर।',
- 'जप गिनती के लिए नहीं, याद के लिए है।',
- 'भूल गए? कोई बात नहीं। फिर से "राम"।',
- 'मन भटका, यह जान लिया — यही जागना है।',
- 'शांति कहीं से लानी नहीं पड़ती। शोर हटाओ, शांति थी ही।',
- 'सागर में लहर उठे, गिरे — सागर को फर्क नहीं पड़ता।',
- 'घड़ा टूटा, आकाश नहीं टूटा।',
- 'सपने में राजा बने या भिखारी — जागने पर दोनों गए।',
- 'दुनिया एक फिल्म है, आप पर्दा हैं। आग लगे फिल्म में, पर्दा नहीं जलता।',
- 'प्रकाश चीज़ों को दिखाता है। चेतना प्रकाश को भी दिखाती है।',
- 'जो कभी नहीं गया, उसे ढूँढ़ना नहीं, पहचानना है।',
- 'अपने से पूछिए: "मैं कौन हूँ?" उत्तर नहीं, पूछने वाले को देखिए।',
- 'शब्द चुप हो जाए, फिर भी आप हैं।',
- 'आप आज भी वही हैं जो पाँच साल की उम्र में थे — देखने वाले।',
- 'रिश्ते बदलते हैं, नाम बदलते हैं; "मैं हूँ" नहीं बदलता।',
- 'अच्छा-बुरा दिन भी दृश्य है। गुज़र जाएगा।',
- 'क्रोध आए तो एक "राम" — क्रोध और आपके बीच दूरी बनती है।',
- 'डर आए तो देखिए: डर कहाँ है? मन में। मन कहाँ है? आपके सामने।',
- 'हर साँस भीतर आती है, बाहर जाती है। देखने वाला आता-जाता नहीं।',
- 'तुलसीदास ने कहा: कलियुग में नाम ही आधार है।',
- 'राम नाम मणिदीप है — जीभ की देहरी पर रखो, भीतर-बाहर उजाला।',
- 'नाम जपते-जपते नाम मीठा हो जाता है।',
- 'कठिन स्तर, धीमे हाथ। जल्दबाज़ी में दृष्टि खो जाती है।',
- 'हर उलझन बाहर से एक-एक तीर निकालकर ही सुलझती है।',
- 'पहले वह तीर ढूँढ़िए जिसकी राह खुली है। जीवन में भी।',
- 'जो अटका है, उसे पहले नहीं खींचते। जो खुला है, उसे छोड़ो — बाकी अपने-आप खुलेगा।',
- 'तीर गया, जगह खाली हुई। खाली जगह में ही दर्शन होते हैं।',
- 'मन जितना खाली, राम उतने पास।',
- 'गुरु दीया जलाते हैं, देखना हमें है।',
- 'ग्रंथ रास्ता दिखाते हैं, चलना हमें है।',
- 'हर सुबह नींद से उठना — छोटा-सा जागरण है।',
- 'रात सोते समय एक "राम" — दिन के सारे दृश्य वहीं छोड़ दीजिए।',
- 'ईश्वर दूर नहीं, बस आँख के पीछे हैं — जो देख रहा है।',
- 'मंदिर की घंटी बाहर बजती है, सुनने वाला भीतर।',
- 'हनुमान जी की शक्ति: उन्हें याद दिलाया गया, तो सागर छोटा लगा। आप भी भूले हुए हनुमान हैं।',
- 'सीता माता ने अशोक वाटिका में भी नाम नहीं छोड़ा। कठिन समय में नाम ही साथी।',
- 'राम वन गए, फिर भी राम रहे। परिस्थिति बदलती है, स्वरूप नहीं।',
- 'कृष्ण ने कहा: आत्मा को शस्त्र नहीं काटते, आग नहीं जलाती।',
- 'शिव का तीसरा नेत्र — भीतर देखने वाली आँख।',
- 'गणेश जी विघ्न हटाते हैं। सबसे बड़ा विघ्न — "मैं शरीर हूँ" का भ्रम।',
- 'माँ दुर्गा मन के राक्षसों से लड़ती हैं — क्रोध, लोभ, मोह।',
- 'माँ सरस्वती का वीणा-स्वर: शब्द के पीछे मौन।',
- 'माँ लक्ष्मी कमल पर — कीचड़ में रहकर भी अछूती। संसार में रहो, संसार से ऊपर।',
- 'श्री यन्त्र के बीच का बिंदु — सबका केंद्र, स्वयं स्थिर।',
- 'षट्कोण: ऊपर का त्रिकोण शिव, नीचे का शक्ति। मिलन में पूर्णता।',
- 'ॐ में तीन ध्वनियाँ हैं, और चौथा मौन। मौन ही आधार।',
- 'स्वस्तिक चारों दिशाओं में मंगल फैलाता है।',
- 'शंख की ध्वनि — भीतर की नींद तोड़ने वाली पुकार।',
- 'सुदर्शन चक्र घूमता है, केंद्र नहीं घूमता। आप केंद्र हैं।',
- 'कलश में जल, ऊपर नारियल — भरा हुआ मन ही मंगल है।',
- 'गदा — हनुमान जी की शक्ति, जो केवल सेवा में उठती है।',
- 'धनुष-बाण: राम का लक्ष्य कभी नहीं चूकता। जप का लक्ष्य भी नहीं।',
- 'मोरपंख — रंग अनेक, आँख एक।',
- 'त्रिशूल के तीन फल: जागना, सपना, गहरी नींद। तीनों को जानने वाला दंड है — सीधा, स्थिर।',
- 'डमरू — सृष्टि की पहली ध्वनि; फिर मौन।',
- 'कमल पानी में उगता है, पानी उसे भिगो नहीं पाता।',
- 'तुलसी का पौधा छोटा है, पर आँगन पवित्र कर देता है। एक नाम भी ऐसा ही।',
- 'दीया छोटा है, अँधेरा बड़ा। फिर भी जीत दीये की।',
- 'खेल कठिन है, क्योंकि मन कठिन है। धीरे-धीरे दोनों सुलझते हैं।',
- 'आज जितना जप हुआ, वही पूँजी है।',
- 'हारना भी दृश्य है। हार को देखने वाला हारा नहीं।',
- 'हर स्तर के बाद पूछिए: जिसने खेला, वह कौन था?',
- 'कोई भी कमरा खाली नहीं — आकाश तो भरा ही है।',
- 'शरीर को आराम दीजिए, साँस धीमी कीजिए, फिर "राम"।',
- 'बोलकर जप, फिर फुसफुसाकर, फिर मन में — तीनों जप हैं।',
- 'उम्र से कुछ नहीं बिगड़ता — नाम के लिए हर उम्र सही है।',
-];
-const WHISPERS = ['राम…','देखने वाला कौन है?','यह तीर दृश्य है','आप दृष्टा हैं','धीरे… ध्यान से','श्वास देखिए','विचार आया — किसने जाना?','सीता राम','जय हनुमान','राम राम राम','नाम में ठहरिए','सब गुज़रता है, आप रहते हैं','मैं साक्षी हूँ','हर तीर एक विचार','शांत…'];
-
-const GLOSSARY = {
- 'दृक्': ['देखने वाला। जो जानता है।','आप टीवी देखते हैं — टीवी दिखता है, आप देखते हैं। आप दृक् हैं।','दृक् = देखने वाला'],
- 'दृश्य': ['जो दिखता है, सुनाई देता है, महसूस होता है — सब दृश्य है।','कप, आवाज़, दर्द, विचार — जो भी आपके सामने आता है।','दृश्य = जो दिखता है'],
- 'साक्षी': ['सबसे भीतर का देखने वाला। जो मन को भी देखता है।','सपना देखा, जागे, सोए — तीनों को जिसने जाना, वह साक्षी।','साक्षी = चुपचाप देखने वाला'],
- 'विवेक': ['सही और गलत को, असली और नकली को अलग पहचानना।','दूध और पानी मिला हो, हंस दूध अलग कर लेता है — यह विवेक है।','विवेक = अलग-अलग पहचानना'],
- 'माया': ['वह शक्ति जो सच को छिपाती है और झूठ को सच जैसा दिखाती है।','जादूगर का खेल: आप जानते हैं धोखा है, फिर भी असली लगता है।','माया = भ्रम की शक्ति'],
- 'आवरण': ['ढकने वाली शक्ति। सच वहीं है, पर दिखता नहीं।','बादल सूरज को ढकता है। सूरज मिटा नहीं, बस छिपा है।','आवरण = पर्दा'],
- 'विक्षेप': ['जो नहीं है, उसे दिखाने वाली शक्ति।','अँधेरे में रस्सी को साँप समझना। साँप था नहीं, फिर भी डर लगा।','विक्षेप = गलत दिखना'],
- 'अधिष्ठान': ['आधार — जिस असली चीज़ पर भ्रम टिका है।','साँप का भ्रम रस्सी पर टिका था। रस्सी अधिष्ठान है।','अधिष्ठान = नींव'],
- 'चिदाभास': ['चेतना की परछाईं, जो मन में पड़ती है और "मैं" जैसी लगती है।','सूरज पानी में दिखता है। पानी का सूरज = चिदाभास, आकाश का सूरज = साक्षी।','चिदाभास = चेतना का प्रतिबिंब'],
- 'वृत्ति': ['मन की एक लहर — एक विचार, एक भावना।','गुस्सा, इच्छा, डर, याद — हर एक अलग वृत्ति है।','वृत्ति = मन की लहर'],
- 'बुद्धि': ['मन का वह हिस्सा जो निर्णय करता है, समझता है।','"यह ठीक है, यह गलत" — यह तय करने वाली बुद्धि।','बुद्धि = समझने वाला मन'],
- 'अहंकार': ['"मैं करता हूँ, मेरा है" — यह भाव।','"मैंने खाना बनाया" — शरीर ने बनाया, अहंकार ने श्रेय लिया।','अहंकार = "मैं-मेरा" का भाव'],
- 'नाम-रूप': ['हर चीज़ का नाम और आकार। ये बदलते रहते हैं।','सोने का कंगन पिघलाकर हार बना — नाम-रूप बदला, सोना वही।','नाम-रूप = बदलने वाला हिस्सा'],
- 'अस्ति-भाति-प्रिय': ['हर चीज़ में तीन न बदलने वाली बातें: वह है, वह जानी जाती है, वह प्यारी लगती है।','फूल है (अस्ति), दिखता है (भाति), अच्छा लगता है (प्रिय)।','अस्ति-भाति-प्रिय = सत्-चित्-आनन्द'],
- 'सत्-चित्-आनन्द': ['सत् = हमेशा रहने वाला, चित् = जानने वाला, आनन्द = पूर्ण सुख। यही आपका असली स्वरूप।','गहरी नींद का सुख — कुछ नहीं था, फिर भी आनन्द था।','सत्-चित्-आनन्द = ब्रह्म का स्वरूप'],
- 'समाधि': ['मन का पूरी तरह एक बात में टिक जाना।','जैसे संगीत में डूबकर समय का पता न चले।','समाधि = पूरा ठहराव'],
- 'सविकल्प': ['समाधि जिसमें एक विचार या शब्द साथ रहता है।','"राम" जपते-जपते केवल "राम" बचे — बाकी सब चुप।','सविकल्प = शब्द के साथ ठहराव'],
- 'निर्विकल्प': ['समाधि जिसमें शब्द भी शांत हो जाता है, केवल होना बचता है।','जप करते-करते नाम भी अपने-आप चुप हो जाए और आप केवल हों।','निर्विकल्प = शब्द-रहित ठहराव'],
- 'जप': ['भगवान का नाम बार-बार, प्रेम और ध्यान से लेना।','"राम राम राम" — होंठ से, धीमे स्वर में, या मन में।','जप = नाम की याद'],
- 'प्रातिभासिक': ['जो केवल दिखता है, असल में नहीं — सपना या भ्रम।','सपने का खाना पेट नहीं भरता।','प्रातिभासिक = दिखावटी सच'],
- 'व्यावहारिक': ['रोज़ के संसार का सच — काम चलता है, पर स्थायी नहीं।','रोटी भूख मिटाती है — यह व्यावहारिक सच है।','व्यावहारिक = काम-चलाऊ सच'],
- 'पारमार्थिक': ['सबसे ऊँचा सच, जो कभी नहीं बदलता — ब्रह्म।','सपना और जागना दोनों बदलते हैं; जानने वाला नहीं।','पारमार्थिक = सदा का सच'],
- 'आत्मा': ['आपका असली "मैं" — शरीर और मन से परे, चेतना।','शरीर कपड़ा है, आत्मा पहनने वाला।','आत्मा = भीतर का "मैं"'],
- 'ब्रह्म': ['वह एक चेतना, जो सब में है और सबसे परे है।','सारे घड़ों में एक ही आकाश।','ब्रह्म = सबमें एक'],
- 'जीव': ['वह, जो अपने को शरीर-मन मानकर सुख-दुख भोगता है।','घड़े का आकाश अपने को "छोटा" माने — वह जीव।','जीव = सीमित समझा हुआ "मैं"'],
- 'नेति-नेति': ['"यह नहीं, यह नहीं" — जो दिखा, उसे "मैं" न मानना।','शरीर दिखता है — मैं नहीं। मन दिखता है — मैं नहीं। जो बचा — मैं।','नेति-नेति = छोड़ते जाना'],
-};
-const TERM_RX = /\[\[([^\]]+)\]\]/g;
-
-/* Darshan: public-domain paintings (Raja Ravi Varma & studio, before 1906) from Wikimedia Commons.
-   Loaded at runtime and colour-graded in the browser. */
-const DARSHAN = [
- {f:'Ramapanchayan, Raja Ravi Varma (Lithograph).jpg', name:'श्री राम दरबार', line:'राम · सीता · लक्ष्मण · हनुमान'},
- {f:'Raja Ravi Varma, Goddess Saraswati.jpg', name:'माँ सरस्वती', line:'वीणा का स्वर, शब्द के पीछे मौन'},
- {f:'Bharata welcoming Rama, Sita, Lakshmana and Hanuman to Ayodhya by Raja Ravi Varma.jpg', name:'भरत मिलाप', line:'राम घर लौटे'},
- {f:'Ravi Varma-Lakshmi.jpg', name:'माँ लक्ष्मी', line:'कमल पर, जल से अछूती'},
- {f:'Raja Ravi Varma - Sankaracharya.jpg', name:'आदि शंकराचार्य', line:'अद्वैत के आचार्य'},
- {f:'Ganapati1.jpg', name:'श्री गणेश', line:'विघ्नहर्ता'},
- {f:'Raja Ravi Varma, Jatayu vadha, 1906.jpg', name:'जटायु', line:'अंत तक सेवा'},
- {f:'Yashoda with Krishna, Raja Ravi Varma.jpg', name:'यशोदा और कृष्ण', line:'प्रेम में गिनती नहीं'},
- {f:'Kashi Viswanatha.jpg', name:'काशी विश्वनाथ', line:'ॐ नमः शिवाय'},
- {f:'Raja Ravi Varma, Bharat Milap (Lithographic Print).jpg', name:'भरत और राम', line:'भाव ही सिंहासन'},
- {f:'Raja Ravi Varma, Ambika (Oleographic print).jpg', name:'माँ अम्बिका', line:'शक्ति'},
- {f:'Lakshmi Saraswati Sanyog, by Raja Ravi Varma.jpg', name:'लक्ष्मी-सरस्वती', line:'समृद्धि और ज्ञान'},
- {f:'Raja Ravi Varma - Dattatreya.jpg', name:'श्री दत्तात्रेय', line:'गुरु-तत्त्व'},
- {f:'Krishna as Envoy, by Raja Ravi Varma.jpg', name:'श्री कृष्ण', line:'शांति-दूत'},
- {f:'Dashavataras.jpg', name:'दशावतार', line:'एक, अनेक रूपों में'},
-];
-const imgURL = f => 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(f.replace(/ /g,'_')) + '?width=1100';
-/* ======================= ART: board shapes + darshan drawings ======================= */
-// Board shapes: f(u,v) with u,v in [-1,1] → inside?
-const SHAPES = [
- {n:'ऊर्ध्व-बाण',  f:(u,v)=> (v>-0.15 && Math.abs(u)<0.62) || (v<=-0.15 && v>-1 && Math.abs(u) < (v+1)*1.1)},
- {n:'कमल',        f:(u,v)=>{const r=Math.hypot(u,v),a=Math.atan2(v,u);return r < 0.55+0.45*Math.abs(Math.cos(4*a));}},
- {n:'षट्कोण',      f:(u,v)=> tri(u,v,1)||tri(u,v,-1)},
- {n:'त्रिशूल',      f:(u,v)=> (Math.abs(u)<0.3 && v>-0.6) || (v>-0.45&&v<0.05&&Math.abs(u)<1) || (v<=0.05&&v>-1&&(Math.abs(u-0.72)<0.28||Math.abs(u+0.72)<0.28)) || (v>-1&&Math.abs(u)<0.3) || (v>0.7&&Math.abs(u)<0.6)},
- {n:'कलश',        f:(u,v)=> (Math.hypot(u/0.95,(v-0.25)/0.7)<1) || (v<-0.35&&v>-0.65&&Math.abs(u)<0.4) || (v<=-0.65&&v>-1&&Math.abs(u)<0.75-((v+1)*0.6))},
- {n:'चक्र',        f:(u,v)=>{const r=Math.hypot(u,v);return r<1 && (r>0.42 || r<0.18 || Math.abs(Math.sin(4*Math.atan2(v,u)))<0.28);}},
- {n:'शिखर',        f:(u,v)=> (v>0.45 && Math.abs(u)<0.95) || (v<=0.45 && Math.abs(u) < 0.62*Math.pow((v+1.05)/1.5,0.7)) },
- {n:'गदा',         f:(u,v)=> Math.hypot(u/1.05,(v+0.35)/0.75)<0.85 || (Math.abs(u)<0.3 && v>-0.1) || (v>0.75&&Math.abs(u)<0.55)},
- {n:'चतुर्द्वार',    f:(u,v)=> (Math.abs(u)<0.45||Math.abs(v)<0.45) || (Math.abs(u)>0.55&&Math.abs(v)>0.55)},
- {n:'हीरक',        f:(u,v)=> Math.abs(u)+Math.abs(v)<1.05},
-];
-function tri(u,v,s){ v*=s; return v>-1 && v<0.5 && Math.abs(u) < (v+1)*0.62; }
-
-/* ======================= UTILITIES & SAVE ======================= */
+/* ================= Utilities ================= */
 const $ = id => document.getElementById(id);
 const HN = n => String(n).replace(/[0-9]/g, d => '०१२३४५६७८९'[d]);
 function rng(seed){ let s = (seed >>> 0) || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const lerp = (a,b,t) => a + (b - a) * t;
-const ease = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
 const DIRS = [[1,0],[0,1],[-1,0],[0,-1]];
-const KEY = 'ddv2_save';
+const SANS = "'Noto Sans Devanagari','Mangal',sans-serif";
+
+/* ================= Save (cookie + localStorage mirror) ================= */
+const SAVE_KEY = 'ddv2';
 const Save = {
-  d: { level:0, jap:0, bank:0, lesson:0, sutra:0, whisper:0, terms:{}, music:true, vol:.5 },
-  load(){ try { const r = localStorage.getItem(KEY); if (r) Object.assign(this.d, JSON.parse(r)); } catch(e){} },
-  write(){ try { localStorage.setItem(KEY, JSON.stringify(this.d)); } catch(e){} },
+  data: { unlocked:0, cur:0, jap:0, bank:0, gates:0, music:true, vol:.5, endless:0, finished:false, grid:false },
+  load(){
+    let raw = null;
+    const m = document.cookie.match(new RegExp('(?:^|; )' + SAVE_KEY + '=([^;]*)'));
+    if (m) raw = decodeURIComponent(m[1]);
+    if (!raw) try { raw = localStorage.getItem(SAVE_KEY); } catch(e){}
+    if (raw) try { Object.assign(this.data, JSON.parse(raw)); } catch(e){}
+    else { // carry jap over from the first version
+      const o = document.cookie.match(/(?:^|; )ddv_save=([^;]*)/);
+      if (o) try { const d = JSON.parse(decodeURIComponent(o[1])); this.data.jap = d.jap || 0; this.data.bank = d.bank || 0; } catch(e){}
+    }
+  },
+  write(){
+    const s = JSON.stringify(this.data);
+    document.cookie = SAVE_KEY + '=' + encodeURIComponent(s) + ';max-age=31536000;path=/;SameSite=Lax';
+    try { localStorage.setItem(SAVE_KEY, s); } catch(e){}
+  },
   _t:0, soon(){ clearTimeout(this._t); this._t = setTimeout(() => this.write(), 500); }
 };
 Save.load();
-function withTerms(s){ return s.replace(TERM_RX, (_, t) => `<span class="term" data-t="${t}">${t}</span>`); }
-function bindTerms(root){ root.querySelectorAll('.term').forEach(el => el.onclick = e => { e.stopPropagation(); openTerm(el.dataset.t); }); }
-function nextLesson(){ const i = Save.d.lesson; if (i < LESSONS.length){ Save.d.lesson++; Save.soon(); return LESSONS[i]; } return nextSutra(); }
-function nextSutra(){ const i = Save.d.sutra++; Save.soon(); const pool = SUTRAS.concat(LESSONS); return pool[i % pool.length]; }
 
-/* ======================= AUDIO ======================= */
+/* ================= Line icons ================= */
+const ICON = {
+  bow:'<path d="M14 54 Q32 6 50 54"/><path d="M14 54 L50 54" stroke-width="1.2"/><path d="M32 60 L32 14"/><path d="M27 20 L32 11 L37 20"/>',
+  paduka:'<path d="M18 14c-6 0-8 10-8 22s3 18 8 18 8-6 8-18-2-22-8-22z"/><path d="M46 14c-6 0-8 10-8 22s3 18 8 18 8-6 8-18-2-22-8-22z"/><circle cx="18" cy="24" r="2.5"/><circle cx="46" cy="24" r="2.5"/>',
+  deer:'<path d="M24 30 L18 18 M18 18 L12 14 M18 18 L20 10 M40 30 L46 18 M46 18 L52 14 M46 18 L44 10"/><path d="M24 30 Q32 26 40 30 L37 46 Q32 54 27 46 Z"/><circle cx="28" cy="36" r="1.4" fill="currentColor"/><circle cx="36" cy="36" r="1.4" fill="currentColor"/>',
+  mala:'<circle cx="32" cy="30" r="17" stroke-dasharray="2 4.6" stroke-width="4"/><path d="M32 47 L32 56"/><circle cx="32" cy="58" r="3"/>',
+  gada:'<circle cx="38" cy="24" r="12"/><path d="M30 32 L14 54"/><path d="M34 13 v22 M27 24 h22"/>',
+  shila:'<ellipse cx="32" cy="34" rx="22" ry="14"/><path d="M8 50 q8-4 16 0 t16 0 t16 0" stroke-width="1.2"/><text x="32" y="39" font-size="14" text-anchor="middle" stroke="none" fill="currentColor" font-family="serif">राम</text>',
+  diya:'<path d="M10 38 Q32 58 54 38 Z"/><path d="M32 34 C26 26 30 18 32 12 C34 18 38 26 32 34 Z"/><path d="M8 38 h48"/>',
+  eye:'<path d="M6 32 Q32 8 58 32 Q32 56 6 32 Z"/><circle cx="32" cy="32" r="8"/>'
+};
+const icon = (k, sz = 66, col = '#a56a28') => `<svg class="kicon" style="width:${sz}px;height:${sz}px;color:${col}" viewBox="0 0 64 64" fill="none" stroke="${col}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg>`;
+
+/* ================= The seven Kands ================= */
+const KANDS = [
+  { name:'बालकाण्ड', icon:'bow', gate:0, climax:'शिव-धनुष',
+    story:'अयोध्या में राम का जन्म हुआ। विश्वामित्र उन्हें वन ले गए और धनुर्विद्या दी। जनकपुर में शिव का धनुष रखा था, जिसे बड़े-बड़े राजा हिला तक न सके। राम ने सहज भाव से उठाया — और धनुष टूट गया।',
+    ddv:'धनुष <b>दृश्य</b> है, उसे उठाती भुजा भी दृश्य है। इन दोनों को जो जान रहा है, वही <b>दृक्</b> — देखने वाला — है।',
+    mech:'तीर पर टैप करें — वह अपनी दिशा में उड़ जाएगा। राह में दूसरा तीर हो तो टकराएगा और एक <b>जल-बिंदु</b> सूखेगा। दो उँगलियों से ज़ूम करें।<br><b>स्तर १०:</b> शिव-धनुष — सुनहरा भारी तीर, जो सबके जाने के बाद ही उठता है।',
+    end:'धनुष टूटा, पर देखने वाला नहीं टूटा।' },
+  { name:'अयोध्याकाण्ड', icon:'paduka', gate:11, climax:'पादुका-राज्य',
+    story:'राज्याभिषेक की सुबह वनवास का आदेश आया। राम का मुख न तिलक पर खिला, न वनवास पर मुरझाया। भरत ने सिंहासन पर बैठने के बजाय राम की पादुकाएँ रखीं और चौदह वर्ष उन्हीं के नाम से राज चलाया।',
+    ddv:'<b>नेति-नेति</b>: रूप को आँख देखती है, आँख को मन, मन को साक्षी। एक-एक कर दृश्य को छोड़ो — जो अंत तक अचल रहे, वही साक्षी है, जैसे सिंहासन पर पादुका।',
+    mech:'तीरों पर चिह्न हैं — <b>रू</b> (रूप), <b>ने</b> (नेत्र), <b>म</b> (मन)। पहले सारे रूप, फिर नेत्र, फिर मन। क्रम तोड़ा तो जल-बिंदु जाएगा। बीच का <b>साक्षी-नेत्र</b> किसी को नहीं रोकता — तीर उसके आर-पार जाते हैं।',
+    end:'राज्य गया, वन मिला — साक्षी वैसा ही रहा।' },
+  { name:'अरण्यकाण्ड', icon:'deer', gate:21, climax:'मारीच',
+    story:'पंचवटी के पास एक सुनहरा मृग दिखा। वह मृग नहीं, मारीच था — माया का रूप। सीता का मन मोहित हुआ, राम उसके पीछे गए, और वहीं से वियोग की कथा शुरू हुई।',
+    ddv:'माया की दो शक्तियाँ हैं: <b>आवरण</b> — जो सत्य को ढक दे, जैसे घना वन; और <b>विक्षेप</b> — जो असत्य को सत्य दिखाए, जैसे सोने का मृग, या अँधेरे में रस्सी का साँप।',
+    mech:'कुछ तीर <b>मायामृग</b> हैं — बिल्कुल असली जैसे, पर उन्हें छूने पर जल-बिंदु जाता है। <b>फ़ोन झुकाइए</b> (कंप्यूटर पर माउस घुमाइए): असली तीरों की छाया हिलती है, माया की कोई छाया नहीं होती।<br>कुछ तीर <b>वन की धुंध</b> में छिपे हैं — हर “राम” एक धुंध हटाता है।',
+    end:'मृग मिटा; जिसने उसे देखा, वह मिटा नहीं।' },
+  { name:'किष्किन्धाकाण्ड', icon:'mala', gate:27, climax:'वाली-सुग्रीव',
+    story:'वाली और सुग्रीव इतने एक-से थे कि पहले युद्ध में राम भी दोनों में भेद न कर सके। फिर सुग्रीव के गले में एक माला डाली गई — और पहचान स्पष्ट हो गई।',
+    ddv:'<b>चिदाभास</b>: चेतना बुद्धि में प्रतिबिम्बित होकर “मैं” जैसी लगती है, जैसे जल में सूर्य। प्रतिबिम्ब मुड़ता है, सूर्य नहीं। बिम्ब और प्रतिबिम्ब का भेद ही विवेक है।',
+    mech:'<b>दर्पण</b> तीर की राह को 90° मोड़ देते हैं। मोड़ के बाद की राह भी देखिए — असली रुकावट अक्सर दर्पण के पीछे होती है।',
+    end:'दर्पण में दिखा “मैं” प्रतिबिम्ब था; देखने वाला बिम्ब है।' },
+  { name:'सुन्दरकाण्ड', icon:'gada', gate:36, climax:'लंका-दहन',
+    story:'हनुमान ने समुद्र लाँघा। मैनाक पर्वत ने विश्राम का निमंत्रण दिया, सुरसा ने रास्ता रोका, सिंहिका ने परछाईं पकड़कर खींचा — पर हनुमान का मन एक ही काम पर टिका रहा: राम-काज।',
+    ddv:'<b>चित्त-वृत्ति</b>: इच्छा, संशय, भय, आलस्य — ये सब मन की लहरें हैं, और ये भी दृश्य हैं। जो इन्हें आते-जाते देखता है, वह लहर नहीं है।',
+    mech:'<b>लहराते तीर</b> (वृत्ति) तभी मुक्त होंगे जब <b>स्थिरता</b> भरी हो — फ़ोन स्थिर रखें, श्वास धीमी करें।<br><b>हनुमान-बाण</b> (सिंदूरी, “ह” चिह्न) राह के <b>एक</b> तीर को लाँघ जाता है।',
+    end:'समुद्र बड़ा था, पर लक्ष्य से बड़ा नहीं।' },
+  { name:'लंकाकाण्ड', icon:'shila', gate:54, climax:'दशानन',
+    story:'वानरों ने पत्थरों पर “राम” लिखा और वे पानी पर तैरने लगे — सेतु बन गया। युद्ध में रावण के सिर कटते और फिर उग आते। अंत में विभीषण ने भेद बताया, और राम के बाण ने अहंकार का अंत किया।',
+    ddv:'<b>समाधि</b>: नाम-जप से मन का भार हल्का होता है — जैसे राम लिखा पत्थर तैर जाए। <b>अहंकार</b> (दशानन) सबसे अंत में गिरता है, और उसके सिर — विचार — बार-बार उगते हैं।',
+    mech:'<b>राम-शिला</b> वाले तीर जप से खुलते हैं — शिला पर टैप कर उतनी बार “राम” कहें या माला दबाएँ।<br><b>राम-बाण</b> (केसरिया, पंखयुक्त) किसी से नहीं रुकता — राह के सब तीर प्रकाश बन जाते हैं।<br><b>स्तर ६०:</b> दशानन — दस जप, और सबसे अंत में।',
+    end:'अहंकार गिरा; जो शेष रहा, वह कभी लड़ा ही नहीं था।' },
+  { name:'उत्तरकाण्ड', icon:'diya', gate:108, climax:'राम-राज्य',
+    story:'राम अयोध्या लौटे और नगर दीपों से जगमगा उठा। राम-राज्य में हर वस्तु अपने नाम और रूप में थी — पर सबमें एक ही सत्ता झलकती थी।',
+    ddv:'हर वस्तु के पाँच अंश: <b>अस्ति</b> (है), <b>भाति</b> (प्रकाशित है), <b>प्रिय</b> (आनन्द) — ये ब्रह्म के हैं; <b>नाम</b> और <b>रूप</b> — ये जगत के। नाम-रूप हटें तो सत्-चित्-आनन्द शेष है।',
+    mech:'<b>नाम</b> और <b>रूप</b> सुनहरे धागे से बँधे जोड़े हैं — एक को छुओ तो दोनों साथ उड़ते हैं, दोनों की राह खुली चाहिए।<br>तीरों के नीचे तीन रत्न छिपे हैं — <b>अस्ति → भाति → प्रिय</b> क्रम में छुओ, एक जल-बिंदु पाओ।',
+    end:'दीप अनेक, प्रकाश एक।' }
+];
+const GATE_JAP = [0, 11, 21, 27, 36, 54, 108];
+
+function buildLevels(){
+  const out = [], KW = [6, 8, 9, 10, 11, 12, 13];
+  for (let k = 0; k < 7; k++) for (let j = 0; j < 10; j++){
+    const t = j / 9, r = rng(k * 131 + j * 7 + 3);
+    const W = KW[k] + Math.round(t * 3) + (j === 9 ? 1 : 0);
+    const H = W + 1 + (k >= 2 ? 1 : 0);
+    const o = { k, j, w:W, h:H, lmin:2, lmax: Math.round(4 + k * 1.1 + t * 3), fill: .84 + .1 * t };
+    switch (k){
+      case 0: if (j === 9) o.dhanush = 1; break;
+      case 1: o.tiers = 1; o.sakshi = 1; break;
+      case 2: o.illus = 2 + Math.floor(j / 2) + (j === 9 ? 3 : 0); if (j >= 4) o.veil = .12 + .025 * (j - 4); break;
+      case 3: o.mirrors = 2 + Math.floor(j / 2) + (j === 9 ? 2 : 0); if (j >= 5) o.illus = 2; break;
+      case 4: o.vritti = 2 + Math.floor(j / 3) + (j === 9 ? 3 : 0); o.hanuman = 1 + (j >= 5 ? 1 : 0); if (j >= 6) o.mirrors = 2; break;
+      case 5: o.seals = 2 + Math.floor(j / 4); o.rambaan = 1; if (j >= 3) o.mirrors = 2; if (j === 9){ o.ravana = 1; o.rambaan = 0; } break;
+      case 6: o.pairs = 2 + Math.floor(j / 3); o.abp = 1; if (j >= 4) o.illus = 2; if (j >= 6){ o.tiers = 1; o.sakshi = 1; }
+              if (j === 9){ o.mirrors = 3; o.veil = .15; o.vritti = 2; o.seals = 2; o.rambaan = 1; } break;
+    }
+    // echoes of earlier lessons keep later kands tricky
+    if (k >= 3 && j !== 0 && r() < .45) o.veil = (o.veil || 0) + .1;
+    if (k >= 4 && r() < .4) o.illus = (o.illus || 0) + 2;
+    if (k >= 5 && r() < .4) o.mirrors = (o.mirrors || 0) + 2;
+    out.push(o);
+  }
+  return out;
+}
+const LEVELS = buildLevels();
+function endlessSpec(i){
+  const r = rng(7771 + i * 37), W = 13 + Math.floor(r() * 4);
+  const o = { k:6, j:i % 10, w:W, h:W + 2, lmin:2, lmax:10, fill:.93 };
+  const pool = { tiers:1, veil:.18, illus:4, mirrors:4, vritti:3, pairs:2, seals:2, abp:1, hanuman:1, rambaan:1 };
+  Object.keys(pool).sort(() => r() - .5).slice(0, 3 + Math.floor(r() * 3)).forEach(f => o[f] = pool[f]);
+  if (o.tiers) o.sakshi = 1;
+  if (i % 10 === 9) o[r() < .5 ? 'ravana' : 'dhanush'] = 1;
+  return o;
+}
+
+const QUESTIONS = [
+  ['अभी इन तीरों को कौन देख रहा था?', ['आँखें','मन','साक्षी चेतना'], 2, 'आँख और मन भी दृश्य हैं — उन्हें भी कोई जानता है। वही साक्षी है।'],
+  ['सोने का मृग किस पर टिका था?', ['मारीच की माया पर','सोने पर','वन पर'], 0, 'विक्षेप असत्य को सत्य दिखाता है; पर हर भ्रम किसी अधिष्ठान पर टिकता है।'],
+  ['लहर का सार क्या है?', ['हवा','जल','आकार'], 1, 'लहर नाम-रूप है, उसका सार जल। जगत नाम-रूप है, उसका सार सत्-चित्-आनन्द।'],
+  ['किसी वस्तु में ब्रह्म के अंश कौन-से हैं?', ['नाम और रूप','अस्ति, भाति, प्रिय','रंग और गंध'], 1, 'अस्ति-भाति-प्रिय ब्रह्म के; नाम-रूप जगत के।'],
+  ['माया की दो शक्तियाँ?', ['आवरण और विक्षेप','सुख और दुःख','जन्म और मृत्यु'], 0, 'आवरण सत्य को ढकता है, विक्षेप असत्य को दिखाता है।'],
+  ['हनुमान को रोकने वाली सुरसा क्या थी?', ['दृश्य','दृष्टा','साक्षी'], 0, 'हर बाधा, हर लालच दृश्य है। मन लक्ष्य पर हो तो दृश्य राह नहीं रोकता।'],
+  ['स्वप्न का संसार किस स्तर का सत्य है?', ['पारमार्थिक','व्यावहारिक','प्रातिभासिक'], 2, 'प्रातिभासिक (स्वप्न/भ्रम), व्यावहारिक (जाग्रत जगत), पारमार्थिक (ब्रह्म)।'],
+  ['क्या साक्षी को देखा जा सकता है?', ['हाँ, आँख से','हाँ, मन से','नहीं — वह स्वयं देखने वाला है'], 2, 'जो देखता है वह कभी दृश्य नहीं बनता। आँख अपने को नहीं देखती।'],
+  ['रावण के सिर बार-बार क्यों उगते थे?', ['अहंकार की जड़ न कटी थी','बाण कमज़ोर थे','युद्ध लंबा था'], 0, 'विचार काटने से नहीं जाते; जड़ — “मैं” का भ्रम — देखने से जाता है।'],
+  ['“मैं” का भाव किसमें चेतना का प्रतिबिम्ब है?', ['बुद्धि में','शरीर में','आकाश में'], 0, 'चेतना का बुद्धि में पड़ा प्रतिबिम्ब — चिदाभास — “मैं” जैसा लगता है।'],
+  ['भरत ने सिंहासन पर पादुका क्यों रखी?', ['राज्य राम का था, वे केवल सेवक थे','पादुका सुंदर थी','प्रजा के डर से'], 0, 'कर्ता बनकर नहीं, साक्षी-भाव से कर्म — यही पादुका-राज्य है।'],
+  ['तीर उड़ने के बाद क्या शेष रहता है?', ['कुछ नहीं','खाली स्थान, और उसे जानने वाला','दूसरा तीर'], 1, 'दृश्य जाता है; जानने वाला नहीं जाता।']
+];
+const SUTRA = ['जो बदलता है, वह दृश्य है।','देखने वाला कभी देखा नहीं जाता।','राम का नाम, मन का विश्राम।','विचार आया — किसने जाना?','दृश्य अनेक, दृष्टा एक।','जो जाता है, वह मैं नहीं।','नाम-रूप के पीछे — अस्ति, भाति, प्रिय।','मौन भी एक दृश्य है; उसे जानने वाला कौन?'];
+const WHISPERS = ['राम…','देखने वाला कौन है?','यह तीर दृश्य है — तुम दृष्टा हो','क्या यह सत्य है, या केवल प्रतीत होता है?','श्वास को देखो… देखने वाले को देखो','राम राम राम…','मैं साक्षी हूँ','जो बदलता है, वह दृश्य है'];
+const TIER = [ { g:'रू', n:'रूप', c:'#b5652a' }, { g:'ने', n:'नेत्र', c:'#3f8a7e' }, { g:'म', n:'मन', c:'#6b5aa6' } ];
+const ABP = ['अस्ति','भाति','प्रिय'];
+
+/* ================= Audio: generative tanpura + bansuri + bells ================= */
 const Snd = {
-  c:null, music:null, sfx:null, rev:null, np:0, pi:0, nb:0,
+  ctx:null, music:null, sfx:null, rev:null, nextPluck:0, pIdx:0, nextFlute:0, nextBell:0,
   init(){
-    if (this.c) return; const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-    const c = this.c = new AC();
-    this.music = c.createGain(); this.music.gain.value = Save.d.music ? .16 * Save.d.vol : 0; this.music.connect(c.destination);
-    this.sfx = c.createGain(); this.sfx.gain.value = .5; this.sfx.connect(c.destination);
-    const len = c.sampleRate * 3.5, ir = c.createBuffer(2, len, c.sampleRate);
-    for (let ch = 0; ch < 2; ch++){ const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.6); }
-    this.rev = c.createConvolver(); this.rev.buffer = ir; const rg = c.createGain(); rg.gain.value = .5; this.rev.connect(rg); rg.connect(this.music);
-    const Sa = 108;
-    [Sa/2, Sa*1.5, Sa].forEach((f,i) => { const o = c.createOscillator(); o.frequency.value = f; const g = c.createGain(); g.gain.value = [.1,.05,.04][i]; o.connect(g); g.connect(this.music); g.connect(this.rev); o.start(); });
-    this.np = c.currentTime + .3; this.nb = c.currentTime + 4;
+    if (this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const c = this.ctx = new AC();
+    this.music = c.createGain(); this.music.gain.value = Save.data.music ? .16 * Save.data.vol : 0; this.music.connect(c.destination);
+    this.sfx = c.createGain(); this.sfx.gain.value = .45; this.sfx.connect(c.destination);
+    const len = c.sampleRate * 4, ir = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++){ const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    this.rev = c.createConvolver(); this.rev.buffer = ir;
+    const rg = c.createGain(); rg.gain.value = .55; this.rev.connect(rg); rg.connect(this.music);
+    const Sa = 130.81;
+    [Sa / 2, Sa * .75, Sa].forEach((f, i) => {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+      const g = c.createGain(); g.gain.value = [.1, .05, .04][i];
+      const l = c.createOscillator(); l.frequency.value = .05 + i * .03; const lg = c.createGain(); lg.gain.value = .025;
+      l.connect(lg); lg.connect(g.gain); o.connect(g); g.connect(this.music); g.connect(this.rev); o.start(); l.start();
+    });
+    this.nextPluck = c.currentTime + .3; this.nextFlute = c.currentTime + 6; this.nextBell = c.currentTime + 3;
     setInterval(() => this.tick(), 200);
   },
-  resume(){ this.init(); if (this.c && this.c.state !== 'running') this.c.resume(); },
-  setMusic(on){ Save.d.music = on; Save.soon(); if (this.music) this.music.gain.setTargetAtTime(on ? .16 * Save.d.vol : 0, this.c.currentTime, .4); },
-  setVol(v){ Save.d.vol = v; Save.soon(); if (this.music && Save.d.music) this.music.gain.setTargetAtTime(.16 * v, this.c.currentTime, .2); },
-  pluck(f, t){ const c = this.c, g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .03); g.gain.exponentialRampToValueAtTime(.0008, t + 4);
-    const bp = c.createBiquadFilter(); bp.type = 'lowpass'; bp.Q.value = 6; bp.frequency.setValueAtTime(f*9, t); bp.frequency.exponentialRampToValueAtTime(f*2.5, t + 3.5);
-    [0, 1.8, -1.6].forEach(dt => { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = dt; o.connect(bp); o.start(t); o.stop(t + 4.1); });
-    bp.connect(g); g.connect(this.music); g.connect(this.rev); },
-  bell(t, f = 523.25, vol = .05, dest){ const c = this.c;
-    [1, 2.76, 5.4, 8.93].forEach((m,i) => { const o = c.createOscillator(); o.frequency.value = f*m; const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol/(i+1), t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + 3.5/(i*.6+1)); o.connect(g); g.connect(dest || this.music); g.connect(this.rev); o.start(t); o.stop(t + 4); }); },
-  tick(){ if (!this.c || this.c.state !== 'running') return; const now = this.c.currentTime, Sa = 108, seq = [Sa*.75, Sa*2, Sa*2, Sa];
-    while (this.np < now + .5){ this.pluck(seq[this.pi % 4], this.np); this.np += (this.pi % 4 === 3) ? 1.9 : 1.05; this.pi++; }
-    if (this.nb < now + .5){ this.bell(this.nb, 783.99, .03); this.nb += 20 + Math.random()*20; } },
-  noise(t, dur, f0, f1, vol){ const c = this.c, n = c.sampleRate*dur, b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random()*2-1;
-    const s = c.createBufferSource(); s.buffer = b; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 2; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
-    const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + dur*.2); g.gain.exponentialRampToValueAtTime(.001, t + dur); s.connect(f); f.connect(g); g.connect(this.sfx); s.start(t); },
-  // Temple bell: inharmonic partials (hum, prime, tierce, quint, nominal...) with slow beating pairs.
-  templeBell(f, vol = .09, long = 1){
-    if (!this.c) return; const c = this.c, t = c.currentTime;
-    this._recent = (this._recent || []).filter(x => t - x < 1); this._recent.push(t);
-    const v = vol / Math.sqrt(this._recent.length);
-    const P = [[.5,.55,7],[1,1,5],[1.183,.5,3.6],[1.506,.35,3],[2,.42,2.4],[2.514,.2,1.8],[2.662,.16,1.5],[3.011,.12,1.2],[4.166,.07,.9]];
-    const out = c.createGain(); out.gain.value = 1; out.connect(this.sfx); const wet = c.createGain(); wet.gain.value = .6; out.connect(wet); wet.connect(this.rev);
-    for (const [m, a, d] of P) for (const det of [-.35, .35]){
-      const o = c.createOscillator(); o.frequency.value = f*m + det*m; const g = c.createGain();
-      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v*a*.5, t + .004); g.gain.exponentialRampToValueAtTime(.00005, t + d*long);
-      o.connect(g); g.connect(out); o.start(t); o.stop(t + d*long + .05); }
-    this.noise(t, .05, 3000, 6000, v*.4);
+  resume(){ this.init(); if (this.ctx && this.ctx.state !== 'running') this.ctx.resume(); },
+  setMusic(on){ Save.data.music = on; Save.soon(); if (this.music) this.music.gain.setTargetAtTime(on ? .16 * Save.data.vol : 0, this.ctx.currentTime, .4); },
+  setVol(v){ Save.data.vol = v; Save.soon(); if (this.music && Save.data.music) this.music.gain.setTargetAtTime(.16 * v, this.ctx.currentTime, .2); },
+  pluck(f, t){
+    const c = this.ctx, g = c.createGain();
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.055, t + .03); g.gain.exponentialRampToValueAtTime(.0008, t + 4.2);
+    const bp = c.createBiquadFilter(); bp.type = 'lowpass'; bp.Q.value = 6;
+    bp.frequency.setValueAtTime(f * 9, t); bp.frequency.exponentialRampToValueAtTime(f * 2.5, t + 3.5);
+    [0, 1.8, -1.6].forEach(dt => { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = dt; o.connect(bp); o.start(t); o.stop(t + 4.3); });
+    bp.connect(g); g.connect(this.music); g.connect(this.rev);
   },
-  arrowBell(k, special){
-    // 432 Hz tuning, Bhupali (Sa Re Ga Pa Dha) — a gentle walk up and down the scale
-    const R = [1, 9/8, 5/4, 3/2, 5/3, 2, 5/3, 3/2, 5/4, 9/8];
-    if (special){ this.templeBell(528, .13, 1.6); this.templeBell(216, .07, 1.8); return; }
-    this.templeBell(216 * R[k % R.length] * (Math.floor(k / R.length) % 2 ? 2 : 1), .085);
+  flute(f, t, dur){
+    const c = this.ctx, o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+    const v = c.createOscillator(); v.frequency.value = 5.2; const vg = c.createGain(); vg.gain.setValueAtTime(0, t); vg.gain.linearRampToValueAtTime(f * .008, t + dur * .6);
+    v.connect(vg); vg.connect(o.frequency);
+    const n = c.createOscillator(); n.type = 'triangle'; n.frequency.value = f * 2; const ng = c.createGain(); ng.gain.value = .15;
+    const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .35); g.gain.setValueAtTime(.05, t + dur - .5); g.gain.linearRampToValueAtTime(0, t + dur);
+    o.connect(g); n.connect(ng); ng.connect(g); g.connect(this.rev); const dry = c.createGain(); dry.gain.value = .35; g.connect(dry); dry.connect(this.music);
+    [o, v, n].forEach(x => { x.start(t); x.stop(t + dur + .1); });
   },
-  whoosh(){ if (!this.c) return; const t = this.c.currentTime; this.noise(t, .35, 600, 2400, .12); },
-  bump(){ if (!this.c) return; const c = this.c, t = c.currentTime, o = c.createOscillator(); o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(50, t + .25);
-    const g = c.createGain(); g.gain.setValueAtTime(.5, t); g.gain.exponentialRampToValueAtTime(.001, t + .3); o.connect(g); g.connect(this.sfx); o.start(t); o.stop(t + .35); },
-  chant(){ if (this.c) this.bell(this.c.currentTime, 659.25, .05, this.sfx); },
-  win(){ if (!this.c) return; const t = this.c.currentTime; [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f,i) => this.bell(t + i*.2, f, .06, this.sfx)); },
-  conch(){ if (!this.c) return; const c = this.c, t = c.currentTime; [233, 466, 699].forEach((f,i) => { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f*.97, t); o.frequency.linearRampToValueAtTime(f, t + .6);
-    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1400; const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.06/(i+1), t + .5); g.gain.linearRampToValueAtTime(0, t + 2.6);
-    o.connect(lp); lp.connect(g); g.connect(this.sfx); g.connect(this.rev); o.start(t); o.stop(t + 2.7); }); },
-  soft(){ if (this.c) this.bell(this.c.currentTime, 392, .04, this.sfx); }
+  bell(t, f = 523.25, vol = .05, dest){
+    const c = this.ctx;
+    [1, 2.76, 5.4, 8.93].forEach((m, i) => {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * m;
+      const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol / (i + 1), t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + 3.5 / (i * .6 + 1));
+      o.connect(g); g.connect(dest || this.music); g.connect(this.rev); o.start(t); o.stop(t + 4);
+    });
+  },
+  tick(){
+    if (!this.ctx || this.ctx.state !== 'running') return;
+    const now = this.ctx.currentTime, Sa = 130.81, seq = [Sa * .75, Sa * 2, Sa * 2, Sa];
+    while (this.nextPluck < now + .5){ this.pluck(seq[this.pIdx % 4], this.nextPluck); this.nextPluck += (this.pIdx % 4 === 3) ? 1.9 : 1.05; this.pIdx++; }
+    if (this.nextFlute < now + .5){
+      const sc = [1, 9/8, 5/4, 3/2, 5/3, 2, 9/4];
+      let t = this.nextFlute, k = 2 + Math.floor(Math.random() * 3), idx = Math.floor(Math.random() * 5);
+      for (let i = 0; i < k; i++){ const d = 1.4 + Math.random() * 1.6; this.flute(Sa * 2 * sc[idx], t, d); t += d * .92; idx = clamp(idx + (Math.random() < .5 ? -1 : 1) * (1 + Math.floor(Math.random() * 2)), 0, sc.length - 1); }
+      this.nextFlute = t + 7 + Math.random() * 9;
+    }
+    if (this.nextBell < now + .5){ this.bell(this.nextBell, 783.99, .03); this.nextBell += 22 + Math.random() * 20; }
+  },
+  noise(t, dur, f0, f1, vol){
+    const c = this.ctx, n = Math.floor(c.sampleRate * dur), b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const s = c.createBufferSource(); s.buffer = b;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 2; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + dur * .2); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+    s.connect(f); f.connect(g); g.connect(this.sfx); s.start(t);
+  },
+  whoosh(big){ if (!this.ctx) return; const t = this.ctx.currentTime; this.noise(t, big ? .9 : .5, 400, big ? 3800 : 2600, big ? .45 : .3); this.bell(t + .05, big ? 784 : 1046.5, big ? .05 : .022, this.sfx); },
+  bump(){ if (!this.ctx) return; const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(50, t + .25);
+    const g = c.createGain(); g.gain.setValueAtTime(.45, t); g.gain.exponentialRampToValueAtTime(.001, t + .3); o.connect(g); g.connect(this.sfx); o.start(t); o.stop(t + .35); },
+  chant(){ if (this.ctx) this.bell(this.ctx.currentTime, 659.25, .045, this.sfx); },
+  win(){ if (!this.ctx) return; const t = this.ctx.currentTime; [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => this.bell(t + i * .18, f, .055, this.sfx)); },
+  conch(){ if (!this.ctx) return; const c = this.ctx, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(220, t); o.frequency.linearRampToValueAtTime(233, t + .6); o.frequency.linearRampToValueAtTime(220, t + 2.4);
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900; f.Q.value = 4;
+    const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.12, t + .5); g.gain.linearRampToValueAtTime(.08, t + 2); g.gain.linearRampToValueAtTime(0, t + 2.8);
+    o.connect(f); f.connect(g); g.connect(this.sfx); g.connect(this.rev); o.start(t); o.stop(t + 3); },
+  soft(){ if (this.ctx) this.bell(this.ctx.currentTime, 392, .035, this.sfx); }
 };
 
-/* ======================= JAP (mic + Ram button) ======================= */
+/* ================= Jap: speech recognition / voice bursts / mala ================= */
 const Jap = {
-  on:false, rec:null, stream:null, raf:0, counted:{}, sid:1,
-  RX: /(राम|रामा|ram|raam|rama|राँम)/gi,
-  async toggle(){ this.on ? this.stop() : await this.start(); },
+  listening:false, mode:null, rec:null, stream:null, raf:0, counted:{}, sid:1,
+  RX:/(राम|रामा|राँम|ram|raam|rama|rām)/gi,
+  async toggle(){ this.listening ? this.stop() : await this.start(); },
   async start(){
     Snd.resume();
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SR){ try {
-      const r = this.rec = new SR(); r.lang = 'hi-IN'; r.continuous = true; r.interimResults = true; this.counted = {};
-      r.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++){ const txt = e.results[i][0].transcript, n = (txt.match(this.RX) || []).length, k = this.sid + ':' + i, prev = this.counted[k] || 0;
-        if (n > prev){ for (let j = 0; j < n - prev; j++) setTimeout(() => onChant(), j*140); this.counted[k] = n; } showHeard(txt); } };
-      r.onerror = ev => { if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){ this.rec = null; this.energy(); } };
-      r.onend = () => { if (this.on && this.rec){ this.sid++; try { r.start(); } catch(e){} } };
-      r.start(); this.on = true; this.ui(); this.bump(); toast('🎙️ सुन रहा हूँ — "राम" बोलिए'); return;
-    } catch(e){ this.rec = null; } }
-    this.energy();
+    if (SR){
+      try {
+        const r = this.rec = new SR();
+        r.lang = 'hi-IN'; r.continuous = true; r.interimResults = true;
+        this.counted = {};
+        r.onresult = e => {
+          for (let i = e.resultIndex; i < e.results.length; i++){
+            const txt = e.results[i][0].transcript, n = (txt.match(this.RX) || []).length, key = this.sid + ':' + i, prev = this.counted[key] || 0;
+            if (n > prev){ for (let k = 0; k < n - prev; k++) setTimeout(() => onChant(), k * 140); this.counted[key] = n; }
+          }
+        };
+        r.onerror = ev => { if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){ this.rec = null; this.startEnergy(); } };
+        r.onend = () => { if (this.listening && this.mode === 'sr'){ this.sid++; try { r.start(); } catch(e){} } };
+        r.start(); this.mode = 'sr'; this.listening = true; this.ui(); toast('🎙️ सुन रहा हूँ — “राम” बोलिए'); return;
+      } catch(e){ this.rec = null; }
+    }
+    await this.startEnergy();
   },
-  async energy(){
+  async startEnergy(){
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true } });
-      Snd.init(); const an = Snd.c.createAnalyser(); an.fftSize = 1024; Snd.c.createMediaStreamSource(this.stream).connect(an);
-      const buf = new Float32Array(an.fftSize); let floor = .01, voiced = false, t0 = 0, off = 0;
-      const loop = () => { if (!this.on) return; an.getFloatTimeDomainData(buf); let s = 0; for (const x of buf) s += x*x; const rms = Math.sqrt(s/buf.length), now = performance.now();
-        if (!voiced) floor = lerp(floor, rms, .02); const th = Math.max(.02, floor*3.2);
-        if (!voiced && rms > th){ voiced = true; t0 = now; } else if (voiced && rms < th*.7){ if (!off) off = now; if (now - off > 120){ const d = off - t0; voiced = false; off = 0; if (d > 160 && d < 1400) onChant(); } } else off = 0;
-        this.raf = requestAnimationFrame(loop); };
-      this.on = true; this.ui(); this.bump(); loop(); toast('🎙️ हर "राम" साफ़ और अलग बोलें');
-    } catch(e){ toast('माइक नहीं मिला — "राम" बटन दबाकर रखें'); this.on = false; this.ui(); }
+      Snd.init();
+      const an = Snd.ctx.createAnalyser(); an.fftSize = 1024; Snd.ctx.createMediaStreamSource(this.stream).connect(an);
+      const buf = new Float32Array(an.fftSize); let floor = .01, on = false, onT = 0, offT = 0;
+      const loop = () => {
+        if (!this.listening) return;
+        an.getFloatTimeDomainData(buf); let s = 0; for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+        const rms = Math.sqrt(s / buf.length), now = performance.now();
+        if (!on) floor = lerp(floor, rms, .02);
+        const th = Math.max(.02, floor * 3.2);
+        if (!on && rms > th){ on = true; onT = now; }
+        else if (on && rms < th * .7){ if (!offT) offT = now; if (now - offT > 120){ const d = offT - onT; on = false; offT = 0; if (d > 160 && d < 1400) onChant(); } }
+        else offT = 0;
+        this.raf = requestAnimationFrame(loop);
+      };
+      this.mode = 'energy'; this.listening = true; this.ui(); loop();
+      toast('🎙️ ध्वनि-जप: हर “राम” स्पष्ट और अलग बोलें');
+    } catch(e){ toast('माइक उपलब्ध नहीं — “राम” बटन दबाकर रखें'); this.listening = false; this.ui(); }
   },
-  stop(){ this.on = false; clearTimeout(this.idle); if (this.rec){ try { this.rec.onend = null; this.rec.stop(); } catch(e){} this.rec = null; }
-    if (this.stream){ this.stream.getTracks().forEach(t => t.stop()); this.stream = null; } cancelAnimationFrame(this.raf); this.ui(); },
-  bump(){ clearTimeout(this.idle); if (this.on) this.idle = setTimeout(() => { this.stop(); toast('🎙️ माइक बंद — 2 मिनट से जप नहीं सुना'); }, 120000); },
-  ui(){ $('micBtn').classList.toggle('on', this.on); $('micLbl').textContent = this.on ? 'सुन रहा' : 'माइक'; }
+  stop(){
+    this.listening = false;
+    if (this.rec){ try { this.rec.onend = null; this.rec.stop(); } catch(e){} this.rec = null; }
+    if (this.stream){ this.stream.getTracks().forEach(t => t.stop()); this.stream = null; }
+    cancelAnimationFrame(this.raf); this.mode = null; this.ui();
+  },
+  ui(){ $('micBtn').classList.toggle('on', this.listening); }
 };
-let heardT = 0;
-function showHeard(t){ const h = $('heard'); h.textContent = '"' + t.trim().slice(-30) + '"'; h.style.opacity = .9; clearTimeout(heardT); heardT = setTimeout(() => h.style.opacity = 0, 1800); }
-// hold-to-chant button: one Ram per 0.8 s of holding (mindful, not spammy)
-function holdToChant(btn, arcEl){
-  let held = false, t0 = 0, raf = 0; const C = 283;
-  const stop = () => { held = false; cancelAnimationFrame(raf); if (arcEl) arcEl.style.strokeDashoffset = C; else btn.style.backgroundImage = '';
-    removeEventListener('pointerup', stop); removeEventListener('pointercancel', stop); removeEventListener('blur', stop); };
-  const step = () => {
-    if (!held) return;
-    if (!btn.isConnected || btn.offsetParent === null || document.hidden){ stop(); return; }   // button gone → stop counting
-    const p = clamp((performance.now() - t0) / 800, 0, 1);
-    if (arcEl) arcEl.style.strokeDashoffset = C * (1 - p); else btn.style.backgroundImage = `linear-gradient(90deg,#ffffff66 ${p*100}%,transparent ${p*100}%)`;
-    if (p >= 1){ onChant(); t0 = performance.now(); if (navigator.vibrate) navigator.vibrate(12); }
-    raf = requestAnimationFrame(step); };
-  btn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); Snd.resume(); if (held) return; held = true; t0 = performance.now();
-    addEventListener('pointerup', stop); addEventListener('pointercancel', stop); addEventListener('blur', stop); step(); });
-  btn.addEventListener('pointerleave', stop);
+function holdToChant(btn, onProgress){
+  let t0 = 0, raf = 0, held = false;
+  const step = () => { if (!held) return; const p = clamp((performance.now() - t0) / 850, 0, 1); onProgress(p); if (p >= 1){ onChant(); t0 = performance.now(); if (navigator.vibrate) navigator.vibrate(10); } raf = requestAnimationFrame(step); };
+  btn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); Snd.resume(); held = true; t0 = performance.now(); try { btn.setPointerCapture(e.pointerId); } catch(_){} step(); });
+  const up = () => { held = false; cancelAnimationFrame(raf); onProgress(0); };
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev => btn.addEventListener(ev, up));
   btn.addEventListener('contextmenu', e => e.preventDefault());
 }
-holdToChant($('ramBtn'), $('ramArc'));
-$('micBtn').onclick = () => Jap.toggle();
+holdToChant($('malaBtn'), p => $('malaArc').style.strokeDashoffset = 232.5 * (1 - p));
 
-/* ======================= LEVEL DESIGN ======================= */
-function levelSpec(L){
-  return {
-    L, shape: SHAPES[L % SHAPES.length], darshan: DARSHAN[L % DARSHAN.length],
-    target: Math.min(162, 108 + L*3),          // at least 108 arrows — one mala
-    lmin: 2, lmax: Math.min(9, 5 + Math.floor(L / 3)), fill: .95,
-    veil: L >= 2 ? Math.min(.16, .06 + L*.008) : 0,
-    illus: L >= 3 ? Math.min(12, 2 + L) : 0,
-    seals: L >= 1 ? Math.min(9, 2 + L) : 0,
-    special: 9,
-    rotate: L >= 2 && L % 3 === 2, reveil: L >= 4 && L % 3 === 1,
-    lives: 3,
-  };
+/* ================= Sensors: tilt + stillness ================= */
+const Sense = {
+  tx:0, ty:0, rx:0, ry:0, base:null, restless:0, still:0, lb:null, lg:null, gyro:false,
+  async ask(){
+    try {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
+        if (await DeviceOrientationEvent.requestPermission() !== 'granted') return;
+      }
+      addEventListener('deviceorientation', e => this.ori(e));
+    } catch(e){}
+  },
+  ori(e){
+    if (e.beta == null) return; this.gyro = true;
+    if (!this.base) this.base = { b:e.beta, g:e.gamma };
+    this.rx = clamp((e.gamma - this.base.g) / 22, -1, 1); this.ry = clamp((e.beta - this.base.b) / 22, -1, 1);
+    if (this.lb != null) this.restless += Math.abs(e.beta - this.lb) + Math.abs(e.gamma - this.lg);
+    this.lb = e.beta; this.lg = e.gamma;
+    this.base.b = lerp(this.base.b, e.beta, .004); this.base.g = lerp(this.base.g, e.gamma, .004);
+  },
+  mouse(x, y, dx, dy){ if (this.gyro) return; this.rx = clamp((x / innerWidth - .5) * 2, -1, 1); this.ry = clamp((y / innerHeight - .5) * 2, -1, 1); this.restless += (Math.abs(dx) + Math.abs(dy)) * .12; },
+  update(dt){
+    this.tx = lerp(this.tx, this.rx, .12); this.ty = lerp(this.ty, this.ry, .12);
+    const r = this.restless; this.restless = 0;
+    this.still = clamp(this.still + (r < (this.gyro ? .9 : 1.2) ? dt / 1.6 : -dt * 2.5 - r * .02), 0, 1);
+  }
+};
+
+/* ================= Level generation =================
+   Every arrow gets a "rank". An arrow's exit ray may only cross arrows of
+   HIGHER rank, and its body may only sit on rays of LOWER-rank arrows.
+   Releasing in descending rank therefore always works, and freeing an arrow
+   never blocks another — no dead ends are possible. */
+const grid = (W, H, v) => Array.from({ length:H }, () => Array(W).fill(v));
+function rayCells(lv, x, y, dx, dy){
+  const cells = []; let guard = lv.W * lv.H * 4;
+  while (guard--){
+    x += dx; y += dy;
+    if (x < 0 || y < 0 || x >= lv.W || y >= lv.H) return { cells, exit:[dx, dy] };
+    const m = lv.mir[y][x];
+    if (m === 1){ const t = dx; dx = -dy; dy = -t; } else if (m === 2){ const t = dx; dx = dy; dy = t; }
+    cells.push({ x, y, dx, dy });
+  }
+  return { cells, exit:[dx, dy], loop:true };
 }
-const PALETTE = ['#ff9f43','#ffc93c','#e8453c','#f78fb3','#a77bf3','#6c7cf5','#2bb5c8','#3ec28f','#ffb37a','#f3e9d2','#ff6b6b','#9be15d'];
-
-function makeLevel(spec){
-  // grow the board until it holds at least spec.target arrows
-  let best = null;
-  for (let W = 16; W <= 36; W++){
-    const s = Object.assign({}, spec, { W, H: Math.round(W * 1.42) });
-    for (let a = 0; a < 3; a++){
-      const lv = tryMake(s, rng(spec.L * 7919 + W * 131 + a * 31 + 7));
-      if (!best || lv.total > best.total) best = lv;
-      if (lv.total >= spec.target) return lv;
-    }
+function makeLevel(spec, seed){
+  const R = rng(seed * 7919 + 17); let best = null;
+  for (let t = 0; t < 10; t++){
+    const lv = tryMake(spec, R); if (!lv) continue;
+    if (!best || lv.fillRatio > best.fillRatio) best = lv;
+    if (lv.fillRatio >= spec.fill - .03) break;
   }
   return best;
 }
 function tryMake(spec, R){
-  let mask0 = Array.from({length:spec.H}, (_, y) => Array.from({length:spec.W}, (_, x) => spec.shape.f((x + .5) / spec.W * 2 - 1, (y + .5) / spec.H * 2 - 1)));
-  // crop empty border rows/columns so the shape fills the screen
-  let x0 = spec.W, x1 = -1, y0 = spec.H, y1 = -1;
-  mask0.forEach((r, y) => r.forEach((m, x) => { if (m){ x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); } }));
-  const mask = mask0.slice(y0, y1 + 1).map(r => r.slice(x0, x1 + 1));
-  const W = mask[0].length, H = mask.length;
-  const occ = Array.from({length:H}, () => Array(W).fill(-1));
-  const arrows = [], lv = { W, H, mask, occ, arrows, spec };
-  let maskN = 0; mask.forEach(r => r.forEach(m => maskN += m));
-  const okCell = (x,y) => x >= 0 && y >= 0 && x < W && y < H && mask[y][x] && occ[y][x] === -1;
-  let filled = 0, fails = 0;
-  const target = Math.floor(maskN * spec.fill);
-  while (filled < target && fails < maskN * 1.2){
-    const hx = Math.floor(R()*W), hy = Math.floor(R()*H);
-    if (!okCell(hx,hy)){ fails++; continue; }
-    let placed = false;
-    for (const di of [0,1,2,3].sort(() => R() - .5)){
-      const [dx,dy] = DIRS[di];
-      const ray = trace(lv, hx, hy, dx, dy, -1, true); if (!ray.clear) continue;
-      const raySet = new Set(ray.cells.map(c => c.x + ',' + c.y));
-      const want = spec.lmin + Math.floor(Math.pow(R(), 1.3) * (spec.lmax - spec.lmin + 1));
-      const cells = [{x:hx,y:hy}], used = new Set([hx + ',' + hy]);
+  const W = spec.w, H = spec.h;
+  const lv = { W, H, spec, occ:grid(W, H, -1), mir:grid(W, H, 0), arrows:[], sakshi:null, jewels:[], abpNext:0 };
+  const pathers = Array.from({ length:H }, () => Array.from({ length:W }, () => []));
+  if (spec.sakshi) lv.sakshi = { x:W >> 1, y:H >> 1 };
+  const fixed = (x, y) => (lv.sakshi && lv.sakshi.x === x && lv.sakshi.y === y) || lv.mir[y][x];
+  for (let i = 0, g = 0; i < (spec.mirrors || 0) && g < 300; g++){
+    const x = 1 + Math.floor(R() * (W - 2)), y = 1 + Math.floor(R() * (H - 2));
+    if (fixed(x, y)) continue;
+    let near = false;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++){ const yy = y + dy, xx = x + dx; if (yy >= 0 && yy < H && xx >= 0 && xx < W && lv.mir[yy][xx]) near = true; }
+    if (near) continue;
+    lv.mir[y][x] = R() < .5 ? 1 : 2; i++;
+  }
+  let fixedCount = 0; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (fixed(x, y)) fixedCount++;
+  const free = W * H - fixedCount;
+  let filled = 0, floor = -Infinity;
+  const maxP = (x, y, ign) => { let m = -Infinity; for (const id of pathers[y][x]) if (id !== ign){ const r = lv.arrows[id].rank; if (r > m) m = r; } return m; };
+
+  const mk = (cells, dx, dy, rank, ray) => ({ id:lv.arrows.length, cells, dx, dy, rank, ray, alive:true, illusion:false, veil:false, vritti:false, seal:0, pair:-1, tier:null, kind:null, last:false, phase:R() * 6.28, anim:null, shake:0, flash:0, fade:1 });
+  function place(o){
+    for (let k = 0; k < 40; k++){
+      const hx = Math.floor(R() * W), hy = Math.floor(R() * H);
+      if (lv.occ[hy][hx] !== -1 || fixed(hx, hy)) continue;
+      const [dx, dy] = DIRS[Math.floor(R() * 4)];
+      const ray = rayCells(lv, hx, hy, dx, dy); if (ray.loop) continue;
+      const raySet = new Set(); let hi = Infinity;
+      for (const c of ray.cells){ raySet.add(c.x + ',' + c.y); const id = lv.occ[c.y][c.x]; if (id !== -1 && id !== o.ignore) hi = Math.min(hi, lv.arrows[id].rank); }
+      if (raySet.has(hx + ',' + hy)) continue;
+      let lo = Math.max(floor, maxP(hx, hy, o.ignore));
+      const cap = o.fixedRank != null ? o.fixedRank : hi;
+      if (o.fixedRank != null && !(o.fixedRank < hi)) continue;
+      if (!(lo < cap)) continue;
+      const cells = [{ x:hx, y:hy }], used = new Set([hx + ',' + hy]);
+      const ok = (x, y) => {
+        if (x < 0 || y < 0 || x >= W || y >= H || lv.occ[y][x] !== -1 || fixed(x, y)) return false;
+        const s = x + ',' + y; if (raySet.has(s) || used.has(s)) return false;
+        return Math.max(lo, maxP(x, y, o.ignore)) < cap;
+      };
       let cx = hx - dx, cy = hy - dy, pdx = dx, pdy = dy;
-      const ok = (x,y) => okCell(x,y) && !raySet.has(x + ',' + y) && !used.has(x + ',' + y);
-      if (!ok(cx,cy)) continue;
-      cells.push({x:cx,y:cy}); used.add(cx + ',' + cy);
-      while (cells.length < want){
+      if (!ok(cx, cy)) continue;
+      const add = (x, y) => { cells.push({ x, y }); used.add(x + ',' + y); lo = Math.max(lo, maxP(x, y, o.ignore)); };
+      add(cx, cy);
+      const target = o.minLen + Math.floor(R() * (o.maxLen - o.minLen + 1));
+      while (cells.length < target){
         const opts = [];
-        for (const [ex,ey] of DIRS){ if (ex === -pdx && ey === -pdy) continue; const nx = cx - ex, ny = cy - ey; if (ok(nx,ny)) opts.push([ex,ey, (ex === pdx && ey === pdy) ? 1 : 2.2]); }
+        for (const [ex, ey] of DIRS){ if (ex === -pdx && ey === -pdy) continue; if (ok(cx - ex, cy - ey)) opts.push([ex, ey, (ex === pdx && ey === pdy) ? o.straight : 1]); }
         if (!opts.length) break;
-        let tot = opts.reduce((s,o) => s + o[2], 0), pick = R()*tot, ch = opts[0];
-        for (const o of opts){ pick -= o[2]; if (pick <= 0){ ch = o; break; } }
-        pdx = ch[0]; pdy = ch[1]; cx -= pdx; cy -= pdy; cells.push({x:cx,y:cy}); used.add(cx + ',' + cy);
+        let tot = 0; for (const q of opts) tot += q[2];
+        let pick = R() * tot, ch = opts[0]; for (const q of opts){ pick -= q[2]; if (pick <= 0){ ch = q; break; } }
+        pdx = ch[0]; pdy = ch[1]; cx -= pdx; cy -= pdy; add(cx, cy);
       }
-      const a = newArrow(arrows.length, cells.reverse(), dx, dy, PALETTE[Math.floor(R()*PALETTE.length)]);
-      arrows.push(a); for (const c of a.cells) occ[c.y][c.x] = a.id; filled += a.cells.length; placed = true; break;
+      if (cells.length < o.minLen) continue;
+      const rank = o.fixedRank != null ? o.fixedRank : hi === Infinity ? (lo === -Infinity ? 0 : lo + 1) : lo === -Infinity ? hi - 1 : (lo + hi) / 2;
+      const a = mk(cells.reverse(), dx, dy, rank, ray.cells);
+      lv.arrows.push(a);
+      for (const c of a.cells) lv.occ[c.y][c.x] = a.id;
+      for (const c of ray.cells) pathers[c.y][c.x].push(a.id);
+      filled += a.cells.length;
+      return a;
     }
-    if (!placed) fails++; else fails = Math.max(0, fails - 2);
+    return null;
   }
-  // fill leftover single holes with 2-cell stubs where possible (denser, harder)
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++){
-    if (!okCell(x,y)) continue;
-    for (const [dx,dy] of DIRS){ const tx = x - dx, ty = y - dy; if (!okCell(tx,ty)) continue;
-      if (!trace(lv, x, y, dx, dy, -1, true).clear) continue;
-      const a = newArrow(arrows.length, [{x:tx,y:ty},{x,y}], dx, dy, PALETTE[Math.floor(R()*PALETTE.length)]);
-      arrows.push(a); occ[ty][tx] = occ[y][x] = a.id; filled += 2; break; }
+  function undo(a){
+    for (const c of a.cells) lv.occ[c.y][c.x] = -1;
+    for (const c of a.ray) pathers[c.y][c.x].pop();
+    filled -= a.cells.length; lv.arrows.pop();
   }
-  // densify: grow tails into empty cells without breaking solvability
-  // (an arrow removed earlier must never find a later-removed arrow on its exit ray)
-  const rayMax = Array.from({length:H}, () => Array(W).fill(-1)), own = arrows.map(() => new Set());
-  for (const a of arrows){ const h = a.cells[a.cells.length-1]; let x = h.x, y = h.y;
-    while (true){ x += a.dx; y += a.dy; if (x < 0 || y < 0 || x >= W || y >= H) break; rayMax[y][x] = Math.max(rayMax[y][x], a.id); own[a.id].add(x + ',' + y); } }
-  const tailAt = new Map(); arrows.forEach(a => tailAt.set(a.cells[0].x + ',' + a.cells[0].y, a));
-  for (let pass = 0, grew = true; pass < 12 && grew; pass++){ grew = false;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++){
-      if (!okCell(x, y)) continue;
+  // Bosses are placed first → lowest rank → always released last.
+  if (spec.dhanush || spec.ravana){
+    const b = place({ minLen:6, maxLen:9, straight:4 });
+    if (!b) return null;
+    b.kind = spec.ravana ? 'ravana' : 'dhanush'; b.last = true; if (spec.ravana) b.seal = 10;
+    floor = b.rank;
+  }
+  let streak = 0, pairsLeft = spec.pairs || 0, guard = 0;
+  while (filled / free < spec.fill && streak < 160 && guard++ < 6000){
+    let a = null;
+    if (pairsLeft > 0 && R() < .3){
+      a = place({ minLen:2, maxLen:Math.max(3, spec.lmax - 2), straight:2 });
+      if (a){
+        const b = place({ minLen:2, maxLen:Math.max(3, spec.lmax - 2), straight:2, fixedRank:a.rank, ignore:a.id });
+        if (b){ a.pair = b.id; b.pair = a.id; pairsLeft--; } else { undo(a); a = null; }
+      }
+    } else a = place({ minLen:spec.lmin, maxLen:spec.lmax, straight:2 });
+    streak = a ? 0 : streak + 1;
+  }
+  // Grow tails into leftover holes (keeps the ordering invariant).
+  const maxExt = Math.round(spec.lmax * 1.6);
+  for (let pass = 0; pass < 4; pass++){
+    let changed = false;
+    const order = lv.arrows.slice().sort(() => R() - .5);
+    for (const a of order){
+      if (a.cells.length >= maxExt) continue;
+      const t = a.cells[0], t2 = a.cells[1], bx = t.x - t2.x, by = t.y - t2.y;
+      const raySet = new Set(a.ray.map(c => c.x + ',' + c.y));
       const cand = [];
-      for (const [dx,dy] of DIRS){ const a = tailAt.get((x+dx) + ',' + (y+dy)); if (a && a.id > rayMax[y][x] && !own[a.id].has(x + ',' + y) && a.cells.length < spec.lmax + 3) cand.push(a); }
+      for (const [ex, ey] of DIRS){
+        const nx = t.x + ex, ny = t.y + ey;
+        if (nx < 0 || ny < 0 || nx >= W || ny >= H || lv.occ[ny][nx] !== -1 || fixed(nx, ny) || raySet.has(nx + ',' + ny)) continue;
+        if (!(maxP(nx, ny, a.pair) < a.rank)) continue;
+        cand.push([nx, ny, (ex === bx && ey === by) ? 2 : 1]);
+      }
       if (!cand.length) continue;
-      const a = cand[Math.floor(R()*cand.length)];
-      tailAt.delete(a.cells[0].x + ',' + a.cells[0].y); a.cells.unshift({x, y}); occ[y][x] = a.id; tailAt.set(x + ',' + y, a); filled++; grew = true;
-    } }
-  const real = arrows.slice();
-  const sh = real.slice().sort(() => R() - .5); let si = 0;
-  for (let i = 0; i < spec.seals && si < sh.length; i++){ const a = sh[si++]; if (a.cells.length >= 3) a.seal = 2 + Math.floor(R()*4); else i--; if (si >= sh.length) break; }
-  for (let i = 0; i < spec.special && si < sh.length; i++){ const a = sh[si++]; a.special = true; a.col = '#ffd97a'; }
-  if (spec.veil) real.forEach(a => { if (!a.seal && !a.special && R() < spec.veil) a.veil = true; });
-  // illusions: occupy holes, never block, cost a life when touched
-  for (let i = 0, g = 0; i < spec.illus && g < 400; g++){
-    const hx = Math.floor(R()*W), hy = Math.floor(R()*H); if (!okCell(hx,hy)) continue;
-    const [dx,dy] = DIRS[Math.floor(R()*4)]; const cells = [{x:hx,y:hy}]; let cx = hx - dx, cy = hy - dy;
-    while (cells.length < 3 && okCell(cx,cy)){ cells.push({x:cx,y:cy}); cx -= dx; cy -= dy; }
-    if (cells.length < 2) continue;
-    const a = newArrow(arrows.length, cells.reverse(), dx, dy, PALETTE[Math.floor(R()*PALETTE.length)]); a.illusion = true;
-    arrows.push(a); for (const c of a.cells) occ[c.y][c.x] = a.id; i++;
+      let tot = 0; for (const q of cand) tot += q[2];
+      let pick = R() * tot, ch = cand[0]; for (const q of cand){ pick -= q[2]; if (pick <= 0){ ch = q; break; } }
+      a.cells.unshift({ x:ch[0], y:ch[1] }); lv.occ[ch[1]][ch[0]] = a.id; filled++; changed = true;
+    }
+    if (!changed) break;
   }
-  lv.cover = Array.from({length:H}, (_, y) => Array.from({length:W}, (_, x) => mask[y][x] ? 1 : 0));
-  lv.coverA = lv.cover.map(r => r.slice());
-  lv.fillRatio = filled / Math.max(1, maskN);
-  lv.total = real.length;
+  lv.fillRatio = filled / free;
+  const real = lv.arrows.slice();
+  if (real.length < 3) return null;
+
+  // Tiers follow rank: highest ranks (released first) = रूप, lowest = मन.
+  if (spec.tiers){
+    const norm = real.filter(a => !a.last).sort((p, q) => p.rank - q.rank);
+    norm.forEach((a, i) => { const f = i / norm.length; a.tier = f < .25 ? 2 : f < .55 ? 1 : 0; });
+    real.forEach(a => { if (a.pair >= 0 && a.pair < a.id) a.tier = lv.arrows[a.pair].tier; });
+  }
+  const pool = real.filter(a => !a.last && a.pair === -1).sort(() => R() - .5);
+  let si = 0;
+  const take = n => { const out = []; for (let i = 0; i < n && si < pool.length; i++) out.push(pool[si++]); return out; };
+  take(spec.rambaan || 0).forEach(a => a.kind = 'rambaan');
+  take(spec.hanuman || 0).forEach(a => a.kind = 'hanuman');
+  take(spec.vritti || 0).forEach(a => a.vritti = true);
+  take(spec.seals || 0).forEach(a => a.seal = 3 + Math.floor(R() * 4));
+  if (spec.veil) real.forEach(a => { if (!a.last && !a.kind && R() < spec.veil) a.veil = true; });
+
+  // मायामृग: illusions occupy free cells but never block.
+  for (let i = 0, g = 0; i < (spec.illus || 0) && g < 400; g++){
+    const hx = Math.floor(R() * W), hy = Math.floor(R() * H);
+    if (lv.occ[hy][hx] !== -1 || fixed(hx, hy)) continue;
+    const [dx, dy] = DIRS[Math.floor(R() * 4)];
+    const cells = [{ x:hx, y:hy }]; let cx = hx - dx, cy = hy - dy, pdx = dx, pdy = dy;
+    const n = 2 + Math.floor(R() * 3);
+    while (cells.length < n){
+      if (cx < 0 || cy < 0 || cx >= W || cy >= H || lv.occ[cy][cx] !== -1 || fixed(cx, cy) || cells.some(c => c.x === cx && c.y === cy)) break;
+      cells.push({ x:cx, y:cy });
+      if (R() < .3){ const [ex, ey] = DIRS[Math.floor(R() * 4)]; if (!(ex === -pdx && ey === -pdy)){ pdx = ex; pdy = ey; } }
+      cx -= pdx; cy -= pdy;
+    }
+    if (cells.length < 2) continue;
+    const a = mk(cells.reverse(), dx, dy, -1, []); a.illusion = true;
+    if (spec.tiers) a.tier = Math.floor(R() * 3);
+    lv.arrows.push(a); for (const c of a.cells) lv.occ[c.y][c.x] = a.id; i++;
+  }
+  if (spec.abp){
+    const cand = []; real.forEach(a => { if (!a.last) a.cells.forEach(c => cand.push(c)); });
+    cand.sort(() => R() - .5);
+    for (let k = 0; k < 3 && k < cand.length; k++) lv.jewels.push({ x:cand[k].x, y:cand[k].y, k, taken:false });
+  }
   return lv;
 }
-function newArrow(id, cells, dx, dy, col){ return { id, cells, dx, dy, col, alive:true, illusion:false, veil:false, seal:0, anim:null, shake:0, flash:0, fade:1, ph:Math.random()*6.28 }; }
-function trace(lv, x, y, dx, dy, ignore, gen){
-  const cells = [];
-  for (let s = 0; s < lv.W + lv.H + 4; s++){
-    x += dx; y += dy;
-    if (x < 0 || y < 0 || x >= lv.W || y >= lv.H) return { clear:true, cells };
-    cells.push({x,y});
-    const o = lv.occ[y][x];
-    if (o !== -1 && o !== ignore){ const b = lv.arrows[o]; if (gen || (b.alive && !b.illusion)) return { clear:false, cells, blocker:o }; }
-  }
-  return { clear:true, cells };
-}
-function rotateLevel(lv){ // clockwise 90°, preserves solvability
-  const W = lv.W, H = lv.H, nW = H, nH = W;
-  const rot = (x,y) => ({ x: H - 1 - y, y: x });
-  const m2 = Array.from({length:nH}, () => Array(nW).fill(false)), o2 = Array.from({length:nH}, () => Array(nW).fill(-1)), c2 = Array.from({length:nH}, () => Array(nW).fill(0)), a2 = Array.from({length:nH}, () => Array(nW).fill(0));
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++){ const p = rot(x,y); m2[p.y][p.x] = lv.mask[y][x]; o2[p.y][p.x] = lv.occ[y][x]; c2[p.y][p.x] = lv.cover[y][x]; a2[p.y][p.x] = lv.coverA[y][x]; }
-  for (const a of lv.arrows){ a.cells = a.cells.map(c => rot(c.x, c.y)); const dx = a.dx; a.dx = -a.dy; a.dy = dx; }
-  lv.W = nW; lv.H = nH; lv.mask = m2; lv.occ = o2; lv.cover = c2; lv.coverA = a2; lv.rotated = (lv.rotated || 0) + 1;
-}
 
-/* ======================= GAME STATE & VIEW ======================= */
-const G = { scripts:[], art:null, lv:null, L:0, lives:3, playing:false, focus:-1, parts:[], ripples:[], hintA:-1, hintT:0, whisperT:0, noJap:0,
-  twistDone:{}, rotAnim:null, reveal:0, revealAnim:null, gate:null, freed:0 };
+/* ================= Game state ================= */
+const G = { lv:null, idx:0, endless:false, breaths:3, maxB:3, bonus:0, focus:-1, playing:false, particles:[], ripples:[], hintA:-1, hintT:0, whisperT:30, noJap:0, gate:null };
 const cv = $('cv'), ctx = cv.getContext('2d');
 let DPR = 1, VW = 0, VH = 0, cell = 30, ox = 0, oy = 0;
-const view = { z:1, px:0, py:0 };
-function resize(){ DPR = Math.min(2, devicePixelRatio || 1); VW = innerWidth; VH = innerHeight; cv.width = VW*DPR; cv.height = VH*DPR; layout(); }
+const view = { z:1, x:0, y:0 };
+
+const specFor = i => G.endless ? endlessSpec(i) : LEVELS[i];
+const kandOf = i => G.endless ? 6 : LEVELS[i].k;
+const isClimax = i => (i % 10) === 9;
+
+function resize(){
+  DPR = Math.min(2.5, window.devicePixelRatio || 1);
+  VW = innerWidth; VH = innerHeight;
+  cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR);
+  layout();
+}
 function layout(){
   if (!G.lv) return;
-  const top = 100, bot = 140, side = 8, aw = VW - side*2, ah = VH - top - bot;
-  cell = Math.max(10, Math.floor(Math.min(aw / G.lv.W, ah / G.lv.H)));
-  ox = Math.round((VW - cell*G.lv.W) / 2); oy = Math.round(top + (ah - cell*G.lv.H) / 2);
+  const r2 = $('row2').getBoundingClientRect(), gb = $('gridBtn').getBoundingClientRect();
+  const top = (r2.bottom || 110) + 10, bot = (gb.top || VH - 200) - 14, side = 16;
+  const aw = VW - side * 2, ah = Math.max(120, bot - top);
+  G.clipT = top - 6; G.clipB = bot + 6;
+  cell = Math.max(8, Math.floor(Math.min(aw / (G.lv.W + .5), ah / (G.lv.H + .5), 64)));
+  ox = Math.round((VW - cell * G.lv.W) / 2); oy = Math.round(top + (ah - cell * G.lv.H) / 2);
+  view.z = 1; view.x = 0; view.y = 0;
 }
 addEventListener('resize', resize);
-function fitView(){ view.z = 1; view.px = 0; view.py = 0; }
-function setZoom(z, cx = VW/2, cy = VH/2){
-  z = clamp(z, 1, 4); const k = z / view.z;
-  view.px = (view.px + VW/2 - cx) * k - VW/2 + cx; view.py = (view.py + VH/2 - cy) * k - VH/2 + cy; view.z = z; clampPan();
+
+function startLevel(i){
+  G.idx = i;
+  const spec = specFor(i);
+  G.lv = makeLevel(spec, G.endless ? 50000 + i : i + 1);
+  G.maxB = 3 + G.bonus; G.breaths = G.maxB; G.bonus = 0;
+  G.focus = -1; G.hintA = -1; G.whisperT = 20 + Math.random() * 15; G.playing = true;
+  if (!G.endless){ Save.data.cur = i; Save.soon(); }
+  layout(); updateHUD();
+  if (isClimax(i)){ Snd.conch(); toast('महासंग्राम — ' + KANDS[kandOf(i)].climax); }
 }
-function clampPan(){ const mx = VW*(view.z - 1)/2 + 40, my = VH*(view.z - 1)/2 + 40; view.px = clamp(view.px, -mx, mx); view.py = clamp(view.py, -my, my); }
-$('zIn').onclick = () => setZoom(view.z * 1.4); $('zOut').onclick = () => { if (view.z / 1.4 <= 1.05) fitView(); else setZoom(view.z / 1.4); };
-function toGrid(sx, sy){ const wx = (sx - VW/2 - view.px) / view.z + VW/2, wy = (sy - VH/2 - view.py) / view.z + VH/2; return { x: Math.floor((wx - ox) / cell), y: Math.floor((wy - oy) / cell) }; }
-const CX = x => ox + (x + .5)*cell, CY = y => oy + (y + .5)*cell;
+const DROP = (full) => `<svg viewBox="0 0 24 30"><path d="M12 2C12 2 3 13.5 3 19.5a9 9 0 0 0 18 0C21 13.5 12 2 12 2z" fill="${full ? '#5aa9e6' : 'none'}" stroke="${full ? '#5aa9e6' : '#c9b79a'}" stroke-width="1.6"/></svg>`;
+function updateHUD(){
+  const i = G.idx, k = kandOf(i);
+  $('lvlT').textContent = (G.endless ? 'अनन्त ' : 'स्तर ') + HN(i + 1);
+  let d = ''; for (let n = 0; n < Math.max(G.maxB, G.breaths); n++) d += `<span class="${n < G.breaths ? '' : 'lost'}">${DROP(n < G.breaths)}</span>`;
+  $('drops').innerHTML = d;
+  $('japMini').textContent = 'राम ' + HN(Save.data.jap);
+  const band = $('band'), cl = isClimax(i);
+  band.classList.toggle('climax', cl);
+  $('bandT').textContent = cl ? 'महासंग्राम' : (G.endless ? 'अनन्त अभ्यास' : KANDS[k].name);
+  $('bandS').textContent = cl ? KANDS[k].climax : (G.endless ? '' : HN(i % 10 + 1) + ' / १०');
+  $('still').classList.toggle('hidden', !(G.lv && G.lv.arrows.some(a => a.vritti && a.alive)));
+  $('gridBtn').classList.toggle('on', !!Save.data.grid);
+}
 
-/* ======================= INPUT (tap, drag-pan, pinch) ======================= */
-const ptrs = new Map(); let pinch0 = null, moved = false, down0 = null;
-cv.addEventListener('pointerdown', e => { Snd.resume(); cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
-  if (ptrs.size === 1){ moved = false; down0 = {x:e.clientX, y:e.clientY, px:view.px, py:view.py}; }
-  if (ptrs.size === 2){ const [a,b] = [...ptrs.values()]; pinch0 = { d: Math.hypot(a.x-b.x, a.y-b.y), z: view.z }; moved = true; } });
-cv.addEventListener('pointermove', e => { if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
-  if (ptrs.size === 2 && pinch0){ const [a,b] = [...ptrs.values()]; setZoom(pinch0.z * Math.hypot(a.x-b.x, a.y-b.y) / pinch0.d, (a.x+b.x)/2, (a.y+b.y)/2); return; }
-  if (down0 && Math.hypot(e.clientX - down0.x, e.clientY - down0.y) > 14){ moved = true; if (view.z > 1.01){ view.px = down0.px + e.clientX - down0.x; view.py = down0.py + e.clientY - down0.y; clampPan(); } } });
-const up = e => { const was = ptrs.has(e.pointerId); ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch0 = null;
-  if (was && ptrs.size === 0 && !moved && e.type === 'pointerup') tap(e.clientX, e.clientY); if (ptrs.size === 0) down0 = null; };
-['pointerup','pointercancel'].forEach(ev => cv.addEventListener(ev, up));
-cv.addEventListener('wheel', e => { e.preventDefault(); setZoom(view.z * (e.deltaY < 0 ? 1.15 : 1/1.15), e.clientX, e.clientY); }, { passive:false });
-
-function tap(sx, sy){
-  if (!G.playing || !G.lv || G.rotAnim) return;
-  const g = toGrid(sx, sy), lv = G.lv;
-  let id = -1;
-  if (g.x >= 0 && g.y >= 0 && g.x < lv.W && g.y < lv.H) id = lv.occ[g.y][g.x];
-  if (id === -1){ // forgiving tap for older fingers: nearest arrow cell within 0.6 cell
-    let best = 1e9;
-    for (const a of lv.arrows){ if (!a.alive || a.anim) continue; for (const c of a.cells){ const wx = (sx - VW/2 - view.px)/view.z + VW/2, wy = (sy - VH/2 - view.py)/view.z + VH/2;
-      const d = Math.hypot(wx - CX(c.x), wy - CY(c.y)); if (d < cell*.85 && d < best){ best = d; id = a.id; } } }
+/* ================= Rules ================= */
+const headOf = a => a.cells[a.cells.length - 1];
+const realAlive = () => G.lv.arrows.reduce((n, a) => n + (a.alive && !a.illusion ? 1 : 0), 0);
+function lowestTier(){ let m = 9; for (const a of G.lv.arrows) if (a.alive && !a.illusion && a.tier != null) m = Math.min(m, a.tier); return m; }
+function scan(lv, a, ign, mode){
+  const h = headOf(a), ray = rayCells(lv, h.x, h.y, a.dx, a.dy), hits = [];
+  let leapt = -1;
+  for (let i = 0; i < ray.cells.length; i++){
+    const c = ray.cells[i], id = lv.occ[c.y][c.x];
+    if (id === -1 || id === a.id || id === ign) continue;
+    const b = lv.arrows[id]; if (!b.alive) continue;
+    if (mode === 'pierce'){ if (b.last) return { clear:false, cells:ray.cells.slice(0, i + 1), blocker:id }; if (!hits.includes(id)) hits.push(id); continue; }
+    if (b.illusion) continue;
+    if (mode === 'leap' && (leapt === -1 || leapt === id)){ leapt = id; continue; }
+    return { clear:false, cells:ray.cells.slice(0, i + 1), blocker:id };
   }
-  if (id !== -1 && lv.arrows[id].alive && !lv.arrows[id].anim) tapArrow(lv.arrows[id]);
+  return { clear:true, cells:ray.cells, exit:ray.exit, hits, leapt };
+}
+function evaluate(a, ignoreStill){
+  const lv = G.lv;
+  if (a.illusion) return { why:'illusion' };
+  if (a.last && realAlive() > 1) return { why:'last' };
+  if (a.seal > 0) return { why:'seal' };
+  if (a.vritti && !ignoreStill && Sense.still < 1) return { why:'vritti' };
+  if (a.tier != null && a.tier > lowestTier()) return { why:'tier' };
+  const p = a.pair >= 0 && lv.arrows[a.pair].alive ? lv.arrows[a.pair] : null;
+  if (p && (p.seal > 0 || (p.vritti && !ignoreStill && Sense.still < 1))) return { why:'partner' };
+  const mode = k => k === 'rambaan' ? 'pierce' : k === 'hanuman' ? 'leap' : null;
+  const r1 = scan(lv, a, p ? p.id : -1, mode(a.kind));
+  const r2 = p ? scan(lv, p, a.id, mode(p.kind)) : null;
+  if (r1.clear && (!r2 || r2.clear)) return { ok:true, r1, r2, p };
+  return { why:'blocked', bad: !r1.clear ? [a, r1] : [p, r2], p };
 }
 function tapArrow(a){
   const lv = G.lv;
-  if (a.illusion){ a.alive = false; a.anim = { type:'dissolve', t:0 }; for (const c of a.cells) lv.occ[c.y][c.x] = -1;
-    loseLife('यह [[विक्षेप]] था — रस्सी में साँप। जो झिलमिलाता है, उस पर भरोसा न करें।'); return; }
-  if (a.seal > 0){ G.focus = a.id; a.shake = .4; Snd.soft(); toast('🪷 कमल-बंधन — ' + HN(a.seal) + ' बार "राम" जपिए'); return; }
-  const wasVeil = a.veil; a.veil = false;
-  const head = a.cells[a.cells.length-1], p = trace(lv, head.x, head.y, a.dx, a.dy, a.id, false);
-  if (p.clear){ launch(a, p); if (wasVeil) toast('अँधेरे में भी राह थी।'); }
-  else { a.anim = { type:'bump', t:0, path:p }; lv.arrows[p.blocker].flash = 1; loseLife(null); }
-}
-function launch(a, path){
-  const lv = G.lv;
-  for (const c of a.cells){ lv.occ[c.y][c.x] = -1; }
-  a.alive = false;
-  const pts = a.cells.map(c => ({x:c.x, y:c.y})).concat(path.cells.map(c => ({x:c.x, y:c.y})));
-  const last = pts[pts.length-1]; for (let k = 1; k <= a.cells.length + 6; k++) pts.push({ x: last.x + a.dx*k, y: last.y + a.dy*k });
-  a.anim = { type:'fly', s:0, pts, len: a.cells.length - 1 };
-  const rot0 = lv.rotated || 0; a.cells.forEach((c,i) => setTimeout(() => { if ((lv.rotated || 0) === rot0 && lv.cover[c.y]) lv.cover[c.y][c.x] = 0; }, 70*i)); // unveil the darshan underneath
-  Snd.whoosh(); Snd.arrowBell(G.freed, a.special); if (navigator.vibrate) navigator.vibrate(8);
-  if (a.special && G.scripts.length < 3){ const e = pts[Math.min(pts.length - 1, a.cells.length + path.cells.length)]; G.scripts.push({ gx: e.x, gy: e.y, dx: a.dx, dy: a.dy, t: 0 }); }
-  const h = a.cells[a.cells.length-1]; G.ripples.push({ x:h.x, y:h.y, t:0, col:a.col });
-  if (G.focus === a.id) G.focus = -1;
-  G.freed++; updateProgress();
-  twists();
-  setTimeout(checkWin, 60);
-}
-function loseLife(msg){
-  G.lives--; Snd.bump(); if (navigator.vibrate) navigator.vibrate([30,40,30]); updateHUD();
-  if (msg) toast(withTerms(msg)); else toast('रुकावट! राह में दूसरा तीर था।');
-  if (G.lives <= 0){ G.playing = false; setTimeout(outOfBreath, 800); }
-}
-function twists(){
-  const lv = G.lv, s = lv.spec, frac = G.freed / lv.total;
-  if (s.rotate && !G.twistDone.rot && frac > .45){ G.twistDone.rot = 1;
-    setTimeout(() => { G.rotAnim = { t:0 }; Snd.conch(); toast('🔄 दृष्टि बदली! संसार घूमता है — साक्षी नहीं।'); }, 500); }
-  if (s.reveil && !G.twistDone.veil && frac > .35){ G.twistDone.veil = 1;
-    const al = lv.arrows.filter(a => a.alive && !a.illusion && !a.seal).sort(() => Math.random() - .5).slice(0, 4);
-    al.forEach(a => a.veil = true); Snd.soft(); toast('🌫 आवरण लौट आया — "राम" जप से पर्दा हटेगा'); }
-}
-function checkWin(){
-  if (!G.playing) return;
-  if (!G.lv.arrows.some(a => a.alive && !a.illusion)){
-    G.playing = false;
-    G.lv.arrows.forEach(a => { if (a.alive){ a.alive = false; a.anim = { type:'dissolve', t:0 }; } });
-    Snd.win(); setTimeout(() => Snd.conch(), 600);
-    G.revealAnim = { t:0 }; burst();
-    setTimeout(levelComplete, 3200);
+  if (a.anim && a.anim.type === 'bump') a.anim = null;
+  const wasVeiled = a.veil;
+  const e = evaluate(a);
+  if (e.ok){
+    a.veil = false; launch(a, e.r1); if (e.r2){ e.p.veil = false; launch(e.p, e.r2); }
+    if (wasVeiled) toast('धुंध में भी राह थी।');
+    return;
+  }
+  switch (e.why){
+    case 'illusion':
+      a.alive = false; a.anim = { type:'dissolve', t:0, rope:true };
+      for (const c of a.cells) lv.occ[c.y][c.x] = -1;
+      loseBreath('🦌 मायामृग! जिसकी छाया नहीं, वह सत्य नहीं।'); break;
+    case 'last':
+      a.shake = .6; Snd.soft();
+      toast(a.kind === 'ravana' ? 'दशानन सबसे अंत में गिरता है — पहले बाकी सब।' : 'शिव-धनुष तभी उठेगा जब मैदान खाली हो।'); break;
+    case 'seal':
+      G.focus = a.id; a.shake = .3; Snd.soft();
+      toast((a.kind === 'ravana' ? '👑 दशानन: ' : '🪨 राम-शिला: ') + HN(a.seal) + ' बार “राम” शेष'); break;
+    case 'vritti':
+      a.shake = .6; Snd.soft(); toast('🌊 मन चंचल है — स्थिर रहिए।'); break;
+    case 'partner':
+      a.shake = .5; toast('नाम-रूप साथ ही जाते हैं — साथी अभी बँधा है।'); break;
+    case 'tier': {
+      a.shake = .6; a.veil = false;
+      loseBreath('नेति-नेति: पहले “' + TIER[lowestTier()].n + '” को छोड़ो।'); break; }
+    case 'blocked': {
+      const [who, r] = e.bad; who.veil = false; if (e.p) e.p.veil = false;
+      who.anim = { type:'bump', t:0, path:r };
+      if (r.blocker >= 0) lv.arrows[r.blocker].flash = 1;
+      loseBreath(null); break; }
   }
 }
+function launch(a, r){
+  const lv = G.lv;
+  for (const c of a.cells) lv.occ[c.y][c.x] = -1;
+  a.alive = false;
+  const pts = a.cells.map(c => ({ x:c.x, y:c.y }));
+  for (const c of r.cells) pts.push({ x:c.x, y:c.y });
+  const last = pts[pts.length - 1], [ex, ey] = r.exit;
+  for (let k = 1; k <= a.cells.length + 4; k++) pts.push({ x:last.x + ex * k, y:last.y + ey * k });
+  a.anim = { type:'fly', s:0, pts, len:a.cells.length - 1 };
+  const big = a.kind === 'rambaan' || a.last;
+  Snd.whoosh(big); if (navigator.vibrate) navigator.vibrate(big ? 25 : 8);
+  if (a.kind === 'rambaan'){
+    Snd.conch();
+    r.hits.forEach((id, n) => { const b = lv.arrows[id]; b.alive = false; b.veil = false; for (const c of b.cells) lv.occ[c.y][c.x] = -1; b.anim = { type:'dissolve', t:-n * .08, light:true }; });
+    if (r.hits.length) toast('🏹 राम-बाण — ' + HN(r.hits.length) + ' दृश्य प्रकाश बने');
+  }
+  if (a.kind === 'hanuman' && r.leapt >= 0) toast('🚩 जय हनुमान — बाधा लाँघ ली');
+  const h = headOf(a); ripple(h.x, h.y, '#cf8b25');
+  if (G.focus === a.id) G.focus = -1;
+  setTimeout(checkWin, 60);
+}
+function loseBreath(msg){
+  G.breaths--; Snd.bump(); if (navigator.vibrate) navigator.vibrate([25, 40, 25]);
+  updateHUD(); if (msg) toast(msg);
+  if (G.breaths <= 0){ G.playing = false; setTimeout(outOfBreath, 650); }
+}
+function tapJewel(j){
+  const lv = G.lv;
+  if (j.k === lv.abpNext){
+    j.taken = true; lv.abpNext++; Snd.chant(); ripple(j.x, j.y, '#cf8b25');
+    toast('✨ ' + ABP[j.k] + [' — “है”', ' — “प्रकाशित है”', ' — “प्रिय है”'][j.k]);
+    if (lv.abpNext === 3){ G.breaths++; updateHUD(); setTimeout(() => toast('सत्-चित्-आनन्द — नाम-रूप के पीछे यही। +१ जल-बिंदु'), 900); }
+  } else { lv.abpNext = 0; lv.jewels.forEach(x => x.taken = false); Snd.bump(); toast('क्रम: अस्ति → भाति → प्रिय'); }
+}
+function checkWin(){
+  if (!G.playing || realAlive() > 0) return;
+  G.playing = false;
+  G.lv.arrows.forEach(a => { if (a.alive && a.illusion){ a.alive = false; a.anim = { type:'dissolve', t:0, rope:true }; } });
+  Snd.win(); petals(isClimax(G.idx) ? 140 : 60);
+  setTimeout(levelComplete, isClimax(G.idx) ? 1900 : 1300);
+}
 
-/* ======================= CHANTING ======================= */
+/* ================= Chanting ================= */
 function onChant(){
-  Jap.bump();
-  Snd.resume(); Snd.chant(); Save.d.jap++; Save.d.bank++; Save.soon(); G.noJap = 0; floatRam();
-  if (G.gate){ G.gate.n++; renderGate(); updateHUD(); return; }
+  Snd.resume(); Snd.chant();
+  Save.data.jap++; Save.data.bank++; Save.soon(); G.noJap = 0;
+  floatRam();
+  if (G.gate){ G.gate.n++; renderGate(); return; }
   if (G.lv && G.playing){
     const lv = G.lv;
-    let t = G.focus >= 0 && lv.arrows[G.focus].alive && lv.arrows[G.focus].seal > 0 ? lv.arrows[G.focus] : lv.arrows.find(a => a.alive && a.seal > 0);
-    if (t){ t.seal--; t.flash = .6; Save.d.bank--; if (t.seal === 0){ toast('🪷 बंधन खुला'); G.focus = -1; } }
-    else { const v = lv.arrows.filter(a => a.alive && a.veil); if (v.length){ const a = v[Math.floor(Math.random()*v.length)]; a.veil = false; a.flash = .5; Save.d.bank--; } }
+    let t = G.focus >= 0 && lv.arrows[G.focus].alive && lv.arrows[G.focus].seal > 0 ? lv.arrows[G.focus] : lv.arrows.find(a => a.alive && a.seal > 0 && !a.last) || lv.arrows.find(a => a.alive && a.seal > 0);
+    if (t){ t.seal--; Save.data.bank--; t.flash = .4; if (t.seal === 0){ toast(t.kind === 'ravana' ? '👑 दसों शीश शांत' : '🪨 शिला तैर गई — राह खुली'); G.focus = -1; } }
+    else {
+      const v = lv.arrows.filter(a => a.alive && a.veil);
+      if (v.length){ const a = v[Math.floor(Math.random() * v.length)]; a.veil = false; Save.data.bank--; const h = headOf(a); ripple(h.x, h.y, '#ffffff'); }
+    }
   }
   updateHUD();
 }
-function floatRam(){ const el = document.createElement('div'); el.className = 'floatRam'; el.textContent = 'राम';
-  const r = $('ramBtn').getBoundingClientRect(); el.style.left = (r.left + r.width/2 + Math.random()*40 - 20) + 'px'; el.style.top = (r.top - 10) + 'px';
-  document.body.appendChild(el); setTimeout(() => el.remove(), 1700); }
-$('hintBtn').onclick = () => {
+function floatRam(){
+  const el = document.createElement('div'); el.className = 'floatRam'; el.textContent = 'राम';
+  const r = $('malaBtn').getBoundingClientRect();
+  el.style.left = (r.left + r.width / 2 + (Math.random() * 30 - 15)) + 'px'; el.style.top = (r.top - 6) + 'px';
+  document.body.appendChild(el); setTimeout(() => el.remove(), 1600);
+}
+$('hintBtn').addEventListener('click', () => {
   Snd.resume(); if (!G.playing) return;
-  if (Save.d.bank < 3){ toast('विवेक के लिए ३ "राम" चाहिए (अभी ' + HN(Save.d.bank) + ')'); return; }
-  const lv = G.lv, free = lv.arrows.filter(a => { if (!a.alive || a.illusion || a.seal) return false; const h = a.cells[a.cells.length-1]; return trace(lv, h.x, h.y, a.dx, a.dy, a.id, false).clear; });
-  if (!free.length){ toast('अभी बंधे तीर खोलिए — जप कीजिए'); return; }
-  Save.d.bank -= 3; Save.soon(); updateHUD(); G.hintA = free[Math.floor(Math.random()*free.length)].id; G.hintT = 3; toast('🪔 चमकता तीर मुक्त है');
-};
+  if (Save.data.bank < 3){ toast('विवेक के लिए ३ “राम” जप चाहिए (अभी ' + HN(Save.data.bank) + ')'); return; }
+  const free = G.lv.arrows.filter(a => a.alive && !a.illusion && evaluate(a, true).ok);
+  if (!free.length){ toast('अभी राह जप या स्थिरता से खुलेगी'); return; }
+  Save.data.bank -= 3; Save.soon(); updateHUD();
+  G.hintA = free[Math.floor(Math.random() * free.length)].id; G.hintT = 2.6;
+});
+$('gridBtn').addEventListener('click', () => { Save.data.grid = !Save.data.grid; Save.soon(); updateHUD(); });
+$('micBtn').addEventListener('click', () => Jap.toggle());
 
-/* ======================= FLOW ======================= */
-function startLevel(L){
-  G.L = L; Save.d.level = L; Save.soon();
-  const spec = levelSpec(L);
-  G.lv = makeLevel(spec); G.scripts = []; loadArt(spec.darshan); G.lives = spec.lives; G.focus = -1; G.hintA = -1; G.freed = 0; G.twistDone = {}; G.rotAnim = null; G.revealAnim = null; G.reveal = 0;
-  G.whisperT = 25; G.playing = true; fitView(); layout(); updateHUD(); updateProgress();
+/* ================= Touch / mouse input: nearest-arrow hit test, pinch zoom, pan ================= */
+const ptrs = new Map(); let gesture = null;
+const toWorld = (sx, sy) => ({ x:(sx - view.x) / view.z, y:(sy - view.y) / view.z });
+function clampView(){
+  if (view.z <= 1.001){ view.z = 1; view.x = 0; view.y = 0; return; }
+  const bw = G.lv.W * cell, bh = G.lv.H * cell, m = 60;
+  view.x = clamp(view.x, VW - m - (ox + bw) * view.z, m - ox * view.z);
+  view.y = clamp(view.y, VH - m - (oy + bh) * view.z, m - oy * view.z);
 }
-function updateHUD(){
-  if (!G.lv) return; const s = G.lv.spec;
-  $('chName').textContent = 'स्तर ' + HN(G.L + 1) + ' · ' + s.shape.n;
-  $('lives').innerHTML = Array.from({length:s.lives}, (_, i) => `<span class="diya ${i < G.lives ? '' : 'out'}">🪔</span>`).join('');
-  $('japCount').textContent = 'जप ' + HN(Save.d.jap);
+function zoomAt(sx, sy, nz){
+  const w = toWorld(sx, sy); view.z = clamp(nz, 1, 4);
+  view.x = sx - w.x * view.z; view.y = sy - w.y * view.z; clampView();
 }
-function updateProgress(){ if (!G.lv) return;
-  { const lv = G.lv, f = G.freed / lv.total; for (let y = 0; y < lv.H; y++) for (let x = 0; x < lv.W; x++) if (lv.mask[y][x] && lv.occ[y][x] === -1 && lv.cover[y][x] > 0 && !lv.freedCell?.[y+','+x]) lv.cover[y][x] = Math.max(0, 1 - f*1.1); } $('progFill').style.width = (G.freed / G.lv.total * 100) + '%'; $('lvlSub').textContent = HN(G.freed) + ' / ' + HN(G.lv.total) + ' तीर मुक्त'; }
-function hud(on){ ['hudTop','hudBot','progress'].forEach(id => $(id).classList.toggle('hidden', !on)); }
-function modal(html, center){ $('card').innerHTML = html; $('modal').classList.remove('hidden'); $('modal').classList.toggle('center', !!center); bindTerms($('card')); }
-function closeModal(){ $('modal').classList.add('hidden'); }
-
-function introLevel(L){
-  const spec = levelSpec(L), msg = nextLesson();
-  const feats = [];
-  feats.push('✨ <b>सुनहरे तीर</b> — इनके निकलने पर "राम" लिखा उभरता है');
-  if (spec.seals) feats.push('🪷 <b>कमल वाले तीर</b> — जितने दाने, उतनी बार "राम"');
-  if (spec.veil) feats.push('🌫 <b>[[आवरण]]</b> — धुंध में छिपे तीर; "राम" से पर्दा हटता है');
-  if (spec.illus) feats.push('✨ <b>[[विक्षेप]]</b> — झिलमिलाते नकली तीर; छुए तो दीया बुझेगा');
-  if (spec.rotate) feats.push('🔄 बीच में <b>दृष्टि बदलेगी</b>');
-  if (spec.reveil) feats.push('🌫 बीच में <b>आवरण लौटेगा</b>');
-  modal(`<div class="tag">स्तर ${HN(L+1)} · ${spec.shape.n}</div><h3>आज का सूत्र</h3>
-    <div class="msg">${withTerms(msg)}</div>
-    ${L === 0 ? '<p>तीर पर टैप करें — वह अपनी दिशा में उड़ेगा। राह में दूसरा तीर हो तो दीया बुझेगा। <b>पहले बाहर वाले, खुली राह वाले तीर।</b></p>' : ''}
-    ${feats.length ? '<p style="text-align:left">' + withTerms(feats.join('<br>')) + '</p>' : ''}
-    <p class="small">नीले शब्द पर टैप करें — उसका अर्थ खुलेगा।<br>${HN(spec.target)}+ तीरों के पीछे एक दर्शन छिपा है।</p>
-    <div class="row"><button class="btn" id="goBtn">आरम्भ</button></div>`, true);
-  $('goBtn').onclick = () => { closeModal(); startLevel(L); };
-}
-function levelComplete(){
-  const L = G.L, d = G.lv.spec.darshan;
-  openGate(Math.min(21, 3 + Math.floor(L * .8)), `${d.name}`, d.line, () => { Save.d.level = L + 1; Save.write(); introLevel(L + 1); }, null, imgURL(d.f));
-}
-function outOfBreath(){
-  openGate(11, 'दीये बुझ गए', 'प्राणायाम — ११ "राम" से दीये फिर जलेंगे', () => { G.lives = 2; G.playing = true; updateHUD(); toast('दीये जले। देखने वाला कभी नहीं बुझता।'); },
-    { label:'↺ स्तर फिर से', fn:() => startLevel(G.L) });
-}
-function openGate(need, title, sub, done, alt, img){
-  G.gate = { n:0, need, title, sub, done, alt, img, msg: nextSutra() }; G.playing = false; renderGate(true);
-}
-function renderGate(first){
-  const g = G.gate; if (!g) return;
-  if (first){
-    modal(`<div class="tag">जप-द्वार</div>${g.img ? `<div class="darshanPic" id="gPic" style="--p:0"><img src="${g.img}" alt=""></div>` : ''}<h3>${g.title}</h3><p class="small" style="margin-top:0">${g.sub}</p>
-      <div class="msg">${withTerms(g.msg)}</div>
-      <div class="gateProg"><div id="gateProg"></div></div><div class="bigNum" id="gateNum"></div>
-      <p class="small">जितना जप, उतना दर्शन। आगे का द्वार जप से खुलेगा।</p>
-      <div class="row"><button class="btn" id="gRam" style="font-family:var(--serif);font-size:30px;min-width:200px">राम</button></div>
-      <div class="row"><button class="btn ghost" id="gMic">🎙️ बोलकर जप</button>${g.alt ? `<button class="btn ghost" id="gAlt">${g.alt.label}</button>` : ''}</div>`);
-    holdToChant($('gRam'));
-    $('gMic').onclick = () => { if (!Jap.on) Jap.start(); };
-    if (g.alt) $('gAlt').onclick = () => { const f = g.alt.fn; G.gate = null; closeModal(); f(); };
+cv.addEventListener('pointerdown', e => {
+  Snd.resume();
+  try { cv.setPointerCapture(e.pointerId); } catch(_){}
+  ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (ptrs.size === 1) gesture = { sx:e.clientX, sy:e.clientY, moved:false, multi:false, lx:e.clientX, ly:e.clientY };
+  else if (ptrs.size === 2 && gesture){
+    gesture.multi = true;
+    const [p, q] = [...ptrs.values()];
+    gesture.d0 = Math.hypot(p.x - q.x, p.y - q.y) || 1; gesture.z0 = view.z;
+    gesture.w0 = toWorld((p.x + q.x) / 2, (p.y + q.y) / 2);
   }
-  $('gateProg').style.width = Math.min(100, g.n / g.need * 100) + '%'; if ($('gPic')) $('gPic').style.setProperty('--p', Math.min(1, g.n / g.need));
-  $('gateNum').textContent = HN(Math.min(g.n, g.need)) + ' / ' + HN(g.need);
-  if (g.n >= g.need){ const d = g.done; G.gate = null; Snd.win(); setTimeout(() => { closeModal(); d(); }, 800); }
-}
-
-/* ======================= TERM LEVELS (glossary) ======================= */
-let termGate = null;
-function openTerm(t){
-  const e = GLOSSARY[t]; if (!e) return; Snd.resume();
-  const done = Save.d.terms[t];
-  termGate = { t, n:0, need:3 };
-  $('termCard').innerHTML = `<div class="tag" style="color:#7ff0de">ज्ञान-स्तर</div><h3>${t}</h3>
-    <div class="tsec"><b>सरल अर्थ</b><span>${e[0]}</span></div>
-    <div class="tsec"><b>उदाहरण</b><span>${e[1]}</span></div>
-    <div class="tsec" style="text-align:center"><b>एक पंक्ति में</b><span style="font-family:var(--serif);font-size:26px;color:#fff3c4">${e[2]}</span></div>
-    <p class="small">${done ? '✔ यह शब्द पक्का हो चुका है।' : 'इसे पक्का करने के लिए ३ बार "राम" — और इस शब्द को मन में रखिए।'}</p>
-    <div class="bigNum" id="tNum">${done ? '' : '० / ३'}</div>
-    <div class="row">${done ? '' : '<button class="btn" id="tRam" style="font-family:var(--serif);font-size:28px">राम</button>'}<button class="btn ghost" id="tBack">← वापस</button></div>`;
-  $('termLayer').classList.remove('hidden');
-  if (!done) holdToChant($('tRam'));
-  $('tBack').onclick = closeTerm;
-}
-function closeTerm(){ termGate = null; $('termLayer').classList.add('hidden'); }
-const _onChant = onChant;
-onChant = function(){
-  if (termGate && !$('termLayer').classList.contains('hidden')){
-    Snd.resume(); Snd.chant(); Save.d.jap++; Save.d.bank++; floatRam(); termGate.n++;
-    $('tNum').textContent = HN(Math.min(3, termGate.n)) + ' / ३';
-    if (termGate.n >= 3){ Save.d.terms[termGate.t] = 1; Save.write(); Snd.win(); toast('✔ "' + termGate.t + '" पक्का हुआ'); setTimeout(closeTerm, 900); }
-    updateHUD(); return;
+});
+cv.addEventListener('pointermove', e => {
+  Sense.mouse(e.clientX, e.clientY, e.movementX || 0, e.movementY || 0);
+  if (!ptrs.has(e.pointerId) || !gesture) return;
+  ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (ptrs.size >= 2 && G.lv){
+    const [p, q] = [...ptrs.values()];
+    const d = Math.hypot(p.x - q.x, p.y - q.y), mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
+    view.z = clamp(gesture.z0 * d / gesture.d0, 1, 4);
+    view.x = mx - gesture.w0.x * view.z; view.y = my - gesture.w0.y * view.z; clampView();
+    return;
   }
-  _onChant();
-};
-function showGlossary(){
-  const items = Object.keys(GLOSSARY).map(t => `<button class="${Save.d.terms[t] ? 'done' : ''}" data-t="${t}">${Save.d.terms[t] ? '✔ ' : ''}${t}</button>`).join('');
-  modal(`<div class="tag">शब्द-कोश</div><h3>कठिन शब्द, सरल अर्थ</h3><p class="small">किसी भी शब्द पर टैप करें। पक्के शब्द: ${HN(Object.keys(Save.d.terms).length)} / ${HN(Object.keys(GLOSSARY).length)}</p>
-    <div class="glist">${items}</div><div class="row"><button class="btn ghost" id="gClose">बंद करें</button></div>`, true);
-  $('card').querySelectorAll('.glist button').forEach(b => b.onclick = () => openTerm(b.dataset.t));
-  $('gClose').onclick = () => { closeModal(); if (G.lv && !G.gate) G.playing = G.lives > 0 && G.lv.arrows.some(a => a.alive && !a.illusion); };
+  if (Math.hypot(e.clientX - gesture.sx, e.clientY - gesture.sy) > 12) gesture.moved = true;
+  if (gesture.moved && view.z > 1 && G.lv){ view.x += e.clientX - gesture.lx; view.y += e.clientY - gesture.ly; clampView(); }
+  gesture.lx = e.clientX; gesture.ly = e.clientY;
+});
+function endPtr(e, cancel){
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.delete(e.pointerId);
+  if (ptrs.size === 0 && gesture){
+    const g = gesture; gesture = null;
+    if (!cancel && !g.moved && !g.multi) tapAt(g.sx, g.sy);
+  }
 }
-function showMenu(){
-  G.playing = false;
-  modal(`<div class="tag">विराम</div><h3>मौन क्षण</h3>
-    <div class="msg">इस क्षण, कौन जान रहा है कि खेल रुका है?</div>
-    <div class="toggle"><span>🎵 संगीत</span><input type="checkbox" id="musT" ${Save.d.music ? 'checked' : ''}></div>
-    <div class="toggle"><span>🔉 आवाज़</span><input type="range" id="volT" min="0" max="1" step=".05" value="${Save.d.vol}"></div>
-    <p class="small">कुल जप: <b style="color:var(--gold)">${HN(Save.d.jap)}</b> · पढ़े सूत्र: ${HN(Save.d.lesson + Save.d.sutra)}</p>
-    <p class="small" style="font-size:15px">चित्र: राजा रवि वर्मा व उनकी प्रेस (सार्वजनिक डोमेन), विकिमीडिया कॉमन्स से।</p>
-    <div class="row"><button class="btn" id="resT">जारी रखें</button><button class="btn ghost" id="rstT">↺ फिर से</button><button class="btn ghost" id="glT">शब्द-कोश</button></div>`, true);
-  $('musT').onchange = e => { Snd.resume(); Snd.setMusic(e.target.checked); };
-  $('volT').oninput = e => Snd.setVol(+e.target.value);
-  $('resT').onclick = () => { closeModal(); G.playing = G.lv && G.lives > 0 && G.lv.arrows.some(a => a.alive && !a.illusion); };
-  $('rstT').onclick = () => { closeModal(); startLevel(G.L); };
-  $('glT').onclick = showGlossary;
+cv.addEventListener('pointerup', e => endPtr(e, false));
+cv.addEventListener('pointercancel', e => endPtr(e, true));
+cv.addEventListener('wheel', e => { if (!G.lv) return; e.preventDefault(); zoomAt(e.clientX, e.clientY, view.z * Math.exp(-e.deltaY * .0015)); }, { passive:false });
+let lastTap = 0;
+function tapAt(sx, sy){
+  if (!G.playing || !G.lv) return;
+  const lv = G.lv, w = toWorld(sx, sy);
+  const fx = (w.x - ox) / cell, fy = (w.y - oy) / cell, gx = Math.floor(fx), gy = Math.floor(fy);
+  // double-tap on empty space resets zoom
+  const inGrid = gx >= 0 && gy >= 0 && gx < lv.W && gy < lv.H;
+  if (inGrid){
+    const id = lv.occ[gy][gx], emptyCell = id === -1 || !lv.arrows[id].alive;
+    const nearC = Math.hypot(fx - gx - .5, fy - gy - .5) < .5;
+    const j = lv.jewels.find(j => j.x === gx && j.y === gy && !j.taken);
+    if (j && emptyCell && nearC) return tapJewel(j);
+    if (lv.sakshi && lv.sakshi.x === gx && lv.sakshi.y === gy && nearC){ toast('👁 साक्षी को छुआ नहीं जा सकता — जो देखता है, वह दृश्य नहीं बनता।'); Snd.soft(); return; }
+  }
+  // nearest arrow (body segments + arrowhead tip), measured in grid units
+  const thr = Math.max(.6, 18 / (cell * view.z));
+  let best = null, bd = Infinity;
+  for (const a of lv.arrows){
+    if (!a.alive || (a.anim && a.anim.type === 'fly')) continue;
+    const P = a.cells.map(c => ({ x:c.x + .5, y:c.y + .5 }));
+    const h = P[P.length - 1]; P.push({ x:h.x + a.dx * .45, y:h.y + a.dy * .45 });
+    for (let i = 0; i < P.length - 1; i++){
+      const d = segDist(fx, fy, P[i], P[i + 1]);
+      if (d < bd){ bd = d; best = a; }
+    }
+  }
+  if (best && bd <= thr) return tapArrow(best);
+  const now = performance.now();
+  if (now - lastTap < 350 && view.z > 1){ view.z = 1; clampView(); }
+  lastTap = now;
 }
-$('menuBtn').onclick = () => { Snd.resume(); showMenu(); };
+function segDist(px, py, a, b){
+  const vx = b.x - a.x, vy = b.y - a.y, l2 = vx * vx + vy * vy || 1;
+  const t = clamp(((px - a.x) * vx + (py - a.y) * vy) / l2, 0, 1);
+  return Math.hypot(px - (a.x + vx * t), py - (a.y + vy * t));
+}
 
-/* ======================= EFFECTS ======================= */
+/* ================= Effects ================= */
+function ripple(gx, gy, col){ G.ripples.push({ x:gx, y:gy, t:0, col }); }
+function petals(n){
+  const cols = ['#e8a33d', '#f2c14e', '#d9622b', '#f6d27a'];
+  for (let i = 0; i < n; i++) G.particles.push({ x:Math.random() * VW, y:-20 - Math.random() * VH * .5, vx:(Math.random() - .5) * 30, vy:60 + Math.random() * 90, r:Math.random() * 6, vr:(Math.random() - .5) * 4, life:4 + Math.random() * 2, t:0, c:cols[i % 4] });
+}
 let toastT = 0;
-function toast(m){ const t = $('toast'); t.innerHTML = m.replace(TERM_RX, '$1'); t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3000); }
-function whisper(){ const w = $('whisper'); w.textContent = WHISPERS[Save.d.whisper++ % WHISPERS.length]; w.style.opacity = .85; setTimeout(() => w.style.opacity = 0, 3200); }
-function burst(){ for (let i = 0; i < 140; i++){ const a = Math.random()*Math.PI*2, s = 80 + Math.random()*320;
-  G.parts.push({ x:VW/2, y:VH/2, vx:Math.cos(a)*s, vy:Math.sin(a)*s - 80, life:2 + Math.random()*1.4, t:0, c:['#ffd27a','#ff9d3c','#fff2c4','#ff7ab6','#ff5a5f'][i%5], petal:i%2 === 0 }); } }
-/* ======================= ART: load real paintings, grade them cinematically ======================= */
-const ART_CACHE = {};
-function loadArt(d){
-  const url = imgURL(d.f);
-  G.art = ART_CACHE[url] || null;
-  if (ART_CACHE[url]) return;
-  const img = new Image(); img.decoding = 'async';
-  img.onload = () => { const a = ART_CACHE[url] = { img, url, sharp:null, soft:null, key:'' }; if (G.lv && G.lv.spec.darshan === d) G.art = a; };
-  img.onerror = () => { ART_CACHE[url] = null; };                       // offline: gradient fallback
-  img.src = url;
-  // pre-load the next painting too
-  const nx = DARSHAN[(DARSHAN.indexOf(d) + 1) % DARSHAN.length]; const n2 = new Image(); n2.src = imgURL(nx.f);
-}
-function coverFit(c, img, w, h, zoom = 1, fy = .3){
-  const s = Math.max(w / img.naturalWidth, h / img.naturalHeight) * zoom, iw = img.naturalWidth*s, ih = img.naturalHeight*s;
-  c.drawImage(img, (w - iw) / 2, (h - ih) * fy, iw, ih);
-}
-let GRAIN = null;
-function grain(){
-  if (GRAIN) return GRAIN; const g = document.createElement('canvas'); g.width = g.height = 128; const x = g.getContext('2d');
-  for (let i = 0; i < 2600; i++){ const v = Math.random() * 255 | 0; x.fillStyle = `rgba(${v},${v},${v},.5)`; x.fillRect(Math.random()*128, Math.random()*128, 1, 1); }
-  return GRAIN = g;
-}
-// Cinematic grade: warm gold highlights, deep violet shadows, bloom, vignette, film grain.
-function gradeSharp(img, w, h){
-  const cv2 = document.createElement('canvas'); cv2.width = w; cv2.height = h; const c = cv2.getContext('2d');
-  coverFit(c, img, w, h);
-  c.globalCompositeOperation = 'soft-light';
-  let g = c.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#ffb45a'); g.addColorStop(.55, '#c06a3a'); g.addColorStop(1, '#2a1048');
-  c.fillStyle = g; c.fillRect(0, 0, w, h);
-  c.globalCompositeOperation = 'screen'; c.globalAlpha = .35;          // bloom from a blurred copy
-  const sm = document.createElement('canvas'); sm.width = Math.max(8, w/16|0); sm.height = Math.max(8, h/16|0);
-  sm.getContext('2d').drawImage(cv2, 0, 0, sm.width, sm.height); c.imageSmoothingQuality = 'high'; c.drawImage(sm, 0, 0, w, h);
-  c.globalAlpha = 1; c.globalCompositeOperation = 'multiply';
-  g = c.createRadialGradient(w/2, h*.42, Math.min(w,h)*.2, w/2, h/2, Math.max(w,h)*.75); g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#1a0e2a');
-  c.fillStyle = g; c.fillRect(0, 0, w, h);
-  c.globalCompositeOperation = 'overlay'; c.globalAlpha = .1; c.fillStyle = c.createPattern(grain(), 'repeat'); c.fillRect(0, 0, w, h);
-  c.globalAlpha = 1; c.globalCompositeOperation = 'source-over';
-  return cv2;
-}
-function gradeSoft(img, w, h){
-  const sm = document.createElement('canvas'); sm.width = 48; sm.height = Math.round(48 * h / w); const s = sm.getContext('2d');
-  coverFit(s, img, sm.width, sm.height, 1.15);
-  const cv2 = document.createElement('canvas'); cv2.width = w; cv2.height = h; const c = cv2.getContext('2d');
-  c.imageSmoothingQuality = 'high'; c.drawImage(sm, 0, 0, w, h);
-  c.globalCompositeOperation = 'multiply'; c.fillStyle = '#3a2350'; c.fillRect(0, 0, w, h);
-  c.globalCompositeOperation = 'soft-light'; const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#ffb45a'); g.addColorStop(1, '#100828'); c.fillStyle = g; c.fillRect(0, 0, w, h);
-  c.globalCompositeOperation = 'source-over';
-  return cv2;
-}
-function artFor(w, h){
-  const a = G.art; if (!a) return null;
-  const key = w + 'x' + h;
-  if (a.key !== key){ try { a.sharp = gradeSharp(a.img, w, h); a.soft = gradeSoft(a.img, Math.max(64, VW/2|0), Math.max(64, VH/2|0)); a.key = key; } catch(e){ return null; } }
-  return a;
+function toast(msg){ const t = $('toast'); t.innerHTML = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2500); }
+function whisper(){
+  const w = $('whisper'); w.textContent = WHISPERS[Math.floor(Math.random() * WHISPERS.length)];
+  w.style.opacity = .7; setTimeout(() => w.style.opacity = 0, 3200);
 }
 
-/* ======================= RENDERING ======================= */
-const motes = Array.from({length:40}, () => ({ x:Math.random(), y:Math.random(), s:.3 + Math.random()*.8, p:Math.random()*6.28 }));
+/* ================= Rendering ================= */
 let T = 0;
-const SERIF = '"Tiro Devanagari Hindi","Noto Serif Devanagari","Mangal",serif';
-
-function drawBG(dt){
-  ctx.fillStyle = '#07051a'; ctx.fillRect(0, 0, VW, VH);
-  const a = G.lv ? artFor(Math.round(G.lv.W*cell*DPR), Math.round(G.lv.H*cell*DPR)) : null;
-  if (a && a.soft){
-    const z = 1.08 + .04*Math.sin(T*.05);                                   // slow Ken Burns drift
-    ctx.save(); ctx.globalAlpha = .85; ctx.translate(VW/2 + Math.sin(T*.03)*12, VH/2); ctx.scale(z, z);
-    ctx.drawImage(a.soft, -VW/2, -VH/2, VW, VH); ctx.restore();
-  } else {
-    const g = ctx.createRadialGradient(VW*.5, VH*.35, 10, VW*.5, VH*.5, Math.max(VW,VH)*.85);
-    g.addColorStop(0, '#3a1f4a'); g.addColorStop(.6, '#160c2c'); g.addColorStop(1, '#06041a'); ctx.fillStyle = g; ctx.fillRect(0, 0, VW, VH);
-  }
-  // god-rays from above
-  ctx.save(); ctx.globalCompositeOperation = 'screen';
-  for (let k = 0; k < 5; k++){ const x = VW*(.15 + k*.18) + Math.sin(T*.07 + k)*30, g = ctx.createLinearGradient(x, 0, x + 80, VH);
-    g.addColorStop(0, `rgba(255,200,120,${.07 + .03*Math.sin(T*.3 + k)})`); g.addColorStop(1, 'rgba(255,200,120,0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x - 30, 0); ctx.lineTo(x + 30, 0); ctx.lineTo(x + 200, VH); ctx.lineTo(x + 40, VH); ctx.closePath(); ctx.fill(); }
-  ctx.restore();
-  const v = ctx.createRadialGradient(VW/2, VH/2, Math.min(VW,VH)*.3, VW/2, VH/2, Math.max(VW,VH)*.75);
-  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(4,2,14,.85)'); ctx.fillStyle = v; ctx.fillRect(0, 0, VW, VH);
-  for (const m of motes){ m.y -= dt*.01*m.s; if (m.y < -.05){ m.y = 1.05; m.x = Math.random(); }
-    const x = m.x*VW + Math.sin(T*.4 + m.p)*18, y = m.y*VH, r = 6*m.s + 2, rg = ctx.createRadialGradient(x, y, 0, x, y, r);
-    rg.addColorStop(0, `rgba(255,214,150,${.35 + .25*Math.sin(T + m.p)})`); rg.addColorStop(1, 'rgba(255,190,100,0)'); ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.29); ctx.fill(); }
+const INK = '#6e4f36';
+function colorOf(a){
+  if (a.kind === 'rambaan') return '#d9822b';
+  if (a.kind === 'hanuman') return '#c8501e';
+  if (a.kind === 'dhanush') return '#b8862c';
+  if (a.kind === 'ravana') return '#9b2f24';
+  if (a.tier != null) return TIER[a.tier].c;
+  if (a.pair >= 0) return '#a87a2a';
+  if (a.vritti) return '#7d62a3';
+  return INK;
 }
-
-function drawBoard(dt){
-  const lv = G.lv; if (!lv) return;
-  const bw = lv.W*cell, bh = lv.H*cell, cx = ox + bw/2, cy = oy + bh/2;
-  ctx.save();
-  ctx.translate(VW/2 + view.px, VH/2 + view.py); ctx.scale(view.z, view.z); ctx.translate(-VW/2, -VH/2);
-  if (G.rotAnim){ ctx.translate(cx, cy); ctx.rotate(ease(Math.min(1, G.rotAnim.t)) * Math.PI/2); ctx.translate(-cx, -cy); }
-  const reveal = G.revealAnim ? ease(Math.min(1, G.revealAnim.t / 1.8)) : 0;
-
-  // the hidden painting, clipped to the sacred shape
-  ctx.save(); ctx.beginPath();
-  for (let y = 0; y < lv.H; y++) for (let x = 0; x < lv.W; x++) if (lv.mask[y][x]) ctx.rect(ox + x*cell - .4, oy + y*cell - .4, cell + .8, cell + .8);
-  ctx.clip();
-  const a = artFor(Math.round(bw*DPR), Math.round(bh*DPR));
-  if (a && a.sharp){ const z = 1 + reveal*.05; ctx.drawImage(a.sharp, cx - bw*z/2, cy - bh*z/2, bw*z, bh*z); }
-  else { const hg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(bw, bh)*.7); hg.addColorStop(0, '#5a3010'); hg.addColorStop(1, '#160a24'); ctx.fillStyle = hg; ctx.fillRect(ox, oy, bw, bh); }
-  // veil over still-covered cells
+function drawBG(){
+  ctx.fillStyle = '#f5ecdc'; ctx.fillRect(0, 0, VW, VH);
+  if (!G.lv) return;
+  // faint yantra watermark behind the board
+  const cx = ox + G.lv.W * cell / 2, cy = oy + G.lv.H * cell / 2, R0 = Math.max(G.lv.W, G.lv.H) * cell * .62;
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(T * .01);
+  ctx.strokeStyle = 'rgba(176,140,90,.13)'; ctx.lineWidth = 1;
+  for (let ring = 0; ring < 3; ring++){
+    const r = R0 * (.7 + ring * .18), n = 12 + ring * 6;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, 6.29); ctx.stroke();
+    for (let k = 0; k < n; k++){ const a0 = k / n * 6.283; ctx.beginPath(); ctx.ellipse(Math.cos(a0) * r, Math.sin(a0) * r, r * .09, r * .03, a0, 0, 6.29); ctx.stroke(); }
+  }
+  ctx.restore();
+}
+function drawBoard(){
+  const lv = G.lv, c = cell;
+  const X = gx => ox + (gx + .5) * c, Y = gy => oy + (gy + .5) * c;
+  // grid / dots
+  if (Save.data.grid){
+    ctx.strokeStyle = 'rgba(150,120,85,.18)'; ctx.lineWidth = 1 / view.z;
+    ctx.beginPath();
+    for (let x = 0; x <= lv.W; x++){ ctx.moveTo(ox + x * c, oy); ctx.lineTo(ox + x * c, oy + lv.H * c); }
+    for (let y = 0; y <= lv.H; y++){ ctx.moveTo(ox, oy + y * c); ctx.lineTo(ox + lv.W * c, oy + y * c); }
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = 'rgba(150,120,85,.22)';
+    for (let y = 0; y < lv.H; y++) for (let x = 0; x < lv.W; x++){ if (lv.occ[y][x] !== -1 && lv.arrows[lv.occ[y][x]].alive) continue; ctx.beginPath(); ctx.arc(X(x), Y(y), Math.max(.9, c * .04), 0, 6.29); ctx.fill(); }
+  }
+  const big = c * view.z >= 24;
+  // jewels
+  for (const j of lv.jewels){
+    const o = lv.occ[j.y][j.x]; if (o !== -1 && lv.arrows[o].alive) continue;
+    const x = X(j.x), y = Y(j.y), s = c * .36 * (1 + .06 * Math.sin(T * 3 + j.k));
+    ctx.fillStyle = j.taken ? 'rgba(207,139,37,.25)' : ['#e2a640', '#f0c766', '#e88aa0'][j.k];
+    ctx.beginPath(); for (let k = 0; k < 6; k++){ const a = k / 6 * 6.283 + Math.PI / 6; ctx.lineTo(x + Math.cos(a) * s, y + Math.sin(a) * s); } ctx.closePath(); ctx.fill();
+    if (big){ ctx.fillStyle = '#5a3a1a'; ctx.font = `700 ${Math.floor(c * .2)}px ${SANS}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(ABP[j.k], x, y + 1); }
+  }
+  // mirrors
   for (let y = 0; y < lv.H; y++) for (let x = 0; x < lv.W; x++){
-    if (!lv.mask[y][x]) continue;
-    const c = lv.coverA[y][x] += (lv.cover[y][x] - lv.coverA[y][x]) * Math.min(1, dt*2.5);
-    const al = (.42 + .5*c) * (1 - reveal); if (al < .01) continue;
-    ctx.fillStyle = `rgba(10,6,24,${al})`; ctx.fillRect(ox + x*cell, oy + y*cell, cell, cell);
-  }
-  if (reveal > 0){ // light sweep across the painting
-    const sx = ox - bw + reveal*bw*3, g = ctx.createLinearGradient(sx, oy, sx + bw*.5, oy + bh);
-    g.addColorStop(0, 'rgba(255,230,170,0)'); g.addColorStop(.5, `rgba(255,230,170,${.35*(1-reveal*.6)})`); g.addColorStop(1, 'rgba(255,230,170,0)');
-    ctx.fillStyle = g; ctx.fillRect(ox, oy, bw, bh);
-  }
-  ctx.restore();
-  // golden rim around the shape
-  ctx.save(); ctx.strokeStyle = `rgba(255,205,120,${.25 + .5*reveal})`; ctx.lineWidth = 1.2; ctx.shadowColor = '#ffb347'; ctx.shadowBlur = 8;
-  ctx.beginPath();
-  for (let y = 0; y < lv.H; y++) for (let x = 0; x < lv.W; x++){ if (!lv.mask[y][x]) continue; const X = ox + x*cell, Y = oy + y*cell;
-    if (y === 0 || !lv.mask[y-1][x]){ ctx.moveTo(X, Y); ctx.lineTo(X + cell, Y); }
-    if (y === lv.H-1 || !lv.mask[y+1][x]){ ctx.moveTo(X, Y + cell); ctx.lineTo(X + cell, Y + cell); }
-    if (x === 0 || !lv.mask[y][x-1]){ ctx.moveTo(X, Y); ctx.lineTo(X, Y + cell); }
-    if (x === lv.W-1 || !lv.mask[y][x+1]){ ctx.moveTo(X + cell, Y); ctx.lineTo(X + cell, Y + cell); } }
-  ctx.stroke(); ctx.restore();
-
-  for (const ar of lv.arrows) if (ar.fade > 0) drawArrow(ar);
-  for (const r of G.ripples){ const k = r.t / .9; ctx.strokeStyle = hexA(r.col, (1-k)*.8); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(CX(r.x), CY(r.y), cell*(.3 + k*2.2), 0, 6.29); ctx.stroke(); }
-  ctx.restore();
-
-  if (G.revealAnim){
-    const k = clamp((G.revealAnim.t - 1) / 1.2, 0, 1), d = lv.spec.darshan;
-    ctx.save(); ctx.globalAlpha = k; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const y = Math.max(140, oy - 30) + (1 - k)*24;
-    ctx.font = `${Math.floor(Math.min(VW*.11, 56))}px ${SERIF}`; ctx.fillStyle = '#fff1c4'; ctx.shadowColor = '#000'; ctx.shadowBlur = 18; ctx.fillText(d.name, VW/2, y);
-    ctx.font = `${Math.floor(Math.min(VW*.055, 26))}px ${SERIF}`; ctx.fillStyle = '#ffd99a'; ctx.fillText(d.line, VW/2, y + 46);
+    const m = lv.mir[y][x]; if (!m) continue;
+    const r = c * .4;
+    ctx.save(); ctx.translate(X(x), Y(y));
+    ctx.fillStyle = 'rgba(111,143,166,.10)'; ctx.beginPath(); ctx.arc(0, 0, r * 1.05, 0, 6.29); ctx.fill();
+    ctx.rotate(m === 1 ? -Math.PI / 4 : Math.PI / 4);
+    const sh = .5 + .45 * Math.sin(T * 1.5 + x + y + Sense.tx * 3);
+    const lg = ctx.createLinearGradient(-r, 0, r, 0);
+    lg.addColorStop(0, '#6f8fa6'); lg.addColorStop(sh, '#e9f3fa'); lg.addColorStop(1, '#6f8fa6');
+    ctx.strokeStyle = lg; ctx.lineWidth = Math.max(2, c * .1); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.stroke();
     ctx.restore();
   }
+  // साक्षी
+  if (lv.sakshi){
+    const x = X(lv.sakshi.x), y = Y(lv.sakshi.y), r = c * .42;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 2); g.addColorStop(0, 'rgba(232,180,90,.35)'); g.addColorStop(1, 'rgba(232,180,90,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 2, 0, 6.29); ctx.fill();
+    ctx.strokeStyle = '#b8862c'; ctx.lineWidth = Math.max(1.3, c * .05);
+    ctx.beginPath(); ctx.moveTo(x - r, y); ctx.quadraticCurveTo(x, y - r * .95, x + r, y); ctx.quadraticCurveTo(x, y + r * .95, x - r, y); ctx.stroke();
+    ctx.fillStyle = '#b8862c'; ctx.beginPath(); ctx.arc(x + Sense.tx * r * .2, y + Sense.ty * r * .12, r * .26, 0, 6.29); ctx.fill();
+  }
+  // नाम-रूप threads
+  for (const a of lv.arrows){
+    if (a.pair > a.id && a.alive && lv.arrows[a.pair].alive && !a.anim){
+      const b = lv.arrows[a.pair], ta = a.cells[0], tb = b.cells[0];
+      ctx.save(); ctx.setLineDash([2, 4]); ctx.lineDashOffset = -T * 12; ctx.strokeStyle = 'rgba(184,134,44,.75)'; ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.moveTo(X(ta.x), Y(ta.y)); ctx.quadraticCurveTo((X(ta.x) + X(tb.x)) / 2, (Y(ta.y) + Y(tb.y)) / 2 - c * .7, X(tb.x), Y(tb.y)); ctx.stroke(); ctx.restore();
+    }
+  }
+  // shadows: only real arrows cast them (the मायामृग test)
+  const shx = c * (.05 + Sense.tx * .24), shy = c * (.08 + Sense.ty * .24);
+  for (const a of lv.arrows) if (!a.illusion && a.alive && !a.veil && !a.anim) drawArrow(a, shx, shy);
+  for (const a of lv.arrows) if (a.fade > 0 && (a.alive || a.anim)) drawArrow(a);
+  for (const r of G.ripples){
+    const k = r.t / .8; ctx.strokeStyle = r.col; ctx.globalAlpha = (1 - k) * .6; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(X(r.x), Y(r.y), c * (.25 + k * 1.3), 0, 6.29); ctx.stroke(); ctx.globalAlpha = 1;
+  }
 }
-function hexA(h, a){ const n = parseInt(h.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
-function shade(h, k){ const n = parseInt(h.slice(1), 16); const f = v => Math.round(v*k); return `rgb(${f(n>>16&255)},${f(n>>8&255)},${f(n&255)})`; }
-function samplePoly(pts, s0, s1){ const out = []; let acc = 0;
-  for (let i = 0; i < pts.length - 1; i++){ const a = pts[i], b = pts[i+1], L = Math.hypot(b.x-a.x, b.y-a.y), e = acc + L;
-    if (e >= s0 && acc <= s1){ const t0 = clamp((s0-acc)/L, 0, 1), t1 = clamp((s1-acc)/L, 0, 1); if (!out.length) out.push({x:lerp(a.x,b.x,t0), y:lerp(a.y,b.y,t0)}); out.push({x:lerp(a.x,b.x,t1), y:lerp(a.y,b.y,t1)}); }
-    acc = e; } return out; }
-
-function drawArrow(a){
+function samplePoly(pts, s0, s1){
+  const out = []; let acc = 0;
+  for (let i = 0; i < pts.length - 1; i++){
+    const a = pts[i], b = pts[i + 1], L = Math.hypot(b.x - a.x, b.y - a.y) || 1e-6;
+    if (acc + L >= s0 && acc <= s1){
+      const t0 = clamp((s0 - acc) / L, 0, 1), t1 = clamp((s1 - acc) / L, 0, 1);
+      if (!out.length) out.push({ x:lerp(a.x, b.x, t0), y:lerp(a.y, b.y, t0) });
+      out.push({ x:lerp(a.x, b.x, t1), y:lerp(a.y, b.y, t1) });
+    }
+    acc += L;
+  }
+  return out;
+}
+function drawArrow(a, shx, shy){
+  const shadow = shx !== undefined, c = cell;
   let pts;
   if (a.anim && a.anim.type === 'fly') pts = samplePoly(a.anim.pts, a.anim.s, a.anim.s + a.anim.len);
-  else if (a.anim && a.anim.type === 'bump'){ const t = a.anim.t, k = t < .18 ? t/.18 : Math.max(0, 1 - (t - .18)/.25);
-    const full = a.cells.concat(a.anim.path.cells), reach = Math.max(0, a.anim.path.cells.length - .55) * k; pts = samplePoly(full, reach, reach + a.cells.length - 1); }
-  else { if (!a.alive && !(a.anim && a.anim.type === 'dissolve')) return; pts = a.cells; }
+  else if (a.anim && a.anim.type === 'bump'){
+    const t = a.anim.t, k = t < .16 ? t / .16 : Math.max(0, 1 - (t - .16) / .26);
+    const reach = Math.max(0, a.anim.path.cells.length - .62) * k;
+    const full = a.cells.map(q => ({ x:q.x, y:q.y })).concat(a.anim.path.cells.map(q => ({ x:q.x, y:q.y })));
+    pts = samplePoly(full, reach, reach + a.cells.length - 1);
+  } else pts = a.cells.map(q => ({ x:q.x, y:q.y }));
   if (!pts || pts.length < 2) return;
-  const shake = a.shake > 0 ? Math.sin(T*60)*a.shake*cell*.1 : 0;
-  const P = pts.map(p => ({ x: CX(p.x) + shake, y: CY(p.y) }));
-  const w = Math.max(2.2, cell*.26);
-  ctx.save(); ctx.globalAlpha = a.fade; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-  if (a.illusion) ctx.globalAlpha *= .5 + .35*Math.sin(T*4.5 + a.ph);
-  if (a.anim && a.anim.type === 'dissolve'){ ctx.strokeStyle = 'rgba(220,180,120,.7)'; ctx.lineWidth = w*.6; ctx.setLineDash([w*.5, w*.6]); poly(P); ctx.restore(); return; }
-  if (a.veil && a.alive && !a.anim){                                     // आवरण: soft mist, direction hidden
-    for (let i = 0; i < P.length; i++){ const g = ctx.createRadialGradient(P[i].x, P[i].y, 0, P[i].x, P[i].y, cell*.5);
-      g.addColorStop(0, 'rgba(225,215,245,.72)'); g.addColorStop(1, 'rgba(225,215,245,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(P[i].x + Math.sin(T*.8 + i)*1.2, P[i].y, cell*.5, 0, 6.29); ctx.fill(); }
-    ctx.restore(); return; }
-  const hint = G.hintA === a.id && G.hintT > 0, col = a.flash > 0 ? '#ff5050' : a.col;
-  // shadow
-  ctx.save(); ctx.translate(cell*.06, cell*.09); ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = w + 1.5; poly(P); head(P, w, 'rgba(0,0,0,.55)'); ctx.restore();
-  // glow for special / hint
-  if (a.special || hint){ ctx.shadowColor = hint ? '#ffffff' : '#ffcf6e'; ctx.shadowBlur = (hint ? 22 : 10) * (.7 + .3*Math.sin(T*3 + a.ph)); }
-  const g = ctx.createLinearGradient(P[0].x, P[0].y, P[P.length-1].x, P[P.length-1].y);
-  g.addColorStop(0, shade(col.startsWith('#') ? col : '#ff5050', .55)); g.addColorStop(1, col);
-  ctx.strokeStyle = g; ctx.lineWidth = w; poly(P); ctx.shadowBlur = 0;
-  ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = Math.max(.8, w*.22);           // specular line
-  ctx.beginPath(); ctx.moveTo(P[0].x - w*.12, P[0].y - w*.12); for (let i = 1; i < P.length; i++) ctx.lineTo(P[i].x - w*.12, P[i].y - w*.12); ctx.stroke();
-  head(P, w, col);
-  if (a.special && !(a.anim && a.anim.type === 'fly')){                  // a single golden bead at the tail
-    ctx.fillStyle = '#fff3c8'; ctx.shadowColor = '#ffcf6e'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(P[0].x, P[0].y, w*.5, 0, 6.29); ctx.fill(); ctx.shadowBlur = 0; }
-  if (a.seal > 0 && !(a.anim && a.anim.type === 'fly')){                 // lotus knot with one bead per pending "Ram"
-    const m = P[Math.floor((P.length-1)/2)], rr = Math.max(6, cell*.42), on = G.focus === a.id;
-    ctx.fillStyle = on ? '#ffb3c8' : '#f7c6d4'; ctx.shadowColor = '#ff9db5'; ctx.shadowBlur = on ? 16 : 6;
-    for (let k = 0; k < 8; k++){ const an = k/8*6.283 + T*.25; ctx.beginPath(); ctx.ellipse(m.x + Math.cos(an)*rr*.42, m.y + Math.sin(an)*rr*.42, rr*.4, rr*.17, an, 0, 6.29); ctx.fill(); }
-    ctx.shadowBlur = 0; ctx.fillStyle = '#5a1630'; ctx.beginPath(); ctx.arc(m.x, m.y, rr*.32, 0, 6.29); ctx.fill();
-    for (let k = 0; k < a.seal; k++){ const an = k/a.seal*6.283 - Math.PI/2; ctx.fillStyle = '#ffe9a8'; ctx.beginPath(); ctx.arc(m.x + Math.cos(an)*rr*.82, m.y + Math.sin(an)*rr*.82, Math.max(1.3, rr*.11), 0, 6.29); ctx.fill(); }
+  const sh = a.shake > 0 ? Math.sin(T * 60) * a.shake * c * .08 : 0;
+  const wob = a.vritti && a.alive ? 1 - Sense.still : 0;
+  const P = pts.map((p, i) => ({
+    x: ox + (p.x + .5) * c + sh + (wob ? Math.sin(T * 4 + i * 1.3 + a.phase) * c * .09 * wob : 0) + (shadow ? shx : 0),
+    y: oy + (p.y + .5) * c + (wob ? Math.cos(T * 3.4 + i + a.phase) * c * .09 * wob : 0) + (shadow ? shy : 0)
+  }));
+  const heavy = a.kind === 'rambaan' || a.last;
+  const w = Math.max(1.7, c * .11) * (heavy ? 1.55 : 1);
+  ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  if (shadow){
+    ctx.strokeStyle = 'rgba(110,79,54,.17)'; ctx.fillStyle = 'rgba(110,79,54,.17)'; ctx.lineWidth = w * 1.25;
+    polyStroke(P); head(P, w, true); ctx.restore(); return;
+  }
+  ctx.globalAlpha = a.fade;
+  if (a.anim && a.anim.type === 'dissolve'){
+    if (a.anim.light){ ctx.shadowColor = '#f2b84b'; ctx.shadowBlur = 14; ctx.strokeStyle = '#e8a33d'; ctx.lineWidth = w * 1.3; polyStroke(P); }
+    else { ctx.strokeStyle = '#b79a72'; ctx.lineWidth = w; ctx.setLineDash([w * 1.2, w * 1.2]); polyStroke(P); } // rope revealed
+    ctx.restore(); return;
+  }
+  if (a.veil && a.alive){
+    for (let i = 0; i < P.length; i++){
+      const g = ctx.createRadialGradient(P[i].x, P[i].y, 0, P[i].x, P[i].y, c * .48);
+      g.addColorStop(0, 'rgba(214,201,180,.75)'); g.addColorStop(1, 'rgba(214,201,180,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(P[i].x + Math.sin(T + i) * 1.2, P[i].y, c * .48, 0, 6.29); ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(150,130,105,.4)'; ctx.lineWidth = w; ctx.setLineDash([w, w * 1.6]); polyStroke(P); ctx.setLineDash([]);
+    if (c * view.z > 16){ const m = P[Math.floor(P.length / 2)]; ctx.fillStyle = '#8a7558'; ctx.font = `700 ${Math.floor(c * .34)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', m.x, m.y); }
+    ctx.restore(); return;
+  }
+  let col = a.flash > 0 ? '#c0392b' : colorOf(a);
+  const hint = G.hintA === a.id && G.hintT > 0;
+  if (hint){ ctx.shadowColor = '#f0a830'; ctx.shadowBlur = 16 + 6 * Math.sin(T * 8); col = '#d9822b'; }
+  else if (a.kind === 'rambaan' || a.kind === 'dhanush'){ ctx.shadowColor = 'rgba(232,163,61,.55)'; ctx.shadowBlur = 8; }
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w;
+  polyStroke(P); head(P, w);
+  ctx.shadowBlur = 0;
+  const flying = a.anim && a.anim.type === 'fly', big = c * view.z >= 24;
+  const tail = P[0], t2 = P[1], ang = Math.atan2(t2.y - tail.y, t2.x - tail.x);
+  // fletching for राम-बाण
+  if (a.kind === 'rambaan'){
+    ctx.lineWidth = Math.max(1.2, w * .6);
+    for (const s of [-1, 1]){ for (const off of [0, .22]){ const bx = tail.x + Math.cos(ang) * c * off, by = tail.y + Math.sin(ang) * c * off;
+      ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx - Math.cos(ang + s * .7) * c * .26, by - Math.sin(ang + s * .7) * c * .26); ctx.stroke(); } }
+  }
+  if (a.kind === 'dhanush' && !flying){
+    ctx.lineWidth = Math.max(1.2, w * .6); ctx.beginPath(); ctx.arc(tail.x, tail.y, c * .32, ang + Math.PI / 2, ang + 3 * Math.PI / 2); ctx.stroke();
+  }
+  if (!flying){
+    let tag = null;
+    if (a.kind === 'hanuman') tag = 'ह';
+    else if (a.pair >= 0) tag = a.pair > a.id ? 'नाम' : 'रूप';
+    else if (a.tier != null) tag = TIER[a.tier].g;
+    if (tag){
+      if (big){
+        const rr = Math.max(6, c * .25);
+        ctx.fillStyle = '#fbf6ec'; ctx.beginPath(); ctx.arc(tail.x, tail.y, rr, 0, 6.29); ctx.fill();
+        ctx.strokeStyle = col; ctx.lineWidth = 1.3; ctx.stroke();
+        ctx.fillStyle = col; ctx.font = `700 ${Math.floor(rr * (tag.length > 2 ? .7 : 1.05))}px ${SANS}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(tag, tail.x, tail.y + 1);
+      } else { ctx.beginPath(); ctx.arc(tail.x, tail.y, Math.max(2.2, c * .14), 0, 6.29); ctx.fill(); }
+    }
+    if (a.seal > 0){
+      const m = P[Math.floor((P.length - 1) / 2)], rr = Math.max(8, c * .32), rav = a.kind === 'ravana';
+      ctx.fillStyle = rav ? '#9b2f24' : (G.focus === a.id ? '#a59a86' : '#bdb3a0');
+      ctx.strokeStyle = G.focus === a.id ? '#d9822b' : 'rgba(110,79,54,.5)'; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.ellipse(m.x, m.y, rr * 1.15, rr * .82, 0, 0, 6.29); ctx.fill(); ctx.stroke();
+      if (rav){ ctx.fillStyle = '#e8b84a'; ctx.beginPath(); for (let k = 0; k < 5; k++){ ctx.lineTo(m.x - rr * .7 + k * rr * .35, m.y - rr * (k % 2 ? .55 : 1.05)); } ctx.lineTo(m.x + rr * .7, m.y - rr * .45); ctx.lineTo(m.x - rr * .7, m.y - rr * .45); ctx.fill(); }
+      ctx.fillStyle = rav ? '#fbe9c6' : '#fbf6ec'; ctx.font = `700 ${Math.floor(rr * .82)}px ${SANS}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(HN(a.seal), m.x, m.y + 1);
+    }
   }
   ctx.restore();
 }
-function poly(P){ ctx.beginPath(); ctx.moveTo(P[0].x, P[0].y); for (let i = 1; i < P.length; i++) ctx.lineTo(P[i].x, P[i].y); ctx.stroke(); }
-function head(P, w, col){ const h = P[P.length-1]; let p = P[P.length-2]; for (let i = P.length-2; i >= 0 && Math.hypot(h.x-P[i].x, h.y-P[i].y) < 1; i--) p = P[i];
-  const ang = Math.atan2(h.y - p.y, h.x - p.x), s = w*1.35; ctx.save(); ctx.translate(h.x, h.y); ctx.rotate(ang);
-  ctx.beginPath(); ctx.moveTo(s*1.1, 0); ctx.lineTo(-s*.45, -s*.8); ctx.quadraticCurveTo(-s*.1, 0, -s*.45, s*.8); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); ctx.restore(); }
-
-// cursive राम that writes itself as a golden arrow leaves the board
-function drawScripts(dt){
-  for (let i = G.scripts.length - 1; i >= 0; i--){
-    const s = G.scripts[i]; s.t += dt; if (s.t > 3.4){ G.scripts.splice(i, 1); continue; }
-    const wx = CX(s.gx), wy = CY(s.gy);
-    let x = (wx - VW/2) * view.z + VW/2 + view.px, y = (wy - VH/2) * view.z + VH/2 + view.py;
-    const size = Math.min(78, VW*.18);
-    x = clamp(x, size*1.2, VW - size*1.2); y = clamp(y, 150, VH - 190) - s.t*22;
-    const write = clamp(s.t / 1.1, 0, 1), fade = s.t < 2.4 ? 1 : 1 - (s.t - 2.4);
-    ctx.save(); ctx.globalAlpha = fade; ctx.translate(x, y); ctx.transform(1, 0, -.28, 1, 0, 0); ctx.rotate(-.06);
-    ctx.font = `${size}px ${SERIF}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const tw = ctx.measureText('राम').width;
-    ctx.beginPath(); ctx.rect(-tw/2 - 10, -size, (tw + 20) * ease(write), size*2); ctx.clip();          // pen reveal, left to right
-    const g = ctx.createLinearGradient(-tw/2, -size/2, tw/2, size/2); g.addColorStop(0, '#fff6d6'); g.addColorStop(.5, '#ffcf6e'); g.addColorStop(1, '#ff9d3c');
-    ctx.shadowColor = '#ff9d3c'; ctx.shadowBlur = 24; ctx.fillStyle = g; ctx.fillText('राम', 0, 0);
-    ctx.shadowBlur = 0; ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(80,30,0,.5)'; ctx.strokeText('राम', 0, 0);
-    ctx.restore();
-  }
+function polyStroke(P){ ctx.beginPath(); ctx.moveTo(P[0].x, P[0].y); for (let i = 1; i < P.length; i++) ctx.lineTo(P[i].x, P[i].y); ctx.stroke(); }
+function head(P, w, shadow){
+  const h = P[P.length - 1]; let p = P[P.length - 2];
+  for (let i = P.length - 2; i >= 0 && Math.hypot(h.x - P[i].x, h.y - P[i].y) < .5; i--) p = P[i];
+  const ang = Math.atan2(h.y - p.y, h.x - p.x), c = cell;
+  const L = Math.max(5, c * .3), Wd = Math.max(3.5, c * .19);
+  ctx.save(); ctx.translate(h.x + Math.cos(ang) * c * .12, h.y + Math.sin(ang) * c * .12); ctx.rotate(ang);
+  // short stub so the shaft meets the head
+  ctx.beginPath(); ctx.moveTo(-c * .12, 0); ctx.lineTo(0, 0); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(L * .75, 0); ctx.lineTo(-L * .25, -Wd * .5 - w * .3); ctx.lineTo(-L * .25, Wd * .5 + w * .3); ctx.closePath(); ctx.fill();
+  ctx.restore();
 }
 function drawParticles(dt){
-  for (let i = G.parts.length - 1; i >= 0; i--){ const p = G.parts[i]; p.t += dt; if (p.t > p.life){ G.parts.splice(i, 1); continue; }
-    p.vy += 40*dt; p.vx *= .99; p.x += p.vx*dt; p.y += p.vy*dt; ctx.globalAlpha = 1 - p.t/p.life; ctx.fillStyle = p.c;
-    if (p.petal){ ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.t*3); ctx.beginPath(); ctx.ellipse(0, 0, 9, 4, 0, 0, 6.29); ctx.fill(); ctx.restore(); }
-    else { ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, 6.29); ctx.fill(); } }
+  for (let i = G.particles.length - 1; i >= 0; i--){
+    const p = G.particles[i]; p.t += dt; if (p.t > p.life || p.y > VH + 30){ G.particles.splice(i, 1); continue; }
+    p.x += (p.vx + Math.sin(T * 2 + i) * 20) * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+    ctx.globalAlpha = Math.min(1, (p.life - p.t)); ctx.fillStyle = p.c;
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.beginPath(); ctx.ellipse(0, 0, 6, 3, 0, 0, 6.29); ctx.fill(); ctx.restore();
+  }
   ctx.globalAlpha = 1;
 }
 
-/* ======================= MAIN LOOP ======================= */
 let last = performance.now();
 function frame(now){
-  const dt = Math.min(.05, (now - last)/1000); last = now; T += dt;
+  const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt;
+  Sense.update(dt);
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  drawBG(dt);
+  drawBG();
   if (G.lv){
     for (const a of G.lv.arrows){
-      if (a.shake > 0) a.shake = Math.max(0, a.shake - dt*1.8);
-      if (a.flash > 0) a.flash = Math.max(0, a.flash - dt*1.4);
-      if (a.anim){
-        if (a.anim.type === 'fly'){ a.anim.s += dt*(18 + a.anim.s*3); if (a.anim.s > a.anim.pts.length){ a.anim = null; a.fade = 0; } }
-        else if (a.anim.type === 'bump'){ a.anim.t += dt; if (a.anim.t > .45) a.anim = null; }
-        else if (a.anim.type === 'dissolve'){ a.anim.t += dt; a.fade = Math.max(0, 1 - a.anim.t/1.2); if (a.anim.t > 1.2){ a.anim = null; a.fade = 0; } }
-      }
+      if (a.shake > 0) a.shake = Math.max(0, a.shake - dt * 1.8);
+      if (a.flash > 0) a.flash = Math.max(0, a.flash - dt * 1.6);
+      if (!a.anim) continue;
+      if (a.anim.type === 'fly'){ a.anim.s += dt * (12 + a.anim.s * 2.6); if (a.anim.s > a.anim.pts.length){ a.anim = null; a.fade = 0; } }
+      else if (a.anim.type === 'bump'){ a.anim.t += dt; if (a.anim.t > .42) a.anim = null; }
+      else if (a.anim.type === 'dissolve'){ a.anim.t += dt; a.fade = clamp(1 - a.anim.t / 1.1, 0, 1); if (a.anim.t > 1.1){ a.anim = null; a.fade = 0; } }
     }
-    for (let i = G.ripples.length - 1; i >= 0; i--){ G.ripples[i].t += dt; if (G.ripples[i].t > .9) G.ripples.splice(i, 1); }
+    for (let i = G.ripples.length - 1; i >= 0; i--){ G.ripples[i].t += dt; if (G.ripples[i].t > .8) G.ripples.splice(i, 1); }
     if (G.hintT > 0) G.hintT -= dt;
-    if (G.rotAnim){ G.rotAnim.t += dt/1.3; if (G.rotAnim.t >= 1){ G.rotAnim = null; rotateLevel(G.lv); layout(); } }
-    if (G.revealAnim) G.revealAnim.t += dt;
-    drawBoard(dt);
-    drawScripts(dt);
-    if (G.playing){ G.whisperT -= dt; if (G.whisperT <= 0){ whisper(); G.whisperT = 40 + Math.random()*25; }
-      G.noJap += dt; if (G.noJap > 120){ G.noJap = 0; toast('📿 एक बार "राम" — फिर आगे'); } }
+    ctx.save(); if (G.clipB){ ctx.beginPath(); ctx.rect(0, G.clipT, VW, G.clipB - G.clipT); ctx.clip(); } ctx.translate(view.x, view.y); ctx.scale(view.z, view.z);
+    drawBoard();
+    ctx.restore();
+    if (G.playing){
+      G.whisperT -= dt; if (G.whisperT <= 0){ whisper(); G.whisperT = 50 + Math.random() * 30; }
+      G.noJap += dt; if (G.noJap > 150){ G.noJap = 0; toast('📿 बहुत देर से जप नहीं हुआ… एक बार “राम”'); }
+    }
+    if (!$('still').classList.contains('hidden')) $('stillFill').style.width = (Sense.still * 100) + '%';
   }
   drawParticles(dt);
   requestAnimationFrame(frame);
 }
 
-/* ======================= START ======================= */
-$('playBtn').textContent = Save.d.level > 0 ? 'जारी रखें · स्तर ' + HN(Save.d.level + 1) : 'आरम्भ करें';
-$('playBtn').onclick = () => {
-  Snd.resume(); $('title').classList.add('hidden'); hud(true);
-  modal(`<div class="tag">संकल्प</div><h3>राम</h3>
-    <div class="msg">${withTerms("यह खेल तीर छुड़ाने का है — पर असली खेल देखने का है। हर तीर एक [[दृश्य]] है। जो देख रहा है, वह कौन है?")}</div>
-    <p>हर स्तर में १०८ से अधिक तीर हैं — एक माला। हर तीर एक घंटी। हर स्तर के बाद <b>जप-द्वार</b>।</p>
-    <p class="small">तीर छोटे हैं: ＋ बटन या दो उँगलियों से बोर्ड बड़ा कीजिए।</p>
-    <div class="row"><button class="btn ghost" id="mOn">🎙️ माइक चालू</button><button class="btn" id="mGo">चलें</button></div>`, true);
+/* ================= Flow: kands, gates, cards ================= */
+function modal(html){ $('card').innerHTML = html; $('modal').classList.remove('hidden'); }
+function closeModal(){ $('modal').classList.add('hidden'); }
+function storyCard(k, then){
+  const K = KANDS[k];
+  modal(`${icon(K.icon)}<div class="tag">काण्ड ${HN(k + 1)} / ७</div><h3>${K.name}</h3>
+    <p class="story">${K.story}</p>
+    <div class="box ddv">${K.ddv}</div><div class="box mech">${K.mech}</div>
+    <div class="row"><button class="btn" id="goBtn">आरम्भ</button></div>`);
+  $('goBtn').onclick = () => { closeModal(); then(); };
+}
+function enterLevel(i){
+  G.endless = false;
+  const k = LEVELS[i].k, first = i % 10 === 0;
+  const go = () => startLevel(i);
+  if (first && GATE_JAP[k] > 0 && Save.data.gates < k){
+    G.lv = null; updateHUD();
+    openGate(GATE_JAP[k], KANDS[k].name + ' का द्वार', () => { Save.data.gates = k; Save.write(); storyCard(k, go); });
+  } else if (first) storyCard(k, go);
+  else go();
+}
+function openGate(n, label, done, alt){ G.gate = { n:0, need:n, label, done, alt }; G.playing = false; renderGate(true); }
+function renderGate(first){
+  const g = G.gate; if (!g) return;
+  if (first || !$('gateProg')){
+    modal(`<div class="tag">जप-द्वार</div><h3>${g.label}</h3>
+      <p>यह द्वार नाम से खुलता है। <b>${HN(g.need)}</b> बार “राम” — बोलकर, या नीचे का बटन दबाकर रखकर।</p>
+      <div class="gateRam">राम</div><div class="gateProg"><div id="gateProg"></div></div>
+      <p id="gateNum" style="text-align:center;font-family:var(--serif);font-size:20px;color:var(--gold);margin:4px 0"></p>
+      <p style="font-size:13px;color:var(--ink2);text-align:center">जप करते हुए देखिए — जो “राम” सुन रहा है, वह कौन है?</p>
+      <div class="row"><button class="btn ghost" id="gMic">🎙️ बोलकर</button><button class="btn" id="gMala">राम · दबाकर रखें</button></div>
+      ${g.alt ? `<div class="row"><button class="btn ghost" id="gAlt" style="font-size:14px">${g.alt.label}</button></div>` : ''}`);
+    $('gMic').onclick = () => { if (!Jap.listening) Jap.start(); };
+    const b = $('gMala');
+    holdToChant(b, p => b.style.background = p > 0 ? `linear-gradient(90deg,#d9822b ${p * 100}%,#6e4f36 ${p * 100}%)` : '');
+    if (g.alt) $('gAlt').onclick = () => { const f = g.alt.fn; G.gate = null; closeModal(); f(); };
+  }
+  $('gateProg').style.width = Math.min(100, g.n / g.need * 100) + '%';
+  $('gateNum').textContent = HN(Math.min(g.n, g.need)) + ' / ' + HN(g.need);
+  if (g.n >= g.need){ const d = g.done; G.gate = null; Snd.win(); setTimeout(() => { closeModal(); d(); }, 650); }
+}
+function outOfBreath(){
+  openGate(11, 'संजीवनी', () => { G.breaths = 2; G.playing = true; updateHUD(); toast('हनुमान संजीवनी ले आए। जो देख रहा था, वह कभी थका ही नहीं।'); },
+    { label:'↺ स्तर फिर से', fn:() => startLevel(G.idx) });
+}
+function levelComplete(){
+  const i = G.idx, k = kandOf(i), climax = isClimax(i);
+  if (!G.endless){ Save.data.unlocked = Math.max(Save.data.unlocked, Math.min(i + 1, LEVELS.length - 1)); if (i === LEVELS.length - 1) Save.data.finished = true; Save.write(); }
+  else { Save.data.endless = Math.max(Save.data.endless, i + 1); Save.write(); }
+  const askQ = climax || i % 3 === 2;
+  const q = QUESTIONS[(i * 5 + k) % QUESTIONS.length];
+  const head = climax && !G.endless
+    ? `${icon(KANDS[k].icon, 58)}<div class="tag">${KANDS[k].name} पूर्ण</div><h3>${KANDS[k].climax}</h3><p class="story" style="text-align:center">${KANDS[k].end}</p>`
+    : `<div class="tag">स्तर ${HN(i + 1)} पूर्ण</div><h3>सब दृश्य मुक्त</h3>${G.lv && G.lv.sakshi ? '<p>सारे तीर गए — साक्षी वहीं है। वह न आया था, न गया।</p>' : `<p style="font-family:var(--serif);font-size:18px">${SUTRA[i % SUTRA.length]}</p>`}`;
+  const qa = askQ ? `<p style="font-family:var(--serif);font-size:18px;text-align:center;margin-top:14px">${q[0]}</p>
+    <div class="opts">${q[1].map((o, n) => `<button class="opt" data-k="${n}">${o}</button>`).join('')}</div><p id="qExp" style="font-size:13.5px;color:var(--ink2)"></p>` : '';
+  const isLast = !G.endless && i === LEVELS.length - 1;
+  modal(head + qa + `<div class="row ${askQ ? 'hidden' : ''}" id="nextRow"><button class="btn" id="nextBtn">${isLast ? 'इति' : 'आगे'}</button><button class="btn ghost" id="mapBtn2">काण्ड</button></div>`);
+  if (askQ) document.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (!$('nextRow').classList.contains('hidden')) return;
+    const n = +b.dataset.k;
+    document.querySelectorAll('.opt').forEach(x => { if (+x.dataset.k === q[2]) x.classList.add('right'); });
+    if (n === q[2]){ G.bonus = 1; $('qExp').innerHTML = '✔ प्रज्ञा — अगले स्तर में <b>+१ जल-बिंदु</b>। ' + q[3]; Snd.chant(); }
+    else { b.classList.add('wrong'); $('qExp').textContent = q[3]; Snd.soft(); }
+    $('nextRow').classList.remove('hidden');
+  });
+  $('nextBtn').onclick = () => { closeModal(); if (G.endless) return startLevel(i + 1); if (isLast) return finale(); enterLevel(i + 1); };
+  $('mapBtn2').onclick = showMap;
+}
+function finale(){
+  G.lv = null; updateHUD();
+  modal(`${icon('eye')}<div class="tag">इति</div><h3>दृग्-दृश्य-विवेक</h3>
+    <p class="story">धनुष टूटा, राज्य छूटा, मृग मिटा, दर्पण मुड़े, समुद्र लँघा, अहंकार गिरा, दीप जले। जिसने यह सब देखा — वह न हिला, न गया।</p>
+    <p style="font-family:var(--serif);font-size:21px;color:var(--gold);text-align:center">वह देखने वाला — तुम हो।</p>
+    <p style="font-size:13px;color:var(--ink2);text-align:center">कुल जप: ${HN(Save.data.jap)} · खेल समाप्त हो सकता है, जप नहीं।</p>
+    <div class="row"><button class="btn" id="endBtn">अनन्त अभ्यास</button><button class="btn ghost" id="mapBtn3">काण्ड</button></div>`);
+  Snd.conch(); petals(160);
+  $('endBtn').onclick = () => { closeModal(); G.endless = true; startLevel(Save.data.endless || 0); };
+  $('mapBtn3').onclick = showMap;
+}
+function showMap(){
+  const tiles = KANDS.map((K, k) => {
+    const fl = k * 10, open = fl <= Save.data.unlocked, done = Save.data.unlocked > fl + 9 || Save.data.finished;
+    const prog = Math.max(0, Math.min(10, Save.data.unlocked - fl + (done ? 0 : 0)));
+    return `<button class="kt ${open ? '' : 'locked'} ${done ? 'done' : ''}" data-l="${fl}" ${open ? '' : 'disabled'}>${icon(K.icon, 34)}<span>${K.name}<small>${done ? 'पूर्ण' : open ? HN(prog) + ' / १०' : 'जप-द्वार ' + HN(GATE_JAP[k])}</small></span></button>`;
+  }).join('');
+  modal(`<div class="tag">यात्रा</div><h3>सात काण्ड</h3><div id="kmap">${tiles}</div>
+    <p style="font-size:13px;color:var(--ink2)">कुल जप <b style="color:var(--saffron)">${HN(Save.data.jap)}</b> · विवेक-निधि ${HN(Save.data.bank)}</p>
+    <div class="row">${Save.data.finished ? '<button class="btn ghost" id="endless2">∞ अनन्त</button>' : ''}${Save.data.unlocked > 0 ? '<button class="btn" id="contBtn">स्तर ' + HN(Save.data.cur + 1) + ' जारी रखें</button>' : ''}<button class="btn ghost" id="closeMap">बंद</button></div>`);
+  document.querySelectorAll('.kt').forEach(b => b.onclick = () => {
+    if (b.disabled) return; closeModal(); hideTitle();
+    const fl = +b.dataset.l, target = Math.min(Save.data.unlocked, fl + 9);
+    enterLevel(Save.data.cur >= fl && Save.data.cur <= target ? Save.data.cur : fl);
+  });
+  if ($('contBtn')) $('contBtn').onclick = () => { closeModal(); hideTitle(); enterLevel(Math.min(Save.data.cur, Save.data.unlocked)); };
+  $('closeMap').onclick = () => { closeModal(); resumeIfPossible(); };
+  if ($('endless2')) $('endless2').onclick = () => { closeModal(); hideTitle(); G.endless = true; startLevel(Save.data.endless || 0); };
+}
+function resumeIfPossible(){ if (G.lv && !G.gate) G.playing = G.breaths > 0 && realAlive() > 0; }
+function showSettings(){
+  G.playing = false;
+  modal(`<div class="tag">विराम</div><h3>मौन क्षण</h3>
+    <p style="text-align:center;font-family:var(--serif);font-size:17px">इस क्षण, कौन जान रहा है कि खेल रुका है?</p>
+    <div class="tg"><span>शांत संगीत</span><input type="checkbox" id="musT" ${Save.data.music ? 'checked' : ''}></div>
+    <div class="tg"><span>संगीत की ध्वनि</span><input type="range" id="volT" min="0" max="1" step=".05" value="${Save.data.vol}"></div>
+    <div class="tg"><span>झुकाव का केन्द्र</span><button class="btn ghost" style="padding:5px 14px;font-size:13px;margin:0" id="calT">पुनः-केन्द्र</button></div>
+    <div class="row" style="margin-top:14px"><button class="btn" id="resT">जारी रखें</button><button class="btn ghost" id="rstT">↺ फिर से</button></div>
+    <p class="small" style="text-align:center">प्रगति कुकी में सुरक्षित है · डबल-टैप से ज़ूम सामान्य</p>`);
+  $('musT').onchange = e => { Snd.resume(); Snd.setMusic(e.target.checked); };
+  $('volT').oninput = e => Snd.setVol(+e.target.value);
+  $('calT').onclick = () => { Sense.base = null; toast('झुकाव का केन्द्र नया हुआ'); };
+  $('resT').onclick = () => { closeModal(); resumeIfPossible(); };
+  $('rstT').onclick = () => { closeModal(); if (G.lv) startLevel(G.idx); };
+}
+$('setBtn').onclick = () => { Snd.resume(); showSettings(); };
+$('backBtn').onclick = () => { Snd.resume(); G.playing = false; showMap(); };
+$('modal').addEventListener('pointerdown', e => e.stopPropagation());
+
+function hideTitle(){ $('title').classList.add('hidden'); $('hud').classList.remove('hidden'); requestAnimationFrame(layout); }
+async function firstGesture(){ Snd.resume(); await Sense.ask(); }
+$('playBtn').textContent = Save.data.unlocked > 0 ? 'जारी रखें · स्तर ' + HN(Save.data.cur + 1) : 'आरम्भ';
+$('playBtn').onclick = async () => {
+  await firstGesture(); hideTitle();
+  const i = Math.min(Save.data.cur, Save.data.unlocked);
+  modal(`${icon('mala', 58)}<div class="tag">संकल्प</div><h3>राम</h3>
+    <p>यह खेल तीरों को मुक्त करने का है — पर असली खेल देखने का है। हर तीर <b>दृश्य</b> है। जो देख रहा है, वह कौन है?</p>
+    <p>खेलते हुए मन में “राम” चलता रहे। माइक चालू करें तो आपका जप गिना जाएगा और खेल में शक्ति बनेगा।</p>
+    <div class="row"><button class="btn ghost" id="mOn">🎙️ माइक चालू</button><button class="btn" id="mGo">चलें</button></div>`);
   $('mOn').onclick = () => { Jap.start(); $('mOn').textContent = '🎙️ चालू'; };
-  $('mGo').onclick = () => { closeModal(); introLevel(Save.d.level); };
+  $('mGo').onclick = () => { closeModal(); enterLevel(i); };
 };
-$('glossBtn').onclick = () => { Snd.resume(); showGlossary(); };
-// title screen: a real painting behind the title
-(() => { const d = DARSHAN[0]; $('title').style.backgroundImage = `radial-gradient(ellipse at 50% 35%,rgba(40,20,60,.55),rgba(8,5,22,.94) 72%),url("${imgURL(d.f)}")`; })();
+$('mapBtn').onclick = async () => { await firstGesture(); showMap(); };
+
 resize();
 requestAnimationFrame(frame);
-window.__G = G; window.__make = makeLevel; window.__spec = levelSpec; window.__trace = trace; window.__rot = rotateLevel;
-
+window.__G = G; window.__make = makeLevel; window.__LEVELS = LEVELS; window.__scan = scan;
 </script>
 </body>
 </html>
