@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PackIQ — Smart Travel Packing, Wardrobe & Color Harmony Coordinator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-paper: #FAF8F5;
+      --ink-900: #141413;
+      --ink-600: #575653;
+      --border-hairline: #E4E1DA;
+      --accent-navy: #1E3A5F;
+    }
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink-900);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-ed { font-family: 'Newsreader', Georgia, serif; }
+    .font-mono-ed { font-family: 'JetBrains Mono', monospace; }
+    .hairline-border { border: 1px solid var(--border-hairline); }
+    .card-surface { background: #FFFFFF; border: 1px solid var(--border-hairline); }
+    input[type="checkbox"] { accent-color: #1E3A5F; }
+  </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-12">
+
+  <!-- TOP EDITORIAL HEADER + COMPLETION BAR -->
+  <header class="sticky top-0 z-30 bg-[#FAF8F5]/95 backdrop-blur border-b border-[#E4E1DA]">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded bg-[#141413] text-[#FAF8F5] flex items-center justify-center font-serif-ed font-semibold text-lg">P</div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-serif-ed text-xl font-semibold tracking-tight">PackIQ</h1>
+            <span id="cloudStatusBadge" class="text-[11px] font-mono-ed px-2 py-0.5 rounded bg-amber-100 text-amber-900">Connecting...</span>
+          </div>
+          <p class="text-xs text-[#575653]">Smart Packing, Local-Photo Wardrobe & Color Harmony Matrix</p>
+        </div>
+      </div>
+
+      <!-- Auth Controls -->
+      <div class="flex items-center gap-2">
+        <div id="userProfileChip" class="hidden items-center gap-2 px-2.5 py-1 rounded bg-white hairline-border text-xs">
+          <span id="userEmailLabel" class="font-mono-ed text-[#141413] truncate max-w-[160px]"></span>
+          <button onclick="window.handleSignOut()" class="text-red-700 hover:underline font-medium ml-1">Sign out</button>
+        </div>
+        <button id="openAuthBtn" onclick="window.openAuthModal()" class="px-3.5 py-1.5 rounded bg-[#141413] text-white text-xs font-medium hover:bg-[#2c2c2a] transition">
+          Sign In / Create Account
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Readiness Completion Bar -->
+    <div class="max-w-6xl mx-auto px-4 pb-2.5">
+      <div class="flex items-center justify-between text-xs mb-1">
+        <span class="font-mono-ed uppercase tracking-wider text-[11px] text-[#575653]">Suitcase Readiness</span>
+        <span id="completionStats" class="font-mono-ed font-semibold text-[#141413]">0 / 0 Packed (0%)</span>
+      </div>
+      <div class="w-full h-2 bg-[#E4E1DA] rounded-full overflow-hidden">
+        <div id="completionBarFill" class="h-full bg-[#1E3A5F] transition-all duration-300" style="width: 0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="max-w-6xl mx-auto px-4 pt-6">
+
+    <!-- TRIP PARAMETERS BAR -->
+    <section class="card-surface rounded-lg p-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <div>
+          <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Trip Mode</label>
+          <select id="tripModeSelect" onchange="window.updateTripConfig()" class="w-full px-3 py-2 rounded hairline-border text-sm bg-[#FAF8F5] font-medium">
+            <option value="vacation">Vacation Only</option>
+            <option value="business">Business Trip Only</option>
+            <option value="hybrid">Business + Vacation Hybrid</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Total Duration (1–30 Days): <span id="daysValueLabel" class="font-bold text-[#141413]">5 Days</span></label>
+          <input id="tripDaysInput" type="range" min="1" max="30" value="5" oninput="window.updateTripConfig()" class="w-full accent-[#1E3A5F]" />
+        </div>
+        <div id="bizDaysContainer" class="hidden">
+          <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Business Days: <span id="bizDaysLabel" class="font-bold text-[#141413]">3 Days</span></label>
+          <input id="bizDaysInput" type="range" min="1" max="30" value="3" oninput="window.updateTripConfig()" class="w-full accent-[#1E3A5F]" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Climate Profile</label>
+          <select id="climateSelect" onchange="window.updateTripConfig()" class="w-full px-3 py-2 rounded hairline-border text-sm bg-[#FAF8F5] font-medium">
+            <option value="temperate">Temperate / Mild (12°C–22°C)</option>
+            <option value="warm">Tropical / Warm (23°C+)</option>
+            <option value="cold">Cold / Nordic Winter (&lt;10°C)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <div class="flex border-b border-[#E4E1DA] mb-6 gap-6 overflow-x-auto">
+      <button onclick="window.switchTab('checklist')" id="tabBtn-checklist" class="pb-2.5 text-sm font-semibold border-b-2 border-[#141413] text-[#141413] whitespace-nowrap">
+        1. Smart Packing Checklist
+      </button>
+      <button onclick="window.switchTab('wardrobe')" id="tabBtn-wardrobe" class="pb-2.5 text-sm font-medium border-b-2 border-transparent text-[#575653] whitespace-nowrap">
+        2. Digital Wardrobe & Camera Color Scanner (<span id="wardrobeCountBadge">0</span>)
+      </button>
+      <button onclick="window.switchTab('outfits')" id="tabBtn-outfits" class="pb-2.5 text-sm font-medium border-b-2 border-transparent text-[#575653] whitespace-nowrap">
+        3. Color Harmony & Daily Outfit Matrix
+      </button>
+    </div>
+
+    <!-- TAB 1: PACKING CHECKLIST -->
+    <section id="tabPanel-checklist" class="space-y-6">
+      <div class="card-surface rounded-lg p-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="font-serif-ed text-lg font-semibold">Calculated Packing Manifest</h2>
+          <p id="manifestFormulaNote" class="text-xs text-[#575653]"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input id="customItemInput" type="text" placeholder="Add custom item (e.g., Presentation Clicker)..." class="px-3 py-1.5 text-xs rounded hairline-border bg-[#FAF8F5] w-56" />
+          <select id="customCategorySelect" class="px-2.5 py-1.5 text-xs rounded hairline-border bg-[#FAF8F5]">
+            <option value="Clothing">Clothing</option>
+            <option value="Business">Business</option>
+            <option value="Toiletries">Toiletries</option>
+            <option value="Tech & Docs">Tech & Docs</option>
+          </select>
+          <button onclick="window.addCustomItem()" class="px-3 py-1.5 rounded bg-[#141413] text-white text-xs font-medium">+ Add</button>
+        </div>
+      </div>
+
+      <div id="checklistGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- TAB 2: DIGITAL WARDROBE (DEVICE-ONLY PHOTO + CLOUD COLOR METADATA) -->
+    <section id="tabPanel-wardrobe" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Add Garment Card -->
+        <div class="card-surface rounded-lg p-5 space-y-4">
+          <div>
+            <h2 class="font-serif-ed text-lg font-semibold">Scan or Add Garment</h2>
+            <p class="text-xs text-[#575653] mt-0.5">Photos stay 100% on your device (IndexedDB). Only extracted hex colors & metadata sync to your Firebase cloud vault.</p>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">1. Snap or Select Cloth Photo</label>
+            <input id="clothPhotoInput" type="file" accept="image/*" capture="environment" onchange="window.handleClothPhotoUpload(event)" class="w-full text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-[#141413] file:text-white cursor-pointer" />
+            <canvas id="colorCanvas" class="hidden"></canvas>
+            <div id="photoPreviewWrap" class="hidden mt-3 flex items-center gap-3 p-2 rounded bg-[#FAF8F5] hairline-border">
+              <img id="photoPreviewImg" class="w-16 h-16 object-cover rounded hairline-border" alt="Cloth preview" />
+              <div class="text-xs space-y-1">
+                <div class="font-medium">Extracted Palette:</div>
+                <div class="flex items-center gap-2">
+                  <span id="swatchPrimary" class="inline-block w-5 h-5 rounded-full border border-black/20"></span>
+                  <span id="swatchSecondary" class="inline-block w-5 h-5 rounded-full border border-black/20"></span>
+                  <span id="extractedHexLabel" class="font-mono-ed text-[11px] text-[#575653]"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Garment Name</label>
+              <input id="garmentNameInput" type="text" placeholder="e.g., Oxford Shirt" class="w-full px-3 py-1.5 rounded hairline-border text-xs bg-[#FAF8F5]" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Type</label>
+              <select id="garmentRoleSelect" class="w-full px-2.5 py-1.5 rounded hairline-border text-xs bg-[#FAF8F5]">
+                <option value="top">Top (Shirt / Polo / Knit)</option>
+                <option value="bottom">Bottom (Trousers / Chinos / Jeans)</option>
+                <option value="layer">Layer (Blazer / Suit Jacket / Coat)</option>
+                <option value="shoes">Footwear</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Primary Color</label>
+              <div class="flex items-center gap-2">
+                <input id="primaryHexInput" type="color" value="#1E3A5F" class="w-8 h-8 rounded cursor-pointer border-0" />
+                <input id="colorNameInput" type="text" value="Navy Blue" placeholder="Color name" class="w-full px-2.5 py-1.5 rounded hairline-border text-xs bg-[#FAF8F5]" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-mono-ed uppercase text-[#575653] mb-1">Formality</label>
+              <select id="garmentFormalitySelect" class="w-full px-2.5 py-1.5 rounded hairline-border text-xs bg-[#FAF8F5]">
+                <option value="business">Business Formal / Smart</option>
+                <option value="versatile">Versatile (Biz + Casual)</option>
+                <option value="casual">Vacation / Casual</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="window.saveGarmentToWardrobe()" class="w-full py-2 rounded bg-[#1E3A5F] text-white text-xs font-semibold hover:opacity-95 transition">
+            Save Garment (Metadata to Cloud, Photo on Device)
+          </button>
+        </div>
+
+        <!-- Wardrobe Inventory Grid -->
+        <div class="lg:col-span-2 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-serif-ed text-lg font-semibold">Your Saved Wardrobe</h3>
+            <button onclick="window.loadSampleWardrobe()" class="text-xs font-mono-ed underline text-[#1E3A5F]">+ Load Capsule Sample Wardrobe</button>
+          </div>
+          <div id="wardrobeGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: COLOR HARMONY & OUTFIT PLANNER -->
+    <section id="tabPanel-outfits" class="hidden space-y-6">
+      <div class="card-surface rounded-lg p-5">
+        <h2 class="font-serif-ed text-lg font-semibold">What to Pack from Your Wardrobe & Daily Color-Matched Outfits</h2>
+        <p class="text-xs text-[#575653] mt-0.5">Evaluates HSL color harmony (complementary, analogous, neutral-anchor) across your saved tops, bottoms, and blazers for each day of your trip.</p>
+        <div id="recommendedPackSummary" class="mt-4"></div>
+      </div>
+
+      <div id="dailyOutfitsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+  </main>
+
+  <!-- AUTH MODAL (GOOGLE SIGN-IN + EMAIL/PASSWORD) -->
+  <div id="authModal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card-surface rounded-xl max-w-md w-full p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-serif-ed text-xl font-semibold">Cloud Account Sign-In</h3>
+        <button onclick="window.closeAuthModal()" class="text-sm text-[#575653] hover:text-black">✕</button>
+      </div>
+      <p class="text-xs text-[#575653]">Sign in to sync your packing checklist, trip days, and extracted cloth colors across all devices via your <code>packiq-cloud</code> Firebase server.</p>
+
+      <button onclick="window.signInWithGoogle()" class="w-full py-2.5 px-4 rounded hairline-border bg-white hover:bg-[#FAF8F5] text-xs font-semibold flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-[#E4E1DA]"></div>
+        <span class="flex-shrink mx-3 text-[11px] font-mono-ed text-[#575653]">OR EMAIL & PASSWORD</span>
+        <div class="flex-grow border-t border-[#E4E1DA]"></div>
+      </div>
+
+      <div class="space-y-2.5">
+        <input id="authEmailInput" type="email" placeholder="Email address" class="w-full px-3 py-2 rounded hairline-border text-xs bg-[#FAF8F5]" />
+        <input id="authPassInput" type="password" placeholder="Password (min 6 chars)" class="w-full px-3 py-2 rounded hairline-border text-xs bg-[#FAF8F5]" />
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="window.handleEmailAuth('login')" class="py-2 rounded bg-[#141413] text-white text-xs font-medium">Sign In</button>
+          <button onclick="window.handleEmailAuth('register')" class="py-2 rounded bg-[#1E3A5F] text-white text-xs font-medium">Create Account</button>
+        </div>
+      </div>
+      <p id="authErrorMsg" class="text-xs text-red-700 font-mono-ed hidden"></p>
+    </div>
+  </div>
+
+  <!-- FIREBASE & APPLICATION SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Wired directly to your packiq-cloud Firebase project
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyCdS6qCwnn_U6RhDJ3N370bPkui0dp8W4g",
+      authDomain: "packiq-cloud.firebaseapp.com",
+      projectId: "packiq-cloud",
+      storageBucket: "packiq-cloud.firebasestorage.app",
+      messagingSenderId: "225432217927",
+      appId: "1:225432217927:web:f2a5f25c8b5f83a5e08462",
+      measurementId: "G-Z00G4MTYHF"
+    };
+
+    const APP_ID = "packiq-production-v1";
+    const app = initializeApp(FIREBASE_CONFIG);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Application State (Synced to Cloud Firestore; Photos kept in Device IndexedDB)
+    let state = {
+      tripMode: "vacation",
+      tripDays: 5,
+      bizDays: 3,
+      climate: "temperate",
+      checkedIds: {},
+      customItems: [],
+      wardrobe: []
+    };
+
+    let currentUser = null;
+    let pendingPhotoDataUrl = null;
+    let pendingSecondaryHex = "#575653";
+    let localPhotosCache = {};
+
+    // ---------------- DEVICE-ONLY INDEXEDDB PHOTO STORAGE ----------------
+    function openPhotoDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open("PackIQ_LocalPhotos_DB", 1);
+        req.onupgradeneeded = (e) => {
+          e.target.result.createObjectStore("photos", { keyPath: "id" });
+        };
+        req.onsuccess = (e) => resolve(e.target.result);
+        req.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function savePhotoLocally(id, dataUrl) {
+      if (!dataUrl) return;
+      localPhotosCache[id] = dataUrl;
+      const idb = await openPhotoDB();
+      const tx = idb.transaction("photos", "readwrite");
+      tx.objectStore("photos").put({ id, dataUrl });
+    }
+
+    async function loadAllLocalPhotos() {
+      try {
+        const idb = await openPhotoDB();
+        return new Promise((resolve) => {
+          const tx = idb.transaction("photos", "readonly");
+          const req = tx.objectStore("photos").getAll();
+          req.onsuccess = () => {
+            (req.result || []).forEach(item => { localPhotosCache[item.id] = item.dataUrl; });
+            resolve();
+          };
+          req.onerror = () => resolve();
+        });
+      } catch {
+        return;
+      }
+    }
+
+    // ---------------- CLOUD FIRESTORE SYNC ----------------
+    async function syncToCloud() {
+      localStorage.setItem("packiq_fallback_state", JSON.stringify(state));
+      if (!currentUser) return;
+
+      const badge = document.getElementById("cloudStatusBadge");
+      badge.textContent = "Saving to Cloud...";
+
+      try {
+        const vaultRef = doc(db, "artifacts", APP_ID, "users", currentUser.uid, "packiq", "vault");
+        await setDoc(vaultRef, {
+          ...state,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        // Also update public directory so Admin can view active users in Firestore
+        const { packed, total } = getCompletionCounts();
+        const dirRef = doc(db, "artifacts", APP_ID, "public", "data", "user_directory", currentUser.uid);
+        await setDoc(dirRef, {
+          uid: currentUser.uid,
+          email: currentUser.email || "Anonymous",
+          displayName: currentUser.displayName || currentUser.email || "User",
+          tripMode: state.tripMode,
+          tripDays: state.tripDays,
+          wardrobeCount: state.wardrobe.length,
+          completionPct: total ? Math.round((packed / total) * 100) : 0,
+          lastActiveAt: serverTimestamp()
+        }, { merge: true });
+
+        badge.textContent = "Synced • packiq-cloud";
+        badge.className = "text-[11px] font-mono-ed px-2 py-0.5 rounded bg-emerald-100 text-emerald-900";
+      } catch (err) {
+        console.error("Cloud sync error:", err);
+        badge.textContent = "Local Saved (Check Firestore Rules)";
+        badge.className = "text-[11px] font-mono-ed px-2 py-0.5 rounded bg-amber-100 text-amber-900";
+      }
+    }
+
+    async function loadFromCloud(uid) {
+      try {
+        const vaultRef = doc(db, "artifacts", APP_ID, "users", uid, "packiq", "vault");
+        const snap = await getDoc(vaultRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          state = {
+            tripMode: data.tripMode || "vacation",
+            tripDays: data.tripDays || 5,
+            bizDays: data.bizDays || 3,
+            climate: data.climate || "temperate",
+            checkedIds: data.checkedIds || {},
+            customItems: data.customItems || [],
+            wardrobe: data.wardrobe || []
+          };
+        }
+      } catch (err) {
+        console.error("Load error:", err);
+      }
+      syncControlsFromState();
+      renderAll();
+    }
+
+    // ---------------- SMART CHECKLIST GENERATOR ----------------
+    function generateManifestItems() {
+      const days = Number(state.tripDays) || 1;
+      const mode = state.tripMode;
+      const bizDays = mode === "hybrid" ? Math.min(days, Number(state.bizDays) || 1) : (mode === "business" ? days : 0);
+      const vacDays = Math.max(0, days - bizDays);
+
+      const items = [];
+      const add = (id, label, category) => items.push({ id, label, category });
+
+      // Core Essentials
+      add("doc_id", "Passport / National ID & Boarding Passes", "Tech & Docs");
+      add("doc_wallet", "Payment Cards & Emergency Cash", "Tech & Docs");
+      add("tech_phone", "Smartphone + Charger Cable + Power Bank", "Tech & Docs");
+      add("tech_adapter", "Universal Travel Power Adapter", "Tech & Docs");
+
+      // Clothing quantities scaled to days
+      add("cloth_under", `Undergarments (${days + 1} pairs)`, "Clothing");
+      add("cloth_socks", `Socks (${days + 1} pairs)`, "Clothing");
+      add("cloth_sleep", `Sleepwear (${Math.max(1, Math.ceil(days / 4))} sets)`, "Clothing");
+
+      if (bizDays > 0) {
+        add("biz_shirts", `Pressed Business Shirts / Blouses (${bizDays}x)`, "Business");
+        add("biz_trousers", `Tailored Dress Trousers / Chinos (${Math.max(1, Math.ceil(bizDays / 2))}x)`, "Business");
+        add("biz_blazer", `Structured Blazer / Suit Jacket (${bizDays >= 4 ? 2 : 1}x)`, "Business");
+        add("biz_shoes", "Formal Dress Shoes + Belt", "Business");
+        add("biz_laptop", "Work Laptop + Charger + Presentation Adapter", "Business");
+        add("biz_cards", "Company Badge / Business Cards", "Business");
+      }
+
+      if (vacDays > 0) {
+        add("vac_tops", `Casual Tees / Polos / Tops (${vacDays}x)`, "Clothing");
+        add("vac_bottoms", `Casual Chinos / Shorts / Denim (${Math.max(1, Math.ceil(vacDays / 2))}x)`, "Clothing");
+        add("vac_shoes", "Comfortable Walking Sneakers", "Clothing");
+      }
+
+      // Climate additions
+      if (state.climate === "cold") {
+        add("clim_coat", "Insulated Winter Coat / Thermal Outer Layer", "Clothing");
+        add("clim_thermal", "Thermal Base Layer & Knit Sweater", "Clothing");
+        add("clim_gloves", "Gloves, Scarf & Warm Beanie", "Clothing");
+      } else if (state.climate === "warm") {
+        add("clim_sun", "Sunglasses, Sun Hat & SPF 50 Sunscreen", "Toiletries");
+        add("clim_linen", "Breathable Linen Layer", "Clothing");
+      } else {
+        add("clim_light", "Light Weatherproof Jacket / Cardigan", "Clothing");
+      }
+
+      // Toiletries
+      add("toil_brush", "Toothbrush, Toothpaste & Floss", "Toiletries");
+      add("toil_deo", "Deodorant & Cologne / Roll-on (<=100ml)", "Toiletries");
+      add("toil_meds", "Personal First-Aid & Essential Medications", "Toiletries");
+
+      // Custom user items
+      state.customItems.forEach(c => add(c.id, c.label, c.category));
+      return items;
+    }
+
+    function getCompletionCounts() {
+      const items = generateManifestItems();
+      const packed = items.filter(i => state.checkedIds[i.id]).length;
+      return { packed, total: items.length };
+    }
+
+    // ---------------- COLOR HARMONY ENGINE ----------------
+    function hexToHsl(hex) {
+      let c = (hex || "#1E3A5F").replace("#", "");
+      if (c.length === 3) c = c.split("").map(x => x + x).join("");
+      const r = parseInt(c.substr(0, 2), 16) / 255;
+      const g = parseInt(c.substr(2, 2), 16) / 255;
+      const b = parseInt(c.substr(4, 2), 16) / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h = 0, s = 0, l = (max + min) / 2;
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    function evaluateColorPairing(hexA, hexB) {
+      const a = hexToHsl(hexA);
+      const b = hexToHsl(hexB);
+      const isNeutralA = a.s < 18 || a.l < 18 || a.l > 88;
+      const isNeutralB = b.s < 18 || b.l < 18 || b.l > 88;
+      const contrast = Math.abs(a.l - b.l);
+
+      if (isNeutralA && isNeutralB) {
+        return { score: 88, rule: "Monochrome Neutral Anchor — Clean tailored pairing" };
+      }
+      if (isNeutralA || isNeutralB) {
+        return { score: 94 + (contrast > 25 ? 4 : 0), rule: "Neutral Anchor + Chromatic Accent — High versatility" };
+      }
+      const hueDiff = Math.min(Math.abs(a.h - b.h), 360 - Math.abs(a.h - b.h));
+      if (hueDiff >= 150 && hueDiff <= 210) {
+        return { score: 91, rule: "Complementary Hue Balance — Sharp visual contrast" };
+      }
+      if (hueDiff <= 45) {
+        return { score: 86, rule: "Analogous Tonal Harmony — Cohesive neighboring palette" };
+      }
+      return { score: 74, rule: "Balanced Smart-Casual Contrast" };
+    }
+
+    // ---------------- CAMERA / PHOTO COLOR EXTRACTION ----------------
+    window.handleClothPhotoUpload = function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.getElementById("colorCanvas");
+          const ctx = canvas.getContext("2d");
+          const size = 140;
+          canvas.width = size;
+          canvas.height = size;
+          ctx.drawImage(img, 0, 0, size, size);
+          pendingPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.78);
+
+          // Sample center region for primary & secondary cloth colors
+          const data = ctx.getImageData(35, 35, 70, 70).data;
+          let r1 = 0, g1 = 0, b1 = 0, count1 = 0;
+          let r2 = 0, g2 = 0, b2 = 0, count2 = 0;
+          for (let i = 0; i < data.length; i += 16) {
+            if (i % 32 === 0) {
+              r1 += data[i]; g1 += data[i + 1]; b1 += data[i + 2]; count1++;
+            } else {
+              r2 += data[i]; g2 += data[i + 1]; b2 += data[i + 2]; count2++;
+            }
+          }
+          const toHex = (n) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+          const pHex = `#${toHex(r1 / count1)}${toHex(g1 / count1)}${toHex(b1 / count1)}`.toUpperCase();
+          pendingSecondaryHex = `#${toHex(r2 / count2)}${toHex(g2 / count2)}${toHex(b2 / count2)}`.toUpperCase();
+
+          document.getElementById("primaryHexInput").value = pHex;
+          document.getElementById("colorNameInput").value = nameFromHex(pHex);
+          document.getElementById("photoPreviewWrap").classList.remove("hidden");
+          document.getElementById("photoPreviewImg").src = pendingPhotoDataUrl;
+          document.getElementById("swatchPrimary").style.backgroundColor = pHex;
+          document.getElementById("swatchSecondary").style.backgroundColor = pendingSecondaryHex;
+          document.getElementById("extractedHexLabel").textContent = `${pHex} / ${pendingSecondaryHex}`;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function nameFromHex(hex) {
+      const { h, s, l } = hexToHsl(hex);
+      if (l < 16) return "Charcoal Black";
+      if (l > 88 && s < 20) return "Crisp White";
+      if (s < 16) return l < 50 ? "Slate Grey" : "Stone / Light Grey";
+      if (h >= 195 && h <= 255) return l < 40 ? "Navy Blue" : "Oxford Sky Blue";
+      if (h >= 20 && h <= 50) return l > 65 ? "Sand / Khaki" : "Espresso Brown";
+      if (h >= 85 && h <= 165) return "Olive / Forest Green";
+      if (h < 20 || h >= 340) return "Burgundy / Crimson";
+      return "Tailored Accent";
+    }
+
+    // ---------------- WARDROBE MANAGEMENT ----------------
+    window.saveGarmentToWardrobe = async function() {
+      const name = document.getElementById("garmentNameInput").value.trim() || "Tailored Garment";
+      const role = document.getElementById("garmentRoleSelect").value;
+      const primaryHex = document.getElementById("primaryHexInput").value;
+      const colorName = document.getElementById("colorNameInput").value.trim() || nameFromHex(primaryHex);
+      const formality = document.getElementById("garmentFormalitySelect").value;
+
+      const id = "g_" + Date.now();
+      if (pendingPhotoDataUrl) {
+        await savePhotoLocally(id, pendingPhotoDataUrl);
+      }
+
+      // Only color metadata goes into Cloud Firestore state
+      state.wardrobe.push({
+        id,
+        name,
+        role,
+        primaryHex,
+        secondaryHex: pendingSecondaryHex,
+        colorName,
+        formality,
+        hasLocalPhoto: Boolean(pendingPhotoDataUrl)
+      });
+
+      pendingPhotoDataUrl = null;
+      document.getElementById("garmentNameInput").value = "";
+      document.getElementById("clothPhotoInput").value = "";
+      document.getElementById("photoPreviewWrap").classList.add("hidden");
+
+      renderAll();
+      await syncToCloud();
+    };
+
+    window.removeGarment = async function(id) {
+      state.wardrobe = state.wardrobe.filter(g => g.id !== id);
+      renderAll();
+      await syncToCloud();
+    };
+
+    window.loadSampleWardrobe = async function() {
+      const samples = [
+        { id: "s1", name: "Crisp White Oxford Shirt", role: "top", primaryHex: "#F4F4F2", secondaryHex: "#E2E2DE", colorName: "Crisp White", formality: "versatile" },
+        { id: "s2", name: "Sky Blue Poplin Dress Shirt", role: "top", primaryHex: "#A8C3DC", secondaryHex: "#89A9C6", colorName: "Oxford Sky Blue", formality: "business" },
+        { id: "s3", name: "Fine Merino Charcoal Polo", role: "top", primaryHex: "#36383B", secondaryHex: "#242527", colorName: "Charcoal Grey", formality: "versatile" },
+        { id: "s4", name: "Olive Linen Casual Shirt", role: "top", primaryHex: "#556347", secondaryHex: "#434E38", colorName: "Olive Green", formality: "casual" },
+        { id: "s5", name: "Tailored Navy Wool Trousers", role: "bottom", primaryHex: "#1E2D42", secondaryHex: "#152030", colorName: "Navy Blue", formality: "business" },
+        { id: "s6", name: "Sand Stretch Chinos", role: "bottom", primaryHex: "#CBB89D", secondaryHex: "#B5A184", colorName: "Sand Khaki", formality: "versatile" },
+        { id: "s7", name: "Unstructured Navy Blazer", role: "layer", primaryHex: "#1B2A4A", secondaryHex: "#142038", colorName: "Midnight Navy", formality: "business" }
+      ];
+      state.wardrobe = [...state.wardrobe, ...samples];
+      renderAll();
+      await syncToCloud();
+    };
+
+    // ---------------- UI RENDERERS ----------------
+    function renderAll() {
+      renderChecklist();
+      renderWardrobe();
+      renderOutfitMatrix();
+    }
+
+    function renderChecklist() {
+      const items = generateManifestItems();
+      const { packed, total } = getCompletionCounts();
+      const pct = total ? Math.round((packed / total) * 100) : 0;
+
+      document.getElementById("completionStats").textContent = `${packed} / ${total} Packed (${pct}%)`;
+      document.getElementById("completionBarFill").style.width = `${pct}%`;
+
+      const days = state.tripDays;
+      const bizDays = state.tripMode === "hybrid" ? Math.min(days, state.bizDays) : (state.tripMode === "business" ? days : 0);
+      const vacDays = Math.max(0, days - bizDays);
+      document.getElementById("manifestFormulaNote").textContent =
+        `Scaled for ${days} total day(s): ${bizDays} Business day(s) + ${vacDays} Vacation day(s) • Climate: ${state.climate}`;
+
+      const categories = ["Business", "Clothing", "Toiletries", "Tech & Docs"];
+      const grid = document.getElementById("checklistGrid");
+      grid.innerHTML = categories.map(cat => {
+        const catItems = items.filter(i => i.category === cat);
+        if (!catItems.length) return "";
+        return `
+          <div class="card-surface rounded-lg p-4">
+            <div class="flex items-center justify-between border-b border-[#E4E1DA] pb-2 mb-3">
+              <h3 class="font-mono-ed text-xs uppercase tracking-wider font-semibold">${cat}</h3>
+              <span class="font-mono-ed text-[11px] text-[#575653]">${catItems.filter(i => state.checkedIds[i.id]).length}/${catItems.length}</span>
+            </div>
+            <div class="space-y-2">
+              ${catItems.map(item => `
+                <label class="flex items-center gap-2.5 text-xs cursor-pointer select-none py-1">
+                  <input type="checkbox" ${state.checkedIds[item.id] ? "checked" : ""} onchange="window.toggleCheckItem('${item.id}')" class="w-4 h-4 rounded" />
+                  <span class="${state.checkedIds[item.id] ? "line-through text-[#575653]" : "text-[#141413] font-medium"}">${item.label}</span>
+                </label>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderWardrobe() {
+      document.getElementById("wardrobeCountBadge").textContent = state.wardrobe.length;
+      const grid = document.getElementById("wardrobeGrid");
+      if (!state.wardrobe.length) {
+        grid.innerHTML = `
+          <div class="col-span-2 card-surface rounded-lg p-8 text-center text-xs text-[#575653]">
+            No garments scanned yet. Take a photo of your clothes on the left or click <strong>+ Load Capsule Sample Wardrobe</strong> to test color matching immediately.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = state.wardrobe.map(g => {
+        const localPhoto = localPhotosCache[g.id];
+        return `
+          <div class="card-surface rounded-lg p-3 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              ${localPhoto
+                ? `<img src="${localPhoto}" class="w-12 h-12 rounded object-cover hairline-border" alt="${g.name}" />`
+                : `<div class="w-12 h-12 rounded hairline-border flex items-center justify-center font-mono-ed text-[10px] text-white" style="background:${g.primaryHex}">${g.primaryHex}</div>`
+              }
+              <div>
+                <div class="text-xs font-semibold text-[#141413]">${g.name}</div>
+                <div class="text-[11px] text-[#575653] flex items-center gap-1.5 mt-0.5">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full border border-black/20" style="background:${g.primaryHex}"></span>
+                  <span>${g.colorName}</span> • <span class="uppercase font-mono-ed text-[10px]">${g.role}</span> • <span>${g.formality}</span>
+                </div>
+              </div>
+            </div>
+            <button onclick="window.removeGarment('${g.id}')" class="text-xs text-[#575653] hover:text-red-700 px-2">Remove</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderOutfitMatrix() {
+      const tops = state.wardrobe.filter(g => g.role === "top");
+      const bottoms = state.wardrobe.filter(g => g.role === "bottom");
+      const layers = state.wardrobe.filter(g => g.role === "layer");
+
+      const summaryEl = document.getElementById("recommendedPackSummary");
+      const outfitsGrid = document.getElementById("dailyOutfitsGrid");
+
+      if (!tops.length || !bottoms.length) {
+        summaryEl.innerHTML = `
+          <div class="p-3 rounded bg-[#FAF8F5] hairline-border text-xs text-[#575653]">
+            Add at least <strong>1 Top</strong> and <strong>1 Bottom</strong> in Tab 2 (or load the sample capsule) to generate daily color-harmonized outfits and packing selections.
+          </div>
+        `;
+        outfitsGrid.innerHTML = "";
+        return;
+      }
+
+      const days = Number(state.tripDays) || 1;
+      const bizDays = state.tripMode === "hybrid" ? Math.min(days, Number(state.bizDays) || 1) : (state.tripMode === "business" ? days : 0);
+
+      const dailyPlan = [];
+      const chosenIds = new Set();
+
+      for (let d = 1; d <= days; d++) {
+        const isBizDay = d <= bizDays;
+        const eligibleTops = tops.filter(t => isBizDay ? t.formality !== "casual" : true);
+        const eligibleBottoms = bottoms.filter(b => isBizDay ? b.formality !== "casual" : true);
+        const topPool = eligibleTops.length ? eligibleTops : tops;
+        const bottomPool = eligibleBottoms.length ? eligibleBottoms : bottoms;
+
+        const top = topPool[(d - 1) % topPool.length];
+        let bestBottom = bottomPool[0];
+        let bestEval = evaluateColorPairing(top.primaryHex, bestBottom.primaryHex);
+
+        bottomPool.forEach(b => {
+          const ev = evaluateColorPairing(top.primaryHex, b.primaryHex);
+          if (ev.score > bestEval.score) {
+            bestEval = ev;
+            bestBottom = b;
+          }
+        });
+
+        const layer = isBizDay && layers.length ? layers[(d - 1) % layers.length] : null;
+        chosenIds.add(top.id);
+        chosenIds.add(bestBottom.id);
+        if (layer) chosenIds.add(layer.id);
+
+        dailyPlan.push({
+          day: d,
+          type: isBizDay ? "Business Day" : "Vacation / Leisure Day",
+          top,
+          bottom: bestBottom,
+          layer,
+          harmony: bestEval
+        });
+      }
+
+      const recommendedGarments = state.wardrobe.filter(g => chosenIds.has(g.id));
+      summaryEl.innerHTML = `
+        <div class="p-3 rounded bg-[#FAF8F5] hairline-border">
+          <div class="text-xs font-semibold mb-2">Recommended Garments to Pack from Your Wardrobe (${recommendedGarments.length} items cover all ${days} days):</div>
+          <div class="flex flex-wrap gap-2">
+            ${recommendedGarments.map(g => `
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-white hairline-border text-xs">
+                <span class="w-2.5 h-2.5 rounded-full" style="background:${g.primaryHex}"></span>
+                ${g.name}
+              </span>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      outfitsGrid.innerHTML = dailyPlan.map(p => `
+        <div class="card-surface rounded-lg p-4 space-y-2.5">
+          <div class="flex items-center justify-between border-b border-[#E4E1DA] pb-2">
+            <span class="font-mono-ed text-xs font-semibold">DAY ${p.day} • ${p.type.toUpperCase()}</span>
+            <span class="font-mono-ed text-[11px] px-2 py-0.5 rounded bg-[#FAF8F5] hairline-border">${p.harmony.score}% Harmony</span>
+          </div>
+          <div class="space-y-1.5 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full border border-black/20" style="background:${p.top.primaryHex}"></span>
+              <strong>Top:</strong> ${p.top.name} (${p.top.colorName})
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3.5 h-3.5 rounded-full border border-black/20" style="background:${p.bottom.primaryHex}"></span>
+              <strong>Bottom:</strong> ${p.bottom.name} (${p.bottom.colorName})
+            </div>
+            ${p.layer ? `
+              <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded-full border border-black/20" style="background:${p.layer.primaryHex}"></span>
+                <strong>Layer:</strong> ${p.layer.name} (${p.layer.colorName})
+              </div>
+            ` : ""}
+          </div>
+          <p class="text-[11px] text-[#575653] font-mono-ed pt-1">${p.harmony.rule}</p>
+        </div>
+      `).join("");
+    }
+
+    // ---------------- INTERACTIVE HANDLERS ----------------
+    function syncControlsFromState() {
+      document.getElementById("tripModeSelect").value = state.tripMode;
+      document.getElementById("tripDaysInput").value = state.tripDays;
+      document.getElementById("daysValueLabel").textContent = `${state.tripDays} Days`;
+      document.getElementById("bizDaysInput").max = state.tripDays;
+      document.getElementById("bizDaysInput").value = Math.min(state.bizDays, state.tripDays);
+      document.getElementById("bizDaysLabel").textContent = `${Math.min(state.bizDays, state.tripDays)} Days`;
+      document.getElementById("climateSelect").value = state.climate;
+      document.getElementById("bizDaysContainer").classList.toggle("hidden", state.tripMode !== "hybrid");
+    }
+
+    window.updateTripConfig = function() {
+      state.tripMode = document.getElementById("tripModeSelect").value;
+      state.tripDays = Number(document.getElementById("tripDaysInput").value);
+      state.bizDays = Math.min(state.tripDays, Number(document.getElementById("bizDaysInput").value));
+      state.climate = document.getElementById("climateSelect").value;
+      syncControlsFromState();
+      renderAll();
+      syncToCloud();
+    };
+
+    window.toggleCheckItem = function(id) {
+      state.checkedIds[id] = !state.checkedIds[id];
+      renderChecklist();
+      syncToCloud();
+    };
+
+    window.addCustomItem = function() {
+      const input = document.getElementById("customItemInput");
+      const label = input.value.trim();
+      if (!label) return;
+      const category = document.getElementById("customCategorySelect").value;
+      state.customItems.push({ id: "cust_" + Date.now(), label, category });
+      input.value = "";
+      renderChecklist();
+      syncToCloud();
+    };
+
+    window.switchTab = function(tab) {
+      ["checklist", "wardrobe", "outfits"].forEach(t => {
+        document.getElementById(`tabPanel-${t}`).classList.toggle("hidden", t !== tab);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        btn.className = t === tab
+          ? "pb-2.5 text-sm font-semibold border-b-2 border-[#141413] text-[#141413] whitespace-nowrap"
+          : "pb-2.5 text-sm font-medium border-b-2 border-transparent text-[#575653] whitespace-nowrap";
+      });
+    };
+
+    // ---------------- AUTH MODAL HANDLERS ----------------
+    window.openAuthModal = () => document.getElementById("authModal").classList.remove("hidden");
+    window.closeAuthModal = () => document.getElementById("authModal").classList.add("hidden");
+
+    window.signInWithGoogle = async function() {
+      const errEl = document.getElementById("authErrorMsg");
+      errEl.classList.add("hidden");
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        window.closeAuthModal();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove("hidden");
+      }
+    };
+
+    window.handleEmailAuth = async function(mode) {
+      const email = document.getElementById("authEmailInput").value.trim();
+      const pass = document.getElementById("authPassInput").value;
+      const errEl = document.getElementById("authErrorMsg");
+      errEl.classList.add("hidden");
+      try {
+        if (mode === "register") {
+          await createUserWithEmailAndPassword(auth, email, pass);
+        } else {
+          await signInWithEmailAndPassword(auth, email, pass);
+        }
+        window.closeAuthModal();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove("hidden");
+      }
+    };
+
+    window.handleSignOut = async function() {
+      await signOut(auth);
+    };
+
+    // ---------------- INITIALIZATION ----------------
+    await loadAllLocalPhotos();
+    const savedFallback = localStorage.getItem("packiq_fallback_state");
+    if (savedFallback) {
+      try { state = { ...state, ...JSON.parse(savedFallback) }; } catch {}
+    }
+    syncControlsFromState();
+    renderAll();
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      const badge = document.getElementById("cloudStatusBadge");
+      const chip = document.getElementById("userProfileChip");
+      const openBtn = document.getElementById("openAuthBtn");
+
+      if (user) {
+        chip.classList.remove("hidden");
+        chip.classList.add("flex");
+        openBtn.classList.add("hidden");
+        document.getElementById("userEmailLabel").textContent = user.email || user.displayName || "Signed In";
+        badge.textContent = "Synced • packiq-cloud";
+        badge.className = "text-[11px] font-mono-ed px-2 py-0.5 rounded bg-emerald-100 text-emerald-900";
+        await loadFromCloud(user.uid);
+        await syncToCloud();
+      } else {
+        chip.classList.add("hidden");
+        chip.classList.remove("flex");
+        openBtn.classList.remove("hidden");
+        badge.textContent = "Local Mode (Sign in to Sync)";
+        badge.className = "text-[11px] font-mono-ed px-2 py-0.5 rounded bg-stone-200 text-stone-800";
+      }
+    });
+  </script>
+</body>
+</html>
