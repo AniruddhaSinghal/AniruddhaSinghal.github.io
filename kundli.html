@@ -71,6 +71,8 @@ dialog{border:1px solid var(--line);border-radius:16px;background:var(--bg2);col
 dialog::backdrop{background:rgba(10,8,20,.6)}.dlgin{padding:18px 20px;max-height:86vh;overflow:auto}.dlgin h2{margin:0}#dlgClose{position:sticky;top:0;float:right;margin:-6px -8px 0 0}
 .mineBox{background:var(--hit);padding:8px 10px;border-radius:10px}.note{font-size:13.5px;color:var(--mut)}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--mut);margin:6px 0}.src li{margin:4px 0;font-size:14px}
+.dbar{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:8px 0 12px}.dbar i{display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:12.5px;white-space:nowrap;overflow:hidden;min-width:0}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}.flist{margin:4px 0;padding-left:18px}.flist li{margin:3px 0;font-size:14px}details.ay summary{font-size:15px}
 /* ---- Muhurta ---- */
 .seg{display:flex;gap:6px;flex-wrap:wrap}.seg label{flex-direction:row!important;align-items:center;gap:6px!important;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink)!important;cursor:pointer}
 .personBox{background:var(--hit);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
@@ -146,6 +148,7 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
  <button class="tab on" data-p="pKundli" type="button">① Kundli</button>
  <button class="tab" data-p="pAnalysis" type="button">② Pada analysis</button>
  <button class="tab" data-p="pDosha" type="button">③ Ashubh / Dosha</button>
+ <button class="tab" data-p="pAyur" type="button">🌿 Ayurveda</button>
  <button class="tab" data-p="pTable" type="button">④ Ready Reckoner</button>
  <button class="tab mu" data-p="pMuhurta" type="button">⑤ Muhurta calendar</button>
  <button class="tab mu" data-p="pMA" type="button">⑥ Muhurta analysis</button>
@@ -158,7 +161,7 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
   <div class="form">
    <label>Name (optional)<input id="bname" type="text" placeholder="Name"></label>
    <label>Date of birth<input id="bdate" type="date"></label>
-   <label>Time of birth (local clock, 24 h)<input id="btime" type="time" step="1"></label>
+   <label>Time of birth (local clock, 24 h)<span class="row"><input id="btime" type="time" step="1" style="flex:1"><button type="button" class="btn ghost" id="nowBtn" title="Set current date and time">🕒 Now</button></span></label>
    <label>Place (preset)<select id="city"></select></label>
    <label>Latitude (N +, S −)<input id="lat" type="number" step="0.0001"></label>
    <label>Longitude (E +, W −)<input id="lon" type="number" step="0.0001"></label>
@@ -167,7 +170,7 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
    <label>Rahu/Ketu<select id="node"><option value="mean">Mean node (common in panchangs)</option><option value="true">True node</option></select></label>
    <label>Chart style<select id="cstyle"><option value="north">North Indian</option><option value="south">South Indian</option></select></label>
   </div>
-  <p class="hint" id="dstHint"></p>
+  <p class="hint" id="savedNote"></p><p class="hint" id="dstHint"></p>
   <p class="hint">For a place not in the list, type its latitude/longitude and standard UTC offset. For India before 1955 and for war-time years, check the historical time zone.</p>
   <div class="row"><button class="btn" id="genBtn" type="button">Generate kundli & analysis</button><span id="formMsg" class="err" aria-live="polite"></span></div></div>
  <div id="results" hidden>
@@ -188,6 +191,7 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
   <div class="row"><div id="doshaSum"></div><label class="hint"><input type="checkbox" id="doshaOnly"> Show only present / caution</label></div>
   <div id="doshaList"></div><p class="note">Doshas are traditional indicators, not verdicts. Most texts read them together with the full chart, dasha and cancellations. Shanti practices differ by sampradaya.</p></div>
 </section>
+<section id="pAyur" class="pane"><p class="noChart card">Generate a kundli in tab ① first. The Vata–Pitta–Kapha analysis will appear here.</p><div class="needChart" hidden id="ayur"></div></section>
 <section id="pTable" class="pane">
  <div class="card"><div class="toolbar">
    <label>View<select id="mode"><option value="all">All 108 padas</option><option value="mine" class="needChart" hidden>My chart: occupied padas</option><option value="janma" class="needChart" hidden>My Janma nakshatra (4 padas)</option><option value="good" class="needChart" hidden>Shubh taras for me</option><option value="bad" class="needChart" hidden>Ashubh for me (tara / vedha / yoni)</option></select></label>
@@ -258,7 +262,8 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
  <label class="hint" for="glQ">Search</label><input id="glQ" type="search" placeholder="e.g. Bhadra, Chandrashtama, Rohini" style="width:100%"><p class="hint" id="glCount"></p><div id="glList" class="gllist"></div></div></section>
 <section id="pMethod" class="pane">
  <div class="card"><h2>How to use</h2><ol class="src">
-  <li><b>Tab ①</b> – enter birth date, time and place, then press Generate. This birth chart is reused everywhere.</li>
+  <li><b>Tab ①</b> – enter birth date, time and place, then press Generate. This birth chart is reused everywhere. Default place is Gwalior and default time is now; your last details and city are remembered on this device (cookie + local storage).</li>
+  <li><b>🌿 Ayurveda</b> – Vata / Pitta / Kapha prakriti from lagna, Moon, nakshatra nadi, pada (navamsa), Sun, 6th house and strong planets, with nature, foods (vegetarian), foods to avoid and routine.</li>
   <li><b>Charts</b> – tap any planet label (Su, Mo, Ma…) for its full details: position, nakshatra, lords, dignity, house, houses it rules, aspects cast and received, conjunctions, avastha, karaka and gochar. Tap an empty part of a house for the house meaning, lord, occupants and aspects.</li>
   <li><b>Any word</b> – tap it to see its meaning (📖 button in the header switches this off). The full list is in tab ⑧.</li>
   <li><b>Tab ④</b> – 108 padas. On phones it shows cards; open "All details" for every field. Use the View filter to show only what matters for your chart.</li>
@@ -943,7 +948,7 @@ function renderAll(){
  const pc=[["Vara (Vedic weekday)",VARA[P.vara]+(P.dayInfo.night?" · night birth":"")],["Tithi",P.paksha+" "+P.tName+" ("+(P.ti+1)+")"],["Tithi runs",fmtTime(P.tithiSpan[0],off)+" → "+fmtTime(P.tithiSpan[1],off)],["Nakshatra",N.n+" pada "+mo.p],["Nakshatra runs",fmtTime(P.nakSpan[0],off)+" → "+fmtTime(P.nakSpan[1],off)],["Yoga",P.yoga+(BAD_YOGA[P.yi]!==undefined?" ⚠":"")],["Yoga runs",fmtTime(P.yogaSpan[0],off)+" → "+fmtTime(P.yogaSpan[1],off)],["Karana",P.karana],["Sunrise / Sunset",fmtTime(P.rise,off).slice(11,16)+" / "+fmtTime(P.set,off).slice(11,16)],["Rahu Kalam",tw(kz&&kz.rahu)],["Yamaganda",tw(kz&&kz.yama)],["Gulika Kaal",tw(kz&&kz.guli)],["Abhijit Muhurta",tw(kz&&kz.abhijit)],["Ayanamsa (Lahiri)",dms(S.ayan,true)],["Moon speed",P.moonSpeed.toFixed(2)+"°/day"]];
  $("#panchang").innerHTML=pc.map(([a,b])=>`<div class="kv"><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join("");
  $("#ptab").innerHTML=planetTable(G,{head:"<th>Tara from Moon</th><th>Rel. to nak lord</th>",cell:(k,o)=>`<td><span class="${TARA_GOOD[o.tara]===true?"ok":TARA_GOOD[o.tara]===false?"bad":"mix"}">${TARA[o.tara]}</span></td><td>${o.rel}</td>`});
- stackify($("#ptab"));renderDasha();renderAnalysis();renderDosha();}
+ stackify($("#ptab"));renderDasha();renderAnalysis();renderDosha();renderAyur();}
 function renderDasha(){const D=CH.dasha,off=CH.off,now=Date.now()/864e5+2440587.5;
  $("#dashaHead").textContent="Birth dasha: "+D.lord+" – balance "+Math.floor(D.balanceYrs)+" y "+Math.floor((D.balanceYrs%1)*12)+" m "+Math.floor(((D.balanceYrs*12)%1)*30)+" d";
  $("#dasha").innerHTML=D.seq.slice(0,9).map(md=>{const cur=now>=md.start&&now<md.end;
@@ -1495,6 +1500,141 @@ function renderMA(){const b=MSEL.b,t=MSEL.t,ctx=MS.res.ctx,r=evalAt(t,ctx,MS.act
  $("#maPanch").innerHTML=pc.map(([a,b2])=>`<div class="kv"><span>${esc(a)}</span><b>${esc(b2)}</b></div>`).join("");
  $("#maSubs").innerHTML=b.wins.map(w=>`<button type="button" class="sub ${RCLS[w.rating]}${t>=w.a&&t<w.b?" on":""}" data-t="${(w.a+w.b)/2}">${mFmt(w.a,true)}–${mFmt(w.b,true)} · ${w.score}</button>`).join("");
  $$("#maSubs .sub").forEach(x=>x.addEventListener("click",()=>{MSEL.t=+x.dataset.t;renderMA();}));}
+
+/* ================= AYURVEDA PRAKRITI (Jyotish → Vata / Pitta / Kapha) ================= */
+const PL_DOSHA={Sun:{P:1},Moon:{K:.6,V:.4},Mars:{P:1},Mercury:{V:.5,P:.25,K:.25},Jupiter:{K:1},Venus:{K:.6,V:.4},Saturn:{V:1},Rahu:{V:1},Ketu:{P:.7,V:.3}};
+const SIGN_DOSHA=[{P:1},{K:1},{V:1},{K:1},{P:1},{V:.7,P:.3},{V:1},{K:.5,P:.5},{P:.7,K:.3},{V:.7,K:.3},{V:1},{K:1}];
+const NADI_DOSHA=i=>{const m=i%6;return (m===0||m===5)?{V:1}:(m===1||m===4)?{P:1}:{K:1};};
+const DN={V:"Vata",P:"Pitta",K:"Kapha"},DC={V:"#6f8fd8",P:"#e0703a",K:"#3f9e6d"};
+const AY={
+V:{el:"Air + Ether (space)",q:"dry, light, cold, rough, subtle, mobile, clear",
+ body:"Light or thin frame; prominent joints and veins; dry skin and hair; cold hands and feet; variable appetite; light, broken sleep; quick movements; irregular bowels with a tendency to constipation.",
+ mind:"Quick, creative, enthusiastic, imaginative; learns fast and forgets fast; talkative; loves change, travel and new ideas. Under stress: anxiety, worry, fear, restlessness, scattered attention, insomnia.",
+ strengths:"Creativity, adaptability, communication, vision, spiritual sensitivity, quick grasp.",
+ imbalance:"Anxiety, insomnia, constipation, gas and bloating, dry skin, joint cracking or pain, low back pain, tremors, weight loss, fatigue, irregular periods.",
+ tastes:"Favour sweet, sour, salty. Reduce pungent, bitter, astringent.",
+ favour:["Warm, cooked, moist, oily food; soups, stews, khichdi","Grains: rice, wheat, oats (cooked), quinoa","Dals: moong (whole or split), masoor; tofu in small amounts","Vegetables (cooked): pumpkin, sweet potato, carrot, beetroot, bottle gourd (lauki), zucchini, okra, asparagus, green beans","Fruits (ripe, sweet): banana, mango, dates, figs, grapes, papaya, soaked raisins, avocado, stewed apple or pear","Dairy: warm milk with ghee, ginger or nutmeg; ghee; fresh paneer; buttermilk with cumin","Nuts and seeds (soaked): almonds, walnuts, sesame, sunflower, pumpkin seeds","Oils: sesame oil, ghee, olive oil","Spices: ginger, cumin, ajwain, hing, fennel, cinnamon, cardamom, black pepper (moderate), turmeric","Drinks: warm water, ginger or tulsi tea, warm spiced milk"],
+ avoid:["Cold, raw, dry food: salads in excess, crackers, puffed rice, popcorn, chips","Iced drinks, ice cream, cold smoothies","Beans that cause gas: rajma, chole, soybean, chana (unless well cooked with hing)","Raw cabbage, cauliflower, broccoli, raw onion","Dry fruits not soaked, astringent fruits (raw apple, pomegranate, cranberry, unripe banana)","Too much caffeine, fasting, skipping meals","Millet, barley, rye in excess (drying)"],
+ nonveg:"If non-vegetarian: eggs, chicken soup, fish and seafood (warm, cooked) suit; avoid dry or cured meat.",
+ life:"Fixed routine (wake, eat, sleep at the same time); daily warm sesame-oil massage (abhyanga); warm clothes; gentle yoga, walking, swimming in warm water; pranayama (Nadi Shodhana); early sleep before 10 pm; avoid over-travel, noise, screen overload.",
+ season:"Worst in autumn and early winter (Vata season), dry wind and cold. Extra care then.",
+ herbs:"Ashwagandha, Shatavari, Dashamool, Triphala (at night with warm water), Brahmi for the mind – only with a qualified vaidya's advice."},
+P:{el:"Fire + Water",q:"hot, sharp, light, oily, liquid, spreading, intense",
+ body:"Medium, muscular build; warm body; good circulation; reddish or sensitive skin with freckles or acne; early greying or thinning hair; strong appetite and thirst; sweats easily; regular, loose bowels; sharp eyes.",
+ mind:"Sharp, focused, intelligent, logical, ambitious, goal-driven; natural leader; good speaker; perfectionist. Under stress: anger, irritability, criticism, impatience, jealousy, control.",
+ strengths:"Intelligence, courage, leadership, decisiveness, discipline, good digestion, competitive drive.",
+ imbalance:"Acidity, heartburn, ulcers, loose motions, inflammation, rashes, acne, hot flushes, burning eyes, excessive anger, migraines, liver issues, early greying.",
+ tastes:"Favour sweet, bitter, astringent. Reduce pungent, sour, salty.",
+ favour:["Cool or room-temperature, mildly spiced food","Grains: basmati rice, wheat, barley, oats","Dals: moong, masoor, chana dal (moderate); tofu, paneer","Vegetables: cucumber, lauki, tori (ridge gourd), karela, leafy greens, broccoli, cauliflower, cabbage, zucchini, sweet potato, asparagus","Fruits (sweet): coconut, melon, watermelon, pomegranate, sweet grapes, pear, mango (ripe, moderate), figs, dates","Dairy: milk, ghee, unsalted butter, fresh paneer, sweet lassi","Seeds: coconut, sunflower, pumpkin seeds; soaked almonds (peeled) in small amounts","Oils: ghee, coconut oil, sunflower oil","Spices (cooling): coriander, fennel, cardamom, mint, turmeric, cumin (small), saffron","Drinks: coconut water, rose or mint water, fennel water, aloe vera, kokum sharbat"],
+ avoid:["Chilli, very spicy and fried food, pickles, vinegar","Sour food: tamarind, sour curd, tomatoes in excess, citrus in excess","Excess salt, fermented food, alcohol, coffee, smoking","Garlic, raw onion, mustard oil and mustard seeds in excess","Sesame oil and peanuts in excess (heating)","Skipping meals when hungry (makes Pitta angry)","Eating while angry or working"],
+ nonveg:"If non-vegetarian: chicken, turkey, freshwater fish in moderation; avoid red meat, seafood in excess and egg yolks.",
+ life:"Stay cool; avoid midday sun and over-competition; moonlight walks; swimming; Sheetali and Chandra Bhedana pranayama; coconut-oil massage; take breaks from work; cultivate patience and humour; eat lunch as the main meal (at noon).",
+ season:"Worst in summer and late spring (heat). Extra care then.",
+ herbs:"Amla, Guduchi, Shatavari, Neem, Brahmi, Aloe vera, Avipattikar for acidity – only with a qualified vaidya's advice."},
+K:{el:"Earth + Water",q:"heavy, slow, cool, oily, smooth, dense, stable",
+ body:"Broad, solid, strong build; gains weight easily; thick, soft, oily skin; thick hair; large calm eyes; slow but steady digestion; deep long sleep; good stamina; slow, steady speech.",
+ mind:"Calm, patient, loving, loyal, forgiving, steady; slow to learn but long memory; supportive and nurturing. Under stress: lethargy, attachment, possessiveness, greed, stubbornness, depression.",
+ strengths:"Stability, endurance, strong immunity, compassion, loyalty, calm, good memory.",
+ imbalance:"Weight gain, sluggish digestion, congestion, cough and colds, sinus, allergies, diabetes tendency, high cholesterol, water retention, excess sleep, lethargy, depression.",
+ tastes:"Favour pungent, bitter, astringent. Reduce sweet, sour, salty.",
+ favour:["Warm, light, dry, well-spiced food; less quantity","Grains: millet (bajra, jowar, ragi), barley, buckwheat, corn, old rice in small amounts","Dals and legumes: moong, masoor, chana, rajma, lobia (all well spiced)","Vegetables: leafy greens, karela, cabbage, cauliflower, broccoli, radish, beans, onion, garlic, capsicum, brinjal, methi","Fruits: apple, pear, pomegranate, berries, guava, papaya, dried fruit in small amounts","Dairy: little; buttermilk with ginger and pepper; skimmed or goat milk; very little ghee","Honey (raw, never heated) – the best sweetener for Kapha","Oils: mustard oil, small amounts of sesame or corn oil","Spices: all pungent spices – ginger, black pepper, long pepper (pippali), clove, turmeric, mustard seeds, hing, cinnamon","Drinks: warm water, ginger tea, tulsi tea, trikatu tea; lemon-honey water"],
+ avoid:["Heavy, oily, fried and sweet food; sweets and mithai","Cold drinks, ice cream, cold food and leftovers","Excess dairy: cheese, curd (especially at night), thick milk, butter","Wheat and white rice in large amounts; bakery and maida","Bananas, avocado, coconut, dates, melons in excess","Excess salt, nuts in excess","Overeating, eating late at night, sleeping in the day"],
+ nonveg:"If non-vegetarian: lean chicken, turkey, freshwater fish (grilled or baked) in small amounts; avoid red meat, pork and fried food.",
+ life:"Wake early (before 6 am); vigorous daily exercise; dry massage (udvartana) with gram flour; Kapalabhati and Bhastrika pranayama; variety and new challenges; no day sleep; light dinner before 7 pm; occasional fasting.",
+ season:"Worst in late winter and spring (cold and damp). Extra care then.",
+ herbs:"Trikatu, Guggulu, Tulsi, Punarnava, Triphala, Ginger – only with a qualified vaidya's advice."}};
+function addD(acc,d,w){for(const k in d)acc[k]+=d[k]*w;}
+function computePrakriti(C){const G=C.G,acc={V:0,P:0,K:0},rows=[];
+ const push=(src,d,w,why)=>{if(!w)return;addD(acc,d,w);rows.push({src,d,w,why});};
+ const fmt=d=>Object.entries(d).map(([k,v])=>DN[k]+(v<1?" "+Math.round(v*100)+"%":"")).join(" + ");
+ const lg=G.Lagna,lagLord=SIGN_LORD[lg.sign];
+ push("Lagna sign · "+SIGNS[lg.sign],SIGN_DOSHA[lg.sign],3,"Body type is read first from the rising sign");
+ push("Lagna nakshatra · "+lg.row.nak+" (nadi)",NADI_DOSHA(lg.i),2,"Nadi of the lagna nakshatra");
+ push("Lagna pada · "+lg.row.navSign+" navamsa",SIGN_DOSHA[lg.nav],1.5,"Navamsa (pada) refines the lagna");
+ push("Lagna lord · "+lagLord,PL_DOSHA[lagLord],2,"Lord of the body");
+ push("Lagna lord sign · "+SIGNS[G[lagLord].sign],SIGN_DOSHA[G[lagLord].sign],1,"Where the body's lord sits");
+ const inL=CKEYS.filter(k=>k!=="Lagna"&&G[k].sign===lg.sign);inL.forEach(k=>push(k+" in lagna",PL_DOSHA[k],2,"Planets in the 1st house shape the constitution strongly"));
+ const aspL=CKEYS.filter(k=>k!=="Lagna"&&!inL.includes(k)&&aspSigns(k,G[k].sign).includes(lg.sign));aspL.forEach(k=>push(k+" aspects lagna",PL_DOSHA[k],1,"Aspect on the 1st house"));
+ const mo=G.Moon;
+ push("Moon sign · "+SIGNS[mo.sign],SIGN_DOSHA[mo.sign],3,"Moon = mind and bodily fluids (rashi)");
+ push("Moon nakshatra · "+mo.row.nak+" (nadi)",NADI_DOSHA(mo.i),2.5,"Janma nakshatra nadi – the classical dosha marker");
+ push("Moon pada · "+mo.row.navSign+" navamsa",SIGN_DOSHA[mo.nav],1.5,"Pada refines the Moon");
+ CKEYS.filter(k=>k!=="Lagna"&&k!=="Moon"&&G[k].sign===mo.sign).forEach(k=>push(k+" with Moon",PL_DOSHA[k],1,"Conjunction colours the mind"));
+ push("Sun sign · "+SIGNS[G.Sun.sign],SIGN_DOSHA[G.Sun.sign],1.5,"Sun = vitality and digestive fire (agni)");
+ push("Sun nakshatra · "+G.Sun.row.nak+" (nadi)",NADI_DOSHA(G.Sun.i),.75,"Nadi of the Sun's nakshatra");
+ const h6=(lg.sign+5)%12;push("6th house sign · "+SIGNS[h6],SIGN_DOSHA[h6],1,"6th house = disease tendency");
+ CKEYS.filter(k=>k!=="Lagna"&&G[k].sign===h6).forEach(k=>push(k+" in 6th",PL_DOSHA[k],1,"Planet in the house of disease"));
+ // strongest planets (dignity) push their dosha
+ CKEYS.filter(k=>k!=="Lagna"&&["Exalted","Own sign","Moolatrikona"].includes(G[k].dig)).forEach(k=>push(k+" strong ("+G[k].dig+")",PL_DOSHA[k],1,"A strong planet expresses its dosha"));
+ const tot=acc.V+acc.P+acc.K,pc={V:acc.V/tot*100,P:acc.P/tot*100,K:acc.K/tot*100};
+ const ord=["V","P","K"].sort((a,b)=>pc[b]-pc[a]);let type;
+ if(pc[ord[0]]-pc[ord[2]]<10)type=["V","P","K"];else if(pc[ord[0]]-pc[ord[1]]<10)type=[ord[0],ord[1]];else type=[ord[0]];
+ // vikriti hints
+ const vk=[];const wk=k=>G[k].dig==="Debilitated"||G[k].flags.some(f=>f[1].startsWith("Combust"));
+ if(wk("Moon")||mo.flags.some(f=>f[1].includes("Gandanta")))vk.push(["V","Weak or afflicted Moon – mind and fluids get disturbed easily (Vata rises: anxiety, sleep)"]);
+ if(["Saturn","Rahu","Ketu"].some(k=>G[k].sign===mo.sign))vk.push(["V","Saturn / Rahu / Ketu with Moon – nervous strain, worry; protect sleep and routine"]);
+ if(G.Mars.sign===lg.sign||G.Mars.sign===mo.sign||G.Mars.sign===h6)vk.push(["P","Mars on lagna, Moon or 6th – heat, inflammation, acidity, injuries; cool foods help"]);
+ if(G.Sun.sign===h6||G.Sun.sign===lg.sign)vk.push(["P","Sun on lagna or 6th – strong digestion, but liable to heat and acidity"]);
+ if(G.Jupiter.sign===lg.sign||G.Venus.sign===lg.sign)vk.push(["K","Jupiter / Venus on lagna – tendency to gain weight; keep food light"]);
+ if(wk("Sun"))vk.push(["P","Weak Sun – digestive fire (agni) can be irregular"]);
+ if(G.Saturn.sign===lg.sign||G.Saturn.sign===h6)vk.push(["V","Saturn on lagna or 6th – stiffness, joints, chronic dryness; warm oil massage"]);
+ return {acc,pc,ord,type,rows,vk,fmt};}
+function renderAyur(){if(!CH)return;const R=computePrakriti(CH),T=R.type,name=T.map(k=>DN[k]).join("-");
+ const bar=`<div class="dbar">${["V","P","K"].map(k=>`<i style="width:${R.pc[k].toFixed(1)}%;background:${DC[k]}" title="${DN[k]}"><span>${DN[k]} ${Math.round(R.pc[k])}%</span></i>`).join("")}</div>`;
+ const one=k=>AY[k];const main=one(T[0]);
+ const desc=T.length===3?"Sama (tridoshic) prakriti: the three doshas are close to balance. This is rare. Health stays good with a balanced routine, and the doshas follow the season – reduce Kapha in spring, Pitta in summer and Vata in autumn and winter.":
+  T.length===2?`Dual prakriti: ${DN[T[0]]} leads, closely followed by ${DN[T[1]]}. The nature mixes both – ${main.mind.split(".")[0].toLowerCase()}, together with ${AY[T[1]].mind.split(".")[0].toLowerCase()}. Follow the ${DN[T[0]]} guidance in its season and the ${DN[T[1]]} guidance in its season.`:
+  `Single-dosha prakriti: ${DN[T[0]]} clearly leads. The qualities ${main.q} shape body and mind.`;
+ const conflict=T.length>=2?`<p class="hint"><b>Where the two needs conflict:</b> ${T.includes("V")&&T.includes("P")?"Vata wants warmth and Pitta wants coolness – choose food that is warm in temperature but not spicy (sweet, mildly spiced, ghee).":""} ${T.includes("V")&&T.includes("K")?"Both like warmth – favour warm, light, cooked food with digestive spices; avoid cold and heavy.":""} ${T.includes("P")&&T.includes("K")?"Both like bitter and astringent – favour leafy greens, legumes, barley; avoid oily, salty and sour.":""}</p>`:"";
+ const list=(k,arr)=>`<ul class="flist">${arr.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
+ const block=k=>{const a=AY[k];return `<details class="rbd ay" ${k===T[0]?"open":""}><summary><span class="dot" style="background:${DC[k]}"></span> ${DN[k]} (${a.el}) – ${Math.round(R.pc[k])}%</summary>
+  ${kvh([["Qualities (gunas)",a.q],["Body",a.body],["Mind and nature",a.mind],["Strengths",a.strengths],["Signs of imbalance",a.imbalance],["Tastes (rasa)",a.tastes],["Season to watch",a.season]])}
+  <div class="sec two"><div><h4>🥗 Foods that suit (vegetarian)</h4>${list(k,a.favour)}</div><div><h4>🚫 Foods that do not suit</h4>${list(k,a.avoid)}</div></div>
+  <p class="hint">${esc(a.nonveg)}</p><div class="sec"><h4>Daily routine (dinacharya)</h4><p>${esc(a.life)}</p></div><div class="sec"><h4>Herbs often used</h4><p>${esc(a.herbs)}</p></div></details>`;};
+ const ordAll=[...T,...["V","P","K"].filter(k=>!T.includes(k))];
+ $("#ayur").innerHTML=`<div class="card"><h2>Your Ayurvedic constitution (prakriti): <span style="color:${DC[T[0]]}">${name}</span></h2>${bar}
+  <p class="story">${esc(desc)}</p>${conflict}
+  ${R.vk.length?`<div class="sec"><h4>Chart pointers to imbalance (vikriti tendency)</h4><ul class="flist">${R.vk.map(([k,t])=>`<li><b style="color:${DC[k]}">${DN[k]}:</b> ${esc(t)}</li>`).join("")}</ul></div>`:""}
+  <p class="hint">Read the leading dosha first. The other blocks are for the season when that dosha rises.</p></div>
+  <div class="card"><h2>Nature, food and routine by dosha</h2>${ordAll.map(block).join("")}</div>
+  <div class="card"><h2>How the prakriti was calculated</h2><div class="scroll"><table class="tbl" id="ayT"><thead><tr><th>Factor</th><th>Dosha</th><th>Weight</th><th>Why it counts</th></tr></thead><tbody>${R.rows.map(r=>`<tr><td><b>${esc(r.src)}</b></td><td>${esc(R.fmt(r.d))}</td><td>${r.w}</td><td>${esc(r.why)}</td></tr>`).join("")}</tbody></table></div>
+  <p class="hint">Mapping (Jyotish–Ayurveda, after David Frawley's <i>Ayurvedic Astrology</i> and common practice): Sun, Mars – Pitta; Saturn, Rahu – Vata; Jupiter – Kapha; Moon, Venus – Kapha + Vata; Mercury – mixed (Vata); Ketu – Pitta + Vata. Fire signs – Pitta; air signs – Vata; water signs – Kapha; Taurus – Kapha; Virgo and Capricorn – Vata. Nakshatra nadi: Adi – Vata, Madhya – Pitta, Antya – Kapha. Weights are this app's scale. Totals: Vata ${R.acc.V.toFixed(1)}, Pitta ${R.acc.P.toFixed(1)}, Kapha ${R.acc.K.toFixed(1)}.</p>
+  <p class="note">⚕ This is an astrological indication of constitution, not a medical diagnosis. Confirm prakriti by pulse and examination with a qualified Ayurvedic doctor, and do not take herbs or change diet for a medical condition without professional advice.</p></div>`;
+ stackify($("#ayT"));}
+
+/* ================= COOKIES: remember last details ================= */
+const CK_DAYS=365;
+function ckSet(n,v){const s=encodeURIComponent(JSON.stringify(v));try{document.cookie=n+"="+s+";max-age="+CK_DAYS*86400+";path=/;SameSite=Lax";}catch(_){}try{localStorage.setItem(n,s);}catch(_){}}
+function ckGet(n){let raw=null;try{const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));if(m)raw=m[1];}catch(_){}if(!raw){try{raw=localStorage.getItem(n);}catch(_){}}if(!raw)return null;try{return JSON.parse(decodeURIComponent(raw));}catch(_){return null;}}
+function ckDel(n){try{document.cookie=n+"=;max-age=0;path=/";}catch(_){}try{localStorage.removeItem(n);}catch(_){}}
+const GWALIOR=CITIES.findIndex(c=>c[0].startsWith("Gwalior"));
+function localDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function localTime(d){return [d.getHours(),d.getMinutes(),d.getSeconds()].map(x=>String(x).padStart(2,"0")).join(":");}
+const BIRTH_IDS=["bname","bdate","btime","city","lat","lon","tz","dst","node","cstyle"];
+const MU_IDS=["mAct","mNature","mDoor","mDir","mCity","mLat","mLon","mTz","mRule","mKalam"];
+function grab(ids){const o={};ids.forEach(id=>{const e=document.getElementById(id);if(e)o[id]=e.type==="checkbox"?e.checked:e.value;});return o;}
+function put(ids,o){ids.forEach(id=>{const e=document.getElementById(id);if(e&&o&&id in o){if(e.type==="checkbox")e.checked=!!o[id];else e.value=o[id];}});}
+function saveBirth(){const o=grab(BIRTH_IDS);o.cityDst=$("#city").dataset.dst||"";ckSet("nk_birth",o);ckSet("nk_lastcity",{city:o.city,lat:o.lat,lon:o.lon,tz:o.tz});}
+function saveMu(){const o=grab(MU_IDS);o.mMode=($("input[name=mMode]:checked")||{}).value||"act";ckSet("nk_mu",o);}
+function setNow(){const n=new Date();$("#bdate").value=localDate(n);$("#btime").value=localTime(n);suggestDST();}
+(function initPersist(){
+ // defaults: Gwalior + current time
+ if(GWALIOR>=0){$("#city").value=String(GWALIOR);applyCity();$("#mCity").value=String(GWALIOR);mApplyCity();}
+ setNow();
+ const lc=ckGet("nk_lastcity");if(lc){$("#city").value=lc.city;if(lc.city!=="")applyCity();$("#lat").value=lc.lat;$("#lon").value=lc.lon;$("#tz").value=lc.tz;}
+ const b=ckGet("nk_birth");
+ if(b){put(BIRTH_IDS,b);$("#city").dataset.dst=b.cityDst||"";$("#savedNote").innerHTML=`Restored your last details${b.bname?" for <b>"+esc(b.bname)+"</b>":""}. <button type="button" class="linkb" id="useNow">Use current time</button> · <button type="button" class="linkb" id="clrSaved">Forget saved details</button>`;}
+ else $("#savedNote").innerHTML=`Default: Gwalior, current date and time. Your details are saved on this device after you press Generate. <button type="button" class="linkb" id="useNow">Refresh to now</button>`;
+ const m=ckGet("nk_mu");if(m){const r=document.querySelector(`input[name=mMode][value="${m.mMode}"]`);if(r)r.checked=true;put(MU_IDS,m);mModeUI();}
+ else if(lc&&lc.city!==""){$("#mCity").value=lc.city;mApplyCity();}
+ document.addEventListener("click",e=>{if(e.target.id==="useNow")setNow();if(e.target.id==="clrSaved"){["nk_birth","nk_mu","nk_lastcity"].forEach(ckDel);$("#savedNote").textContent="Saved details cleared.";}});
+ $("#nowBtn").addEventListener("click",setNow);
+ $("#genBtn").addEventListener("click",saveBirth);
+ $("#mGo").addEventListener("click",saveMu);
+ MU_IDS.forEach(id=>{const e=document.getElementById(id);e&&e.addEventListener("change",saveMu);});
+ $$("input[name=mMode]").forEach(r=>r.addEventListener("change",saveMu));
+ if(b&&b.bdate&&b.btime) run();
+})();
 
 </script>
 </body>
