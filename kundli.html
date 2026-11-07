@@ -73,6 +73,35 @@ dialog::backdrop{background:rgba(10,8,20,.6)}.dlgin{padding:18px 20px;max-height
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--mut);margin:6px 0}.src li{margin:4px 0;font-size:14px}
 .dbar{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:8px 0 12px}.dbar i{display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:12.5px;white-space:nowrap;overflow:hidden;min-width:0}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px}.flist{margin:4px 0;padding-left:18px}.flist li{margin:3px 0;font-size:14px}details.ay summary{font-size:15px}
+.mwch td{background:color-mix(in srgb,var(--acc2) 10%,transparent)}.slist li.ssoft{background:color-mix(in srgb,var(--warn) 12%,transparent)}.slist li.ssoft>span{color:var(--warn)}
+details.up{margin-top:6px;border-top:1px dashed var(--line);padding-top:4px}details.up summary{cursor:pointer;font-weight:700;color:var(--acc)}
+.aywbox{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));align-items:end}.ayl{display:flex;flex-direction:column;font-size:13px;color:var(--mut);font-weight:600;gap:4px}.ayl output{min-width:44px;font-weight:800;color:var(--acc2)}
+code{font-size:12px;background:var(--chip);padding:1px 4px;border-radius:4px}
+.munbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;border-radius:12px;padding:10px 12px;margin:8px 0;border:2px solid var(--acc)}.munbox div{display:flex;flex-direction:column}.munbox span{font-size:12px;color:var(--mut)}.munbox b{font-size:15px}.munbox.mg{background:color-mix(in srgb,var(--vg) 12%,transparent)}.munbox.mb{background:color-mix(in srgb,var(--vb) 12%,transparent)}
+.hz.munh{fill:rgba(240,184,74,.35)!important;stroke:#d08a00;stroke-width:3}.plc[data-k=Muntha] .plbg{fill:#f0b84a}.plc[data-k=Muntha] .pl{fill:#3a2600;font-weight:800}
+.avt{font-size:13px}.avt th,.avt td{text-align:center;padding:5px 4px;border-bottom:1px solid var(--line)}.avt th small{color:var(--mut);font-weight:500}.avt td:first-child{text-align:left}.avc.av5{background:color-mix(in srgb,var(--vg) 18%,transparent);font-weight:700}.avc.av2{background:color-mix(in srgb,var(--vb) 14%,transparent)}.avc.avp{outline:2px solid var(--acc2);outline-offset:-2px}.savr td{border-top:2px solid var(--acc)}
+@media (max-width:760px){.avt{font-size:11px}.avt th,.avt td{padding:4px 2px}}
+.hz.mlh{fill:rgba(70,130,230,.28)!important;stroke:#2f6fd0;stroke-width:3;stroke-dasharray:6 3}.hz.munh.mlh{fill:rgba(240,184,74,.45)!important}
+.plc.munl .plbg{fill:#2f6fd0}.plc.munl .pl{fill:#fff;font-weight:800}
+.mlbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;border-radius:12px;padding:10px 12px;margin:8px 0;border:2px dashed #2f6fd0;background:rgba(70,130,230,.10)}.mlbox div{display:flex;flex-direction:column}.mlbox span{font-size:12px;color:var(--mut)}.mlbox b{font-size:15px}
+.kmun{background:rgba(240,184,74,.5);padding:0 4px;border-radius:4px}.kml{background:rgba(70,130,230,.3);padding:0 4px;border-radius:4px}
+.rpbar{margin:6px 0;padding:8px;border:1px solid var(--line);border-radius:10px}.rpbar label{flex-direction:row;align-items:center;gap:4px;display:flex}
+#report{display:none}
+@media print{
+ @page{size:A4;margin:7mm}
+ body.printing>*:not(#report){display:none!important}body.printing #report{display:block}
+ body.printing{background:#fff!important;color:#000;font:8.5pt/1.25 Arial,"Noto Sans","Noto Sans Devanagari",sans-serif;--ink:#000;--mut:#444;--line:#999;--acc:#7a5200;--acc2:#3a2a99;--bg:#fff;--bg2:#fff}
+ .rp h1{font-size:14pt;margin:0}.rp h3{font-size:9.5pt;margin:4px 0 2px;color:#5b3cc4}.rh p{margin:1px 0 4px;font-size:8.5pt}
+ .rg2{display:grid;grid-template-columns:1fr 1fr;gap:6mm;break-inside:avoid}.rch svg{width:100%;max-width:72mm;display:block;margin:auto}
+ .rch .snum{font-size:11px}.rch .pl{font-size:13px}.rch .cmid{display:none}
+ .rt,.rkv{border-collapse:collapse;width:100%;font-size:8pt}.rt th,.rt td,.rkv th,.rkv td{border:0.4pt solid #999;padding:1.2pt 2.5pt;text-align:left}.rt th,.rkv th{background:#eee;font-weight:700}.rkv th{width:34%}
+ .rdas td,.rdas th{font-size:7.5pt;padding:1pt 2pt;white-space:nowrap}.rcur{background:#ffe9b0!important;font-weight:700}.rpast{color:#888}
+ .rvs{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.rv{break-inside:avoid;border:0.5pt solid #bbb;border-radius:3pt;padding:2mm}.rv h3{margin-top:0}
+ .rvg{display:grid;grid-template-columns:1fr;gap:1.5mm}.rvg .rch svg{max-width:54mm}.rvi{display:grid;grid-template-columns:1fr auto;gap:1.5mm;align-items:start}.rmud{margin-top:2pt}.rmud td,.rmud th{font-size:7.5pt;padding:0.6pt 2pt;white-space:nowrap}
+ .rnote{font-size:7.5pt;color:#444;margin:2pt 0}
+ .hz.munh{fill:#f6d58a!important}.hz.mlh{fill:#c9dbf7!important}.hz.munh.mlh{fill:#f6d58a!important}.plbg{fill:transparent}.plc.munl .plbg{fill:#2f6fd0}.plc[data-k=Muntha] .plbg{fill:#f0b84a}
+ .cbox{stroke:#7a5200}.cl{stroke:#7a5200}
+}
 /* ---- Muhurta ---- */
 .seg{display:flex;gap:6px;flex-wrap:wrap}.seg label{flex-direction:row!important;align-items:center;gap:6px!important;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink)!important;cursor:pointer}
 .personBox{background:var(--hit);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
@@ -148,6 +177,9 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
  <button class="tab on" data-p="pKundli" type="button">① Kundli</button>
  <button class="tab" data-p="pAnalysis" type="button">② Pada analysis</button>
  <button class="tab" data-p="pDosha" type="button">③ Ashubh / Dosha</button>
+ <button class="tab" data-p="pDP" type="button">⏳ Dasha phal</button>
+ <button class="tab" data-p="pVarsh" type="button">📅 Varshphal</button>
+ <button class="tab" data-p="pAV" type="button">🔢 Ashtakavarga</button>
  <button class="tab" data-p="pAyur" type="button">🌿 Ayurveda</button>
  <button class="tab" data-p="pTable" type="button">④ Ready Reckoner</button>
  <button class="tab mu" data-p="pMuhurta" type="button">⑤ Muhurta calendar</button>
@@ -166,15 +198,22 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
    <label>Latitude (N +, S −)<input id="lat" type="number" step="0.0001"></label>
    <label>Longitude (E +, W −)<input id="lon" type="number" step="0.0001"></label>
    <label>Standard UTC offset (h)<input id="tz" type="number" step="0.25"></label>
-   <label>Summer time / DST<span class="row"><input id="dst" type="checkbox" style="width:auto"> clock was +1 h</span></label>
+   <label>Clock-time rule<select id="tzr"><option value="auto">Auto – standard time + DST / India war time for the place and date</option><option value="std">Standard time only (offset as typed)</option><option value="plus1">Standard + 1 h (force DST / war time)</option><option value="lmt">Local mean time (old births)</option></select><input id="dst" type="checkbox" hidden></label>
    <label>Rahu/Ketu<select id="node"><option value="mean">Mean node (common in panchangs)</option><option value="true">True node</option></select></label>
    <label>Chart style<select id="cstyle"><option value="north">North Indian</option><option value="south">South Indian</option></select></label>
   </div>
   <p class="hint" id="savedNote"></p><p class="hint" id="dstHint"></p>
   <p class="hint">For a place not in the list, type its latitude/longitude and standard UTC offset. For India before 1955 and for war-time years, check the historical time zone.</p>
   <div class="row"><button class="btn" id="genBtn" type="button">Generate kundli & analysis</button><span id="formMsg" class="err" aria-live="polite"></span></div></div>
+ <div class="card"><h2>📁 Saved kundlis <small class="hint" id="kCount"></small></h2>
+  <div class="row"><select id="kList" style="flex:1;min-width:200px"></select><button type="button" class="btn ghost" id="kLoad">Load &amp; generate</button><button type="button" class="btn ghost" id="kSave">💾 Save current</button><button type="button" class="btn ghost" id="kDel">🗑 Delete</button></div>
+  <label class="hint" style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="checkbox" id="kAuto" checked> Also save automatically when I press Generate (needs a name)</label>
+  <div class="row" style="margin-top:8px"><button type="button" class="btn ghost" id="kJson">⬇ Export all (JSON)</button><button type="button" class="btn ghost" id="kCsv">⬇ Kundlis (CSV)</button><button type="button" class="btn ghost" id="kRules">⬇ Rule &amp; weight settings (CSV)</button><button type="button" class="btn ghost" id="kTpl">⬇ CSV template</button>
+   <label class="btn ghost" style="cursor:pointer">⬆ Import CSV / JSON<input type="file" id="kFile" accept=".csv,.json,text/csv,application/json" hidden></label></div>
+  <p class="hint" id="kSt" aria-live="polite"></p>
+  <details class="rbd"><summary>File formats</summary><p class="hint"><b>Kundli CSV</b> – columns <code>name,date,time,place,lat,lon,tz,tzr,node</code> (tzr = auto / std / plus1 / lmt; tz = standard offset; old files with a <code>dst</code> column still work). Date as YYYY-MM-DD or DD-MM-YYYY; time HH:MM[:SS] (AM/PM allowed). Give either a known place (e.g. "Gwalior, IN") or lat/lon/tz. Rows with the same name replace the saved one.<br><b>Settings CSV</b> – columns <code>rule,mode,importance</code>; mode = strict / weighted / off; extra rows <code>threshold_very_good</code>, <code>threshold_good</code>, <code>threshold_neutral</code>, <code>threshold_bad</code>, <code>ayurveda_lagna</code>, <code>ayurveda_moon</code>, <code>ayurveda_sun</code>, <code>ayurveda_sixth</code>, <code>ayurveda_planets</code>.<br><b>JSON</b> – the "Export all" file: <code>{kundlis:[…], muhurtaRules:{rules,th}, ayurWeights:{…}, lastBirth, lastMuhurta}</code>. Importing it restores everything. Data is kept in cookies (split into 3.5 KB parts) and in browser storage.</p></details></div>
  <div id="results" hidden>
-  <div class="card"><h2 id="sumTitle"></h2><div class="charts"><div><h4>Rashi (D1)</h4><div id="chartD1"></div></div><div><h4>Navamsa (D9) · * = Vargottama</h4><div id="chartD9"></div></div></div></div>
+  <div class="card"><h2 id="sumTitle"></h2><p class="hint" id="clockInfo"></p><div class="row rpbar"><b>📄 PDF report</b><label class="hint">Varshphals<select id="rpN"><option value="3">3 years</option><option value="5">5 years</option><option value="10">10 years</option></select></label><label class="hint">from<input id="rpY" type="number" min="1800" max="2100" style="width:90px"></label><button type="button" class="btn" id="rpGo">⬇ Download / print PDF</button></div><p class="hint">In the print window choose <b>Save as PDF</b>. The report holds D1, D9, grahas, Moon panchanga, all mahadashas with antardashas, and the chosen varshphals with Muntha, Muntha lord and Mudda dasha.</p><div class="charts"><div><h4>Rashi (D1)</h4><div id="chartD1"></div></div><div><h4>Navamsa (D9) · * = Vargottama</h4><div id="chartD9"></div></div></div></div>
   <div class="grid"><div class="card"><h2>Avakhada chakra</h2><div id="avakhada"></div></div><div class="card"><h2>Panchang at birth</h2><div id="panchang"></div></div></div>
   <div class="card"><h2>Grahas at nakshatra-pada level</h2><div class="scroll"><table id="ptab" class="tbl"></table></div></div>
   <div class="card"><h2>Vimshottari dasha</h2><p class="hint" id="dashaHead"></p><div id="dasha"></div></div>
@@ -189,9 +228,12 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
  <p class="noChart card">Generate a kundli in tab ① first.</p>
  <div class="needChart card" hidden><h2>Ashubh / dosha scan</h2>
   <div class="row"><div id="doshaSum"></div><label class="hint"><input type="checkbox" id="doshaOnly"> Show only present / caution</label></div>
-  <div id="doshaList"></div><p class="note">Doshas are traditional indicators, not verdicts. Most texts read them together with the full chart, dasha and cancellations. Shanti practices differ by sampradaya.</p></div>
+  <div id="doshaList"></div><div id="upaya"></div><p class="note">Doshas are traditional indicators, not verdicts. Most texts read them together with the full chart, dasha and cancellations. Shanti practices differ by sampradaya.</p></div>
 </section>
-<section id="pAyur" class="pane"><p class="noChart card">Generate a kundli in tab ① first. The Vata–Pitta–Kapha analysis will appear here.</p><div class="needChart" hidden id="ayur"></div></section>
+<section id="pDP" class="pane"><p class="noChart card">Generate a kundli in tab ① first.</p><div class="needChart" hidden id="dashaPhal"></div></section>
+<section id="pVarsh" class="pane"><p class="noChart card">Generate a kundli in tab ① first.</p><div class="needChart card" hidden><h2>📅 Varshphal (Tajik annual chart)</h2><div class="form"><label>Year<span class="row"><button type="button" class="btn ghost" id="vPrev">◀</button><input id="vYear" type="number" min="1800" max="2100" style="flex:1"><button type="button" class="btn ghost" id="vNext">▶</button></span></label><label>Place for the annual chart<select id="vPlace"></select></label></div><div class="row"><label class="hint">PDF with<select id="rpN2"><option value="3">3</option><option value="5">5</option><option value="10">10</option></select> varshphals</label><button type="button" class="btn ghost" id="rpGo2">⬇ PDF report</button></div><p class="hint">Tajik tradition casts the annual chart for the place where you live in that year; birth place is the default.</p></div><div class="needChart" hidden id="varsh"></div></section>
+<section id="pAV" class="pane"><p class="noChart card">Generate a kundli in tab ① first.</p><div class="needChart" hidden id="av"></div></section>
+<section id="pAyur" class="pane"><p class="noChart card">Generate a kundli in tab ① first. The Vata–Pitta–Kapha analysis will appear here.</p><div class="needChart card" hidden><h2>⚖ Importance of each factor group</h2><p class="hint">Raise or lower how strongly each part of the chart counts towards Vata / Pitta / Kapha. 0 = ignore, 1 = default. Saved on this device.</p><div id="aywBox" class="aywbox"></div></div><div class="needChart" hidden id="ayur"></div></section>
 <section id="pTable" class="pane">
  <div class="card"><div class="toolbar">
    <label>View<select id="mode"><option value="all">All 108 padas</option><option value="mine" class="needChart" hidden>My chart: occupied padas</option><option value="janma" class="needChart" hidden>My Janma nakshatra (4 padas)</option><option value="good" class="needChart" hidden>Shubh taras for me</option><option value="bad" class="needChart" hidden>Ashubh for me (tara / vedha / yoni)</option></select></label>
@@ -216,6 +258,7 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
   </div>
   <p class="hint" id="mBasis"></p>
   <details class="rbd"><summary>📜 Shastra rules applied for this act</summary><div id="mRules"></div></details>
+  <details class="rbd"><summary>⚙ Rule importance, strictness and rating thresholds</summary><div id="mwBox"></div></details>
   <h3 style="margin:14px 0 6px;font-size:15px" id="mPlaceLbl">Place where the act will happen</h3>
   <div class="form">
    <label>Place (preset)<select id="mCity"></select></label>
@@ -261,8 +304,13 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
 <section id="pGloss" class="pane"><div class="card"><h2>Glossary</h2><p class="hint">Every technical word used in the app. You can also tap any word anywhere to see its entry.</p>
  <label class="hint" for="glQ">Search</label><input id="glQ" type="search" placeholder="e.g. Bhadra, Chandrashtama, Rohini" style="width:100%"><p class="hint" id="glCount"></p><div id="glList" class="gllist"></div></div></section>
 <section id="pMethod" class="pane">
+ <div class="card"><h2>✅ Engine validation</h2><p class="hint">The app recomputes reference charts with published positions every time it opens: tropical Sun, Moon and Ascendant from Astro-Databank AA charts, and Vedic Lagna / Moon signs of well-known Indian charts (including Vajpayee, Gwalior). Any ✗ means the engine or the data is wrong.</p><button type="button" class="btn ghost" id="valRun">Run again</button><div id="valBox"></div></div>
  <div class="card"><h2>How to use</h2><ol class="src">
   <li><b>Tab ①</b> – enter birth date, time and place, then press Generate. This birth chart is reused everywhere. Default place is Gwalior and default time is now; your last details and city are remembered on this device (cookie + local storage).</li>
+  <li><b>🕒 Clock rule</b> – "Auto" decides daylight saving from the place AND the birth date at the moment you press Generate (EU, US / Canada, and India war time 1942–45). Choose "Standard time only" if your record is already in standard time, "LMT" for very old births. The exact offset used is shown under the chart.</li>
+  <li><b>⏳ Dasha phal / 📅 Varshphal / 🔢 Ashtakavarga</b> – mahadasha, antardasha and pratyantar results with working; Tajik annual chart with Muntha highlighted; BAV / SAV tables with standard conclusions and today's transits.</li>
+  <li><b>📁 Saved kundlis</b> – save any number of named kundlis; export or import them (CSV / JSON) together with your muhurta rule importance and Ayurveda weights.</li>
+  <li><b>🪔 Upaya</b> – in tab ③ every present dosha has remedies by type (shanti, mantra, stotra, daana, vrata, ratna, mool, conduct), plus planet-wise remedies with gem suitability for your lagna. In tab ⑥ every fault shows its parihara.</li>
   <li><b>🌿 Ayurveda</b> – Vata / Pitta / Kapha prakriti from lagna, Moon, nakshatra nadi, pada (navamsa), Sun, 6th house and strong planets, with nature, foods (vegetarian), foods to avoid and routine.</li>
   <li><b>Charts</b> – tap any planet label (Su, Mo, Ma…) for its full details: position, nakshatra, lords, dignity, house, houses it rules, aspects cast and received, conjunctions, avastha, karaka and gochar. Tap an empty part of a house for the house meaning, lord, occupants and aspects.</li>
   <li><b>Any word</b> – tap it to see its meaning (📖 button in the header switches this off). The full list is in tab ⑧.</li>
@@ -294,6 +342,7 @@ details.rbd{margin-top:10px;border:1px solid var(--line);border-radius:10px;padd
   <li><b>Metal:</b> classical texts give metals for planets, not nakshatras. The table shows the metal of the nakshatra lord.</li></ul></div>
 </section>
 </main>
+<div id="report" aria-hidden="true"></div>
 <dialog id="dlg"><div class="dlgin"><button class="btn ghost" id="dlgClose" type="button" aria-label="Close">✕</button><div id="dlgBody"></div></div></dialog>
 <script>
 /* ================= DATA LAYER ================= */
@@ -688,7 +737,7 @@ const NAKSHOOL={17:"East",24:"South",3:"West",11:"North"};
 const DOOR_TITHI={East:[5,10,15],South:[1,6,11],West:[2,7,12],North:[3,8,13]};
 const VAMA_RAVI={East:[8,9,10,11,12],South:[5,6,7,8,9],West:[2,3,4,5,6],North:[11,12,1,2,3]};
 const RATING=["Very good","Good","Neutral","Bad","Very bad"], RCLS=["vg","g","n","b","vb"];
-function rateOf(score,crit){if(crit)return 4;if(score>=15)return 0;if(score>=9)return 1;if(score>=3)return 2;if(score>=-3)return 3;return 4;}
+function rateOf(score,crit){const T=(typeof MW!=="undefined"&&MW.th)||[15,9,3,-3];if(crit)return 4;if(score>=T[0])return 0;if(score>=T[1])return 1;if(score>=T[2])return 2;if(score>=T[3])return 3;return 4;}
 
 /* ---------- astronomy helpers for scanning ---------- */
 const sidSun=t=>norm(tropical(t).Sun-ayanamsa(t)), sidMoon=t=>norm(tropical(t).Moon-ayanamsa(t));
@@ -754,8 +803,8 @@ function houseOf(sign,from){return ((sign-from+12)%12)+1;}
 function evalAt(t,ctx,act,opt){
  const P=ctx.P,S=sidereal(t,P.lat,P.lon,P.node),F=[],ST=[];let score=0,crit=false;
  const aS=SRC[ACT_SRC[act.id]||"nk"];
- const add=(grp,name,val,pts,note,src,isCrit)=>{F.push({grp,name,val,pts,note,src:src||aS,crit:!!isCrit});score+=pts;if(isCrit)crit=true;};
- const strict=(scope,grp,name,bad,val,note,src)=>{ST.push({scope,name,ok:!bad,val,note,src:src||aS});if(bad)add(grp,name,val,-8,note,src,true);};
+ const add=(grp,name,val,pts,note,src,isCrit)=>{const o=ruleCfg(name);if(o.mode==="off"||(!isCrit&&o.w===0))return;if(!isCrit&&o.w!==1){pts=Math.round(pts*o.w*100)/100;note+=" · importance ×"+o.w;}F.push({grp,name,val,pts,note,src:src||aS,crit:!!isCrit});score+=pts;if(isCrit)crit=true;};
+ const strict=(scope,grp,name,bad,val,note,src)=>{const o=ruleCfg(name);if(o.mode==="off"){ST.push({scope,name,ok:true,val,note:note+" (switched OFF in settings)",src:src||aS});return;}ST.push({scope,name,ok:!bad,val,note:note+(o.mode==="weighted"?" (set to weighted in settings)":""),src:src||aS,soft:o.mode==="weighted"});if(bad){if(o.mode==="weighted")add(grp,name,val,-8,note+" (weighted, not rejecting)",src,false);else add(grp,name,val,-8,note,src,true);}};
  const moonI=Math.floor(S.Moon/NAKW),moonP=Math.floor(S.Moon/PADA)%4+1,elong=norm(S.Moon-S.Sun),ti=Math.floor(elong/12),tN=ti+1,tp=(tN-1)%15+1,shukla=tN<=15;
  const yi=Math.floor(norm(S.Sun+S.Moon)/NAKW),ki=Math.floor(elong/6),karana=ki===0?"Kimstughna":ki>=57?["Shakuni","Chatushpada","Naga"][ki-57]:KARANA_MOV[(ki-1)%7];
  const lag=Math.floor(S.Lagna/30),msign=Math.floor(S.Moon/30),ssign=Math.floor(S.Sun/30);
@@ -925,7 +974,7 @@ function run(){const msg=$("#formMsg");msg.textContent="";
  if(!(tz>=-12&&tz<=14)){msg.textContent="UTC offset must be between −12 and +14.";return;}
  const [y,m,d]=ds.split("-").map(Number);const tp=ts.split(":").map(Number);
  if(y<1800||y>2100){msg.textContent="Supported years: 1800–2100.";return;}
- CH=computeChart({y,m,d,hh:tp[0]||0,mi:tp[1]||0,ss:tp[2]||0,lat,lon,tz,dst:$("#dst").checked,node:$("#node").value,name:$("#bname").value.trim()});
+ const CLK=resolveClock();$("#dst").checked=!!CLK.plus;CH=computeChart({y,m,d,hh:tp[0]||0,mi:tp[1]||0,ss:tp[2]||0,lat,lon,tz:CLK.tz,dst:!!CLK.plus,node:$("#node").value,name:$("#bname").value.trim()});
  renderAll();$("#results").hidden=false;$("#results").scrollIntoView({behavior:"smooth",block:"start"});
  $$(".needChart").forEach(e=>e.hidden=false);$$(".noChart").forEach(e=>e.hidden=true);
  $("#mode").value="mine";renderTable();if(window.onChartReady)window.onChartReady();}
@@ -948,7 +997,7 @@ function renderAll(){
  const pc=[["Vara (Vedic weekday)",VARA[P.vara]+(P.dayInfo.night?" · night birth":"")],["Tithi",P.paksha+" "+P.tName+" ("+(P.ti+1)+")"],["Tithi runs",fmtTime(P.tithiSpan[0],off)+" → "+fmtTime(P.tithiSpan[1],off)],["Nakshatra",N.n+" pada "+mo.p],["Nakshatra runs",fmtTime(P.nakSpan[0],off)+" → "+fmtTime(P.nakSpan[1],off)],["Yoga",P.yoga+(BAD_YOGA[P.yi]!==undefined?" ⚠":"")],["Yoga runs",fmtTime(P.yogaSpan[0],off)+" → "+fmtTime(P.yogaSpan[1],off)],["Karana",P.karana],["Sunrise / Sunset",fmtTime(P.rise,off).slice(11,16)+" / "+fmtTime(P.set,off).slice(11,16)],["Rahu Kalam",tw(kz&&kz.rahu)],["Yamaganda",tw(kz&&kz.yama)],["Gulika Kaal",tw(kz&&kz.guli)],["Abhijit Muhurta",tw(kz&&kz.abhijit)],["Ayanamsa (Lahiri)",dms(S.ayan,true)],["Moon speed",P.moonSpeed.toFixed(2)+"°/day"]];
  $("#panchang").innerHTML=pc.map(([a,b])=>`<div class="kv"><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join("");
  $("#ptab").innerHTML=planetTable(G,{head:"<th>Tara from Moon</th><th>Rel. to nak lord</th>",cell:(k,o)=>`<td><span class="${TARA_GOOD[o.tara]===true?"ok":TARA_GOOD[o.tara]===false?"bad":"mix"}">${TARA[o.tara]}</span></td><td>${o.rel}</td>`});
- stackify($("#ptab"));renderDasha();renderAnalysis();renderDosha();renderAyur();}
+ stackify($("#ptab"));renderDasha();renderAnalysis();renderDosha();renderAyur();if(typeof renderV4==="function"&&$("#vPlace").options.length){renderV4();}if(typeof clockLine==="function")$("#clockInfo").textContent=clockLine();}
 function renderDasha(){const D=CH.dasha,off=CH.off,now=Date.now()/864e5+2440587.5;
  $("#dashaHead").textContent="Birth dasha: "+D.lord+" – balance "+Math.floor(D.balanceYrs)+" y "+Math.floor((D.balanceYrs%1)*12)+" m "+Math.floor(((D.balanceYrs*12)%1)*30)+" d";
  $("#dasha").innerHTML=D.seq.slice(0,9).map(md=>{const cur=now>=md.start&&now<md.end;
@@ -982,7 +1031,7 @@ function renderDosha(){const only=$("#doshaOnly").checked;const rank={present:0,
  const L=CH.doshas.slice().sort((a,b)=>rank[a.status]-rank[b.status]).filter(d=>!only||d.status==="present"||d.status==="mild");
  const lab={present:"PRESENT",mild:"CAUTION",absent:"Not present",info:"Info",good:"Auspicious"};const cnt=s=>CH.doshas.filter(d=>d.status===s).length;
  $("#doshaSum").innerHTML=chip(cnt("present")+" present","bad")+chip(cnt("mild")+" caution","warn")+chip(cnt("good")+" auspicious","good");
- $("#doshaList").innerHTML=L.map(d=>`<div class="dz ${d.status}"><div class="dzh"><b>${esc(d.name)}</b><span class="badge ${d.status}">${lab[d.status]}</span></div><p>${esc(d.detail)}</p><small>Basis: ${esc(d.basis)}</small></div>`).join("");}
+ $("#doshaList").innerHTML=L.map(d=>`<div class="dz ${d.status}"><div class="dzh"><b>${esc(d.name)}</b><span class="badge ${d.status}">${lab[d.status]}</span></div><p>${esc(d.detail)}</p><small>Basis: ${esc(d.basis)}</small>${d.status==="present"||d.status==="mild"?upayaHTML(doshaUpaya(d,CH)):""}</div>`).join("");renderPlanetUpaya();}
 $("#doshaOnly").addEventListener("change",()=>CH&&renderDosha());
 /* ---------- Ready Reckoner table ---------- */
 const COLS=[
@@ -1203,8 +1252,8 @@ const GL_MAN=[
 ["lord|nakshatra lord|pada lord|sign lord","Lord (स्वामी)","Planet that rules a sign, nakshatra or pada. Nakshatra lords follow the Vimshottari order. A pada lord is the lord of the pada's navamsa sign."]
 ];
 const HOUSE_MEAN=["Self, body, health, personality, overall direction","Wealth, family, speech, food, face","Courage, siblings, short travel, communication, effort","Mother, home, land, vehicles, inner peace","Children, intelligence, mantra, past merit, romance","Enemies, disease, debts, service, competition","Spouse, partnership, business deals, public","Longevity, sudden events, secrets, inheritance, obstacles","Fortune, dharma, father, guru, long travel","Career, status, action, government","Gains, income, friends, wishes fulfilled","Loss, expenses, foreign lands, sleep, moksha"];
-const YOGA_MEAN=["pot-support – faulty first 3 ghatis","love – good","long life – good","good fortune – good","splendour – good","great danger – faulty first 6 ghatis","good deeds – good","steadiness – good","spear – faulty first 5 ghatis","knot / danger – faulty first 6 ghatis","growth – good","fixed – good for permanent works","beating – faulty first 9 ghatis","joy – good","thunderbolt – faulty first 9 ghatis","success – good","calamity – wholly rejected (mahapata)","comfort – good","iron bar / obstacle – first half faulty","auspicious – good","accomplished – good","achievable – good","auspicious – good","bright – good","pure – good","chief – good","wholly rejected (mahapata)"];
-const KARANA_MEAN={Bava:"movable; good for permanent and auspicious work",Balava:"movable; religious acts, education",Kaulava:"movable; friendship, love",Taitila:"movable; home, ornaments, public work",Garaja:"movable; agriculture, building",Vanija:"movable; trade and business",Vishti:"movable but inauspicious (Bhadra) – avoid for good work",Shakuni:"fixed; medicine, mantras",Chatushpada:"fixed; animals, ancestor rites",Naga:"fixed; harsh or permanent acts",Kimstughna:"fixed; auspicious, fire rituals"};
+const YOGA_MEAN=["'supporting pillar / pot'. Faulty only in its first 3 ghatis (about 72 min); the rest is usable. Natives are said to overcome rivals and gain wealth","'love, affection'. Auspicious – friendship, marriage talks, reconciliation, pleasant work","'long life'. Auspicious – health, medicine, long-term undertakings","'good fortune'. Auspicious – marriage, ornaments, family celebrations","'splendour, beauty'. Auspicious – arts, decoration, ceremonies, pleasure trips","'great obstacle / danger'. Faulty in its first 6 ghatis (about 2 h 24 min): obstacles and accidents are feared; later part usable","'good deeds'. Auspicious – religious work, charity, starting a job, construction","'steadiness, firmness'. Auspicious – foundations and lasting work","'spear, sharp pain'. Faulty in its first 5 ghatis (about 2 h): quarrels and pain are feared","'knot, danger'. Faulty in its first 6 ghatis: obstacles and health trouble are feared","'growth'. Auspicious – business, investment, anything meant to grow","'fixed, permanent'. Auspicious – permanent works, house building, planting, coronation","'striking, beating'. Faulty in its first 9 ghatis (about 3 h 36 min): violence and loss are feared","'joy, delight'. Auspicious – celebrations, learning, good news","'thunderbolt / diamond'. Faulty in its first 9 ghatis: sudden shocks; usable only for harsh acts","'accomplishment'. Very auspicious – mantra initiation, study, any work that needs success","'great calamity'. One of the two mahapatas (Sun and Moon at equal declination). Rejected for its whole length for good work; good for charity, japa and shraddha","'comfort, the best choice'. Auspicious – comforts, family and pleasant work","'iron bar, obstruction'. The first half is faulty and the second half is usable; suits action against enemies","'auspicious, of Shiva'. Very auspicious – worship, mantra, religious ceremonies","'accomplished'. Auspicious – success in learning, spiritual practice and business","'achievable'. Auspicious – learning skills, practice, sustained effort","'auspicious'. Good for all good work","'bright, pure'. Auspicious – learning, religious work, clarity","'of Brahma, the creator'. Auspicious – study, new creations, peace-making","'of Indra, king of gods'. Auspicious – leadership, government work, gaining authority","'great disharmony'. The second mahapata. Rejected for its whole length; good only for charity and prayer"];
+const KARANA_MEAN={Bava:"1st movable karana. Good for permanent, auspicious and growth-oriented work",Balava:"2nd movable karana. Religious acts, education, welfare rites",Kaulava:"3rd movable karana. Friendship, love, marriage talks",Taitila:"4th movable karana. Home building, ornaments, public and government work",Garaja:"5th movable karana. Agriculture, sowing, house building",Vanija:"6th movable karana. Trade, buying and selling, business",Vishti:"7th movable karana, called Bhadra. Inauspicious for all good work; only for harsh acts. Its last 3 ghatis (puchha, tail) are allowed by many",Shakuni:"Fixed karana in the 2nd half of Krishna Chaturdashi. Medicine, mantra",Chatushpada:"Fixed karana in the 1st half of Amavasya. Animals, cattle, ancestor rites",Naga:"Fixed karana in the 2nd half of Amavasya. Harsh, permanent or destructive acts",Kimstughna:"Fixed karana in the 1st half of Shukla Pratipada. Auspicious; fire rituals"};
 const VARA_MEAN=["Sun – authority, government, medicine, gold","Moon – travel, agriculture, white things, ceremonies","Mars – fire, weapons, surgery, disputes (avoid for marriage, house entry)","Mercury – learning, trade, writing, arts","Jupiter – religion, education, marriage, all good works","Venus – marriage, arts, clothes, vehicles, romance","Saturn – iron, labour, permanent construction, harsh acts"];
 const MASA_MEAN=["Chaitra (≈ Mar–Apr)","Vaishakha (≈ Apr–May)","Jyeshtha (≈ May–Jun)","Ashadha (≈ Jun–Jul)","Shravana (≈ Jul–Aug)","Bhadrapada (≈ Aug–Sep)","Ashwin (≈ Sep–Oct)","Kartika (≈ Oct–Nov)","Margashirsha (≈ Nov–Dec)","Pausha (≈ Dec–Jan)","Magha (≈ Jan–Feb)","Phalguna (≈ Feb–Mar)"];
 const ASPECTS={Sun:[7],Moon:[7],Mercury:[7],Venus:[7],Mars:[4,7,8],Jupiter:[5,7,9],Saturn:[3,7,10],Rahu:[5,7,9],Ketu:[5,7,9]};
@@ -1308,7 +1357,7 @@ function aspSigns(k,sign){return ASPECTS[k].map(n=>(sign+n-1)%12);}
 function charaKarakas(G){const L=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"].map(k=>[k,G[k].deg]).sort((a,b)=>b[1]-a[1]);const N=["Atmakaraka (self)","Amatyakaraka (career)","Bhratrikaraka (siblings)","Matrikaraka (mother)","Putrakaraka (children)","Gnatikaraka (rivals)","Darakaraka (spouse)"];const o={};L.forEach(([k],i)=>o[k]=N[i]);return o;}
 function baladi(deg,sign){const st=["Bala (infant – ¼ results)","Kumara (youth – ½ results)","Yuva (adult – full results)","Vriddha (old – little results)","Mrita (dead – very little)"];let i=Math.min(4,Math.floor(deg/6));if(sign%2===1)i=4-i;return st[i];}
 function kvh(rows){return `<div class="grid2">${rows.filter(r=>r&&r[1]!==undefined&&r[1]!=="").map(([a,b])=>`<div class="kv"><span>${a}</span><b>${b}</b></div>`).join("")}</div>`;}
-function showPlanetPop(cid,k,x,y){const R=CHART_REG[cid];if(!R)return;const C=R.C,G=C.G,o=G[k],row=o.row,lag=C.lagSign,d9=!!R.d9;
+function showPlanetPop(cid,k,x,y){if(k==="Muntha"){showMunthaPop(cid,x,y);return;}const R=CHART_REG[cid];if(!R)return;const C=R.C,G=C.G,o=G[k],row=o.row,lag=C.lagSign,d9=!!R.d9;
  const sgn=d9?o.nav:o.sign,asc=d9?G.Lagna.nav:lag,h=houseOf(sgn,asc),hm=houseOf(sgn,d9?G.Moon.nav:C.moonSign);
  const others=CKEYS.filter(q=>q!==k&&q!=="Lagna");const sOf=q=>d9?G[q].nav:G[q].sign;
  let html=`<h3>${k} <small>${PL_HI[k]||""}</small> · ${esc(R.label)}</h3><div class="chips">${o.flags.map(f=>chip(f[1],f[0])).join("")}</div>`;
@@ -1330,7 +1379,7 @@ function showPlanetPop(cid,k,x,y){const R=CHART_REG[cid];if(!R)return;const C=R.
   ["Speed",o.speed!=null?o.speed.toFixed(3)+"°/day":""],
   R.natal?["Gochar from natal Moon","house "+houseOf(o.sign,R.natal.moonSign)+" · tara "+TARA[taraNum(R.natal.moonI,o.i)]]:null,
   R.natal?["Over natal planets",CKEYS.filter(q=>q!=="Lagna"&&R.natal.G[q].sign===o.sign).join(", ")||"none"]:null,
-  ["Signifies",PL_SIG[k]]]);
+  ["Signifies",PL_SIG[k]],["Upaya (quick)",esc(quickUpaya(k))]]);
  html+=`<p class="story"><i>${esc(row.padaKey)}</i></p><button type="button" class="btn ghost" id="pFull">Full pada card →</button>`;
  showPop(html,x,y);const b=document.getElementById("pFull");b&&b.addEventListener("click",()=>{hidePop();openDetail(o.g);});}
 function showHousePop(cid,h,x,y){const R=CHART_REG[cid];if(!R)return;const C=R.C,G=C.G,d9=!!R.d9,asc=d9?G.Lagna.nav:C.lagSign,sg=(asc+h-1)%12,sOf=q=>d9?G[q].nav:G[q].sign;
@@ -1379,14 +1428,14 @@ function rulebook(act){const aS=SRC[ACT_SRC[act.id]||"nk"],harsh=!!act.harsh,har
  return `<div class="scroll"><table class="tbl rbk"><thead><tr><th>Kind</th><th>Rule</th><th>What it requires</th><th>Shastra source</th></tr></thead><tbody>${r}</tbody></table></div>
  <p class="hint">Not modelled: Lattaa, Paata, Ekargala, Upagraha, Kranti-samya and the other dosha of the Vivaha prakarana; both partners' charts; Kalasha / Vrishabha chakra; local exceptions (parihara).</p>`;}
 function ratingExplain(r){const pos=r.F.filter(f=>f.pts>0&&!f.crit).reduce((a,f)=>a+f.pts,0),neg=r.F.filter(f=>f.pts<0&&!f.crit).reduce((a,f)=>a+f.pts,0),cr=r.F.filter(f=>f.crit);
- const steps=[["Very good","≥ 15"],["Good","9 to 14"],["Neutral","3 to 8"],["Bad","−3 to 2"],["Very bad","below −3"]];
+ const T=MW.th,steps=[["Very good","≥ "+T[0]],["Good","≥ "+T[1]],["Neutral","≥ "+T[2]],["Bad","≥ "+T[3]],["Very bad","below "+T[3]]];const nCust=Object.keys(MW.rules).filter(k=>{const c=MW.rules[k];return (c.w!=null&&+c.w!==1)||(c.mode&&c.mode!=="strict");}).length;
  return `<div class="rexp"><h3>How this rating was made</h3><ol>
  <li><b>Strict check.</b> ${cr.length?`<span class="bad">${cr.length} strict prohibition(s) apply</span> (${cr.map(f=>esc(f.name)).join(", ")}), so the rating is <b>Very bad</b>, whatever the points.`:`<span class="ok">No strict prohibition applies</span>, so the points decide.`}</li>
  <li><b>Points.</b> Supports +${pos}, faults ${neg}${cr.length?", strict faults "+cr.length*-8:""} → total <b>${r.score}</b>.</li>
  <li><b>Scale.</b> ${steps.map(([n,v],i)=>`<span class="rb ${RCLS[i]}${i===r.rating?" cur":""}">${n} ${v}</span>`).join(" ")}</li></ol>
- <p class="hint">Weights reflect how seriously the shastra treats each rule: strict prohibitions ⛔ override everything; prescribed nakshatra +4; preferred lagna, Abhijit and siddhi yogas +3; good tithi, weekday, tara and chandra bala +2; minor faults −1 to −5. The texts give rules, not numbers – the numbers are this app's scale.</p></div>`;}
+ <p class="hint">Weights reflect how seriously the shastra treats each rule: strict prohibitions ⛔ override everything; prescribed nakshatra +4; preferred lagna, Abhijit and siddhi yogas +3; good tithi, weekday, tara and chandra bala +2; minor faults −1 to −5. The texts give rules, not numbers – the numbers are this app's scale. ${nCust?`<b>${nCust} rule(s) use your custom importance</b> (⑤ › ⚙).`:`You can change rule importance and thresholds in ⑤ › ⚙.`}</p></div>`;}
 function strictList(r){const G=r.ST.filter(s=>s.scope==="General"),K=r.ST.filter(s=>s.scope==="Kundli");
- const li=s=>`<li class="${s.ok?"sok":"sbad"}"><span>${s.ok?"✓":"⛔"}</span><div><b>${esc(s.name)}</b> – ${esc(s.val)}<br><small>${esc(s.note)} · <i>${esc(s.src)}</i></small></div></li>`;
+ const li=s=>`<li class="${s.ok?"sok":(s.soft?"ssoft":"sbad")}"><span>${s.ok?"✓":(s.soft?"⚠":"⛔")}</span><div><b>${esc(s.name)}</b> – ${esc(s.val)}<br><small>${esc(s.note)} · <i>${esc(s.src)}</i></small></div></li>`;
  return `<div class="grid"><div><h3>General (everyone)</h3><ul class="slist">${G.map(li).join("")||"<li>None apply to this kind of act.</li>"}</ul></div>
  <div><h3>Kundli-specific (this person)</h3><ul class="slist">${K.length?K.map(li).join(""):`<li class="sbad"><span>!</span><div><b>Not checked</b> – no birth chart is in use, so Naidhana tara, Chandrashtama and Janma-ashtama lagna are not tested. Enter the birth details in tab ①.</div></li>`}</ul></div></div>`;}
 
@@ -1482,8 +1531,8 @@ function renderMA(){const b=MSEL.b,t=MSEL.t,ctx=MS.res.ctx,r=evalAt(t,ctx,MS.act
   (r.crit?`<p class="bad">⛔ Rejected because: ${r.F.filter(f=>f.crit).map(f=>esc(f.name+" – "+f.note)).join("; ")}.</p>`:"");
  $("#maExplain").innerHTML=ratingExplain(r);$("#maStrict").innerHTML=strictList(r);$("#maRules").innerHTML=rulebook(MS.act);stackify($("#maRules table"));
  const groups=["Strict","Panchanga","Special yoga","Personal","Lagna","Time","Period","Act"];
- $("#maFactors").innerHTML=`<thead><tr><th>Group</th><th>Check</th><th>At this moment</th><th>Points</th><th>Rule / meaning</th><th>Shastra source</th></tr></thead><tbody>`+
-  groups.map(g=>r.F.filter(f=>f.grp===g).map(f=>`<tr class="${f.crit?"fc":f.pts>0?"fp":f.pts<0?"fn":""}"><td>${g}</td><td><b>${esc(f.name)}</b></td><td>${esc(f.val)}</td><td class="pts">${f.crit?"⛔ ":""}${f.pts>0?"+":""}${f.pts}</td><td>${esc(f.note)}</td><td><small>${esc(f.src)}</small></td></tr>`).join("")).join("")+"</tbody>";stackify($("#maFactors"));
+ $("#maFactors").innerHTML=`<thead><tr><th>Group</th><th>Check</th><th>At this moment</th><th>Points</th><th>Rule / meaning</th><th>Shastra source</th><th>Parihara / what to do</th></tr></thead><tbody>`+
+  groups.map(g=>r.F.filter(f=>f.grp===g).map(f=>`<tr class="${f.crit?"fc":f.pts>0?"fp":f.pts<0?"fn":""}"><td>${g}</td><td><b>${esc(f.name)}</b></td><td>${esc(f.val)}</td><td class="pts">${f.crit?"⛔ ":""}${f.pts>0?"+":""}${f.pts}</td><td>${esc(f.note)}</td><td><small>${esc(f.src)}</small></td><td>${f.pts<0||f.crit?esc(pariharaFor(f)):""}</td></tr>`).join("")).join("")+"</tbody>";stackify($("#maFactors"));
  const [m1,m9]=chartPair(C,style,MS.opt.CH,"Muhurta");$("#maD1").innerHTML=m1;$("#maD9").innerHTML=m9;
  if(CH&&MS.opt.CH){const [p1,p9]=chartPair(CH,style,null,"Person");$("#maP1").innerHTML=p1;$("#maP9").innerHTML=p9;$("#maPersonCharts").hidden=false;}else $("#maPersonCharts").hidden=true;
  const nat=MS.opt.CH;
@@ -1545,7 +1594,7 @@ K:{el:"Earth + Water",q:"heavy, slow, cool, oily, smooth, dense, stable",
  herbs:"Trikatu, Guggulu, Tulsi, Punarnava, Triphala, Ginger – only with a qualified vaidya's advice."}};
 function addD(acc,d,w){for(const k in d)acc[k]+=d[k]*w;}
 function computePrakriti(C){const G=C.G,acc={V:0,P:0,K:0},rows=[];
- const push=(src,d,w,why)=>{if(!w)return;addD(acc,d,w);rows.push({src,d,w,why});};
+ const push=(src,d,w,why)=>{const g=ayGroup(src);w=+(w*AYW[g]).toFixed(2);if(!w)return;addD(acc,d,w);rows.push({src,d,w,why,g});};
  const fmt=d=>Object.entries(d).map(([k,v])=>DN[k]+(v<1?" "+Math.round(v*100)+"%":"")).join(" + ");
  const lg=G.Lagna,lagLord=SIGN_LORD[lg.sign];
  push("Lagna sign · "+SIGNS[lg.sign],SIGN_DOSHA[lg.sign],3,"Body type is read first from the rising sign");
@@ -1566,7 +1615,7 @@ function computePrakriti(C){const G=C.G,acc={V:0,P:0,K:0},rows=[];
  CKEYS.filter(k=>k!=="Lagna"&&G[k].sign===h6).forEach(k=>push(k+" in 6th",PL_DOSHA[k],1,"Planet in the house of disease"));
  // strongest planets (dignity) push their dosha
  CKEYS.filter(k=>k!=="Lagna"&&["Exalted","Own sign","Moolatrikona"].includes(G[k].dig)).forEach(k=>push(k+" strong ("+G[k].dig+")",PL_DOSHA[k],1,"A strong planet expresses its dosha"));
- const tot=acc.V+acc.P+acc.K,pc={V:acc.V/tot*100,P:acc.P/tot*100,K:acc.K/tot*100};
+ const tot=(acc.V+acc.P+acc.K)||1,pc={V:acc.V/tot*100,P:acc.P/tot*100,K:acc.K/tot*100};
  const ord=["V","P","K"].sort((a,b)=>pc[b]-pc[a]);let type;
  if(pc[ord[0]]-pc[ord[2]]<10)type=["V","P","K"];else if(pc[ord[0]]-pc[ord[1]]<10)type=[ord[0],ord[1]];else type=[ord[0]];
  // vikriti hints
@@ -1602,6 +1651,561 @@ function renderAyur(){if(!CH)return;const R=computePrakriti(CH),T=R.type,name=T.
   <p class="note">⚕ This is an astrological indication of constitution, not a medical diagnosis. Confirm prakriti by pulse and examination with a qualified Ayurvedic doctor, and do not take herbs or change diet for a medical condition without professional advice.</p></div>`;
  stackify($("#ayT"));}
 
+/* ================= BIG STORAGE (cookie chunks + localStorage) ================= */
+function ckRaw(n,v,age){try{document.cookie=n+"="+v+";max-age="+(age==null?31536000:age)+";path=/;SameSite=Lax";}catch(_){}}
+function ckRawGet(n){try{const m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?m[1]:null;}catch(_){return null;}}
+function bigSet(n,v){const s=encodeURIComponent(JSON.stringify(v));try{localStorage.setItem(n,s);}catch(_){}
+ const old=+(ckRawGet(n+"_n")||0);for(let i=0;i<old;i++)ckRaw(n+"_"+i,"",0);
+ const parts=s.match(/[\s\S]{1,3500}/g)||[];parts.forEach((p,i)=>ckRaw(n+"_"+i,p));ckRaw(n+"_n",String(parts.length));}
+function bigGet(n){let s=null;try{s=localStorage.getItem(n);}catch(_){}
+ if(!s){const k=+(ckRawGet(n+"_n")||0);if(k){s="";for(let i=0;i<k;i++)s+=ckRawGet(n+"_"+i)||"";}}
+ if(!s)return null;try{return JSON.parse(decodeURIComponent(s));}catch(_){return null;}}
+
+/* ================= MUHURTA RULE IMPORTANCE ================= */
+const RULES=[
+ ["Amavasya","strict","Panchanga"],["Vishti (Bhadra) karana","strict","Panchanga"],["Vyatipata / Vaidhriti yoga","strict","Panchanga"],["Krakacha yoga","strict","Panchanga"],["Samvartaka yoga","strict","Panchanga"],
+ ["Prescribed nakshatra","strict","Panchanga"],["Rejected pada","strict","Panchanga"],["Rikta tithi (4, 9, 14)","strict","Panchanga"],
+ ["Nakshatra gandanta","strict","Time"],["Tithi gandanta","strict","Time"],["Lagna gandanta","strict","Lagna"],["Grahan (eclipse) day","strict","Time"],["Sankranti (16 ghatis)","strict","Time"],
+ ["Naidhana (7th) tara","strict","Kundli"],["Chandrashtama","strict","Kundli"],["Janma-ashtama lagna","strict","Kundli"],["Janma nakshatra","strict","Kundli"],
+ ["Ashtama shuddhi (8th house empty)","strict","Lagna"],["Moon not in 6 / 8 / 12","strict","Lagna"],["Papa-kartari on lagna","strict","Lagna"],["Venus not in 6th","strict","Lagna"],
+ ["Guru asta (Jupiter set)","strict","Period"],["Shukra asta (Venus set)","strict","Period"],["Kharmas / Malmas","strict","Period"],["Adhik masa","strict","Period"],["Chaturmas","strict","Period"],["Uttarayana","strict","Period"],["Sun not in a dual sign","strict","Period"],
+ ["Dik shool","strict","Act"],["Nakshatra shool","strict","Act"],
+ ["Nakshatra","w","Panchanga"],["Tithi","w","Panchanga"],["Paksha","w","Panchanga"],["Vara","w","Panchanga"],["Yoga","w","Panchanga"],["Karana","w","Panchanga"],["Yamaghanta yoga","w","Panchanga"],["Kshaya tithi","w","Panchanga"],
+ ["Sarvartha Siddhi","w","Special yoga"],["Amrit Siddhi","w","Special yoga"],["Ravi yoga","w","Special yoga"],
+ ["Tara bala","w","Kundli"],["Chandra bala","w","Kundli"],["Guru bala","w","Kundli"],["Surya bala","w","Kundli"],
+ ["Lagna type","w","Lagna"],["8th house","w","Lagna"],["Moon from lagna","w","Lagna"],["7th house","w","Lagna"],["Benefics in kendra/kona","w","Lagna"],["Malefics in 3/6/11","w","Lagna"],["Malefics in kendra/kona","w","Lagna"],["Lagna lord placement","w","Lagna"],["Vargottama lagna","w","Lagna"],["Pushkara navamsa lagna","w","Lagna"],["Panchaka","w","Lagna"],
+ ["Varjyam (tyajya)","w","Time"],["Dur muhurta","w","Time"],["Abhijit muhurta","w","Time"],["Rahu Kalam","w","Time"],["Yamaganda","w","Time"],["Gulika Kaal","w","Time"],
+ ["Ayana","w","Period"],["Masa","w","Period"],["Holashtak","w","Period"],["Pitru paksha","w","Period"],["Simha / Makara Guru","w","Period"],
+ ["Door-facing tithi","w","Act"],["Vama Ravi","w","Act"],["Panchak + south","w","Act"],["Chandra vasa","w","Act"]];
+const MW_DEF={rules:{},th:[15,9,3,-3]};
+let MW=bigGet("nk_mw")||JSON.parse(JSON.stringify(MW_DEF));if(!MW.th)MW.th=MW_DEF.th.slice();if(!MW.rules)MW.rules={};
+function ruleCfg(name){const r=MW.rules[name]||{};return {w:r.w!=null?+r.w:1,mode:r.mode||"strict"};}
+function saveMW(){bigSet("nk_mw",MW);}
+function renderMWTable(){const box=$("#mwBox");if(!box)return;
+ const grp=[...new Set(RULES.map(r=>r[2]))];
+ box.innerHTML=`<div class="form">${["Very good ≥","Good ≥","Neutral ≥","Bad ≥ (below = Very bad)"].map((l,i)=>`<label>${l}<input type="number" step="0.5" class="mwth" data-i="${i}" value="${MW.th[i]}"></label>`).join("")}</div>
+ <p class="hint">Importance multiplies a rule's points (0 = ignore, 1 = default, 2 = double). Strict rules can be kept as <b>strict</b> (always rejects), made <b>weighted</b> (−8 × importance, no automatic rejection) or switched <b>off</b>. Changes are saved on this device; press <b>Find muhurtas</b> again to apply.</p>
+ <div class="scroll"><table class="tbl" id="mwT"><thead><tr><th>Group</th><th>Rule</th><th>Type</th><th>Mode</th><th>Importance</th></tr></thead><tbody>`+
+ grp.map(g=>RULES.filter(r=>r[2]===g).map(([n,k])=>{const c=ruleCfg(n),ch=(c.w!==1||(k==="strict"&&c.mode!=="strict"));
+  return `<tr class="${ch?"mwch":""}"><td>${g}</td><td><b>${esc(n)}</b></td><td>${k==="strict"?"⛔ strict":"⚖ weighted"}</td><td>${k==="strict"?`<select class="mwm" data-n="${esc(n)}">${["strict","weighted","off"].map(m=>`<option ${c.mode===m?"selected":""}>${m}</option>`).join("")}</select>`:"—"}</td><td><input type="number" class="mww" data-n="${esc(n)}" min="0" max="5" step="0.25" value="${c.w}" style="width:80px"></td></tr>`;}).join("")).join("")+`</tbody></table></div>
+ <div class="row"><button type="button" class="btn ghost" id="mwReset">↺ Reset all to defaults</button><span class="hint" id="mwSt"></span></div>`;
+ stackify($("#mwT"));
+ $$(".mwth").forEach(e=>e.addEventListener("change",()=>{const v=parseFloat(e.value);if(isFinite(v)){MW.th[+e.dataset.i]=v;MW.th=MW.th.map(Number);saveMW();$("#mwSt").textContent="Saved. Press Find again to apply.";}}));
+ $$(".mwm").forEach(e=>e.addEventListener("change",()=>{const n=e.dataset.n;MW.rules[n]=Object.assign({},MW.rules[n],{mode:e.value});saveMW();$("#mwSt").textContent="Saved – "+n+" is now "+e.value+".";}));
+ $$(".mww").forEach(e=>e.addEventListener("change",()=>{const n=e.dataset.n;let v=parseFloat(e.value);if(!isFinite(v)||v<0)v=0;if(v>5)v=5;e.value=v;MW.rules[n]=Object.assign({},MW.rules[n],{w:v});saveMW();$("#mwSt").textContent="Saved – "+n+" ×"+v+".";}));
+ $("#mwReset").addEventListener("click",()=>{MW=JSON.parse(JSON.stringify(MW_DEF));saveMW();renderMWTable();$("#mwSt").textContent="Defaults restored.";});}
+
+/* ================= AYURVEDA FACTOR IMPORTANCE ================= */
+const AYW_DEF={lagna:1,moon:1,sun:1,sixth:1,planets:1};
+let AYW=Object.assign({},AYW_DEF,bigGet("nk_ayw")||{});
+function ayGroup(src){if(/lagna/i.test(src))return "lagna";if(/^Moon|with Moon/.test(src))return "moon";if(/^Sun/.test(src))return "sun";if(/6th/.test(src))return "sixth";return "planets";}
+const AYW_LBL={lagna:"Lagna (rising sign, its nakshatra, pada, lord, planets on it)",moon:"Moon (rashi, janma nakshatra nadi, pada)",sun:"Sun (agni / digestion)",sixth:"6th house (disease tendency)",planets:"Strong planets (exalted / own / moolatrikona)"};
+function renderAywCtl(){const b=$("#aywBox");if(!b)return;
+ b.innerHTML=Object.keys(AYW_LBL).map(k=>`<label class="ayl">${AYW_LBL[k]}<span class="row"><input type="range" min="0" max="3" step="0.25" data-k="${k}" value="${AYW[k]}" style="flex:1"><output>×${AYW[k]}</output></span></label>`).join("")+`<button type="button" class="btn ghost" id="aywReset">↺ Reset</button>`;
+ $$("#aywBox input").forEach(i=>i.addEventListener("input",()=>{AYW[i.dataset.k]=+i.value;i.nextElementSibling.textContent="×"+i.value;bigSet("nk_ayw",AYW);if(CH)renderAyur();}));
+ $("#aywReset").addEventListener("click",()=>{AYW=Object.assign({},AYW_DEF);bigSet("nk_ayw",AYW);renderAywCtl();if(CH)renderAyur();});}
+
+/* ================= UPAYA (REMEDIES) ================= */
+const PL_UPAYA={
+ Sun:{deity:"Surya; Shiva",japa:"Om Hraam Hreem Hraum Sah Suryaya Namah – 7,000 japa in 40 days",stotra:"Aditya Hridayam; Gayatri mantra; Surya arghya (water from a copper pot) at sunrise",daana:"Wheat, jaggery, copper, red or saffron cloth – Sunday morning",vrata:"Sunday (one meal, no salt)",ratna:"Ruby (manikya) in gold or copper, ring finger, Sunday",root:"Bel (bilva) root",colour:"Saffron, red, orange",karma:"Respect father and seniors; rise early; avoid ego clashes; honest public or government service"},
+ Moon:{deity:"Shiva, Parvati / Durga",japa:"Om Shraam Shreem Shraum Sah Chandraya Namah – 11,000",stotra:"Om Namah Shivaya; Chandra Kavacham; Shiva abhishek with milk on Mondays",daana:"Rice, milk, curd, sugar, white cloth, silver – Monday",vrata:"Monday or Purnima",ratna:"Pearl (moti) in silver, little finger, Monday",root:"Khirni root",colour:"White, silver",karma:"Serve and respect mother; calm routine; meditation; drink water from a silver glass"},
+ Mars:{deity:"Hanuman, Kartikeya",japa:"Om Kraam Kreem Kraum Sah Bhaumaya Namah – 10,000",stotra:"Hanuman Chalisa / Sundarkand; Rin-mochak Mangal stotra",daana:"Masoor dal, red cloth, jaggery, copper, sweet boondi – Tuesday",vrata:"Tuesday",ratna:"Red coral (moonga) in gold or copper, ring finger, Tuesday",root:"Anantmool root",colour:"Red",karma:"Help brothers; donate blood; regular sport; control anger; avoid land disputes"},
+ Mercury:{deity:"Vishnu, Ganesha",japa:"Om Braam Breem Braum Sah Budhaya Namah – 9,000",stotra:"Vishnu Sahasranama; Ganesha worship",daana:"Whole moong, green cloth, green vegetables, books and stationery for students – Wednesday",vrata:"Wednesday",ratna:"Emerald (panna) in gold, little finger, Wednesday",root:"Vidhara root",colour:"Green",karma:"Respect sisters, aunts and young girls; keep promises and accounts clean; study; feed green fodder to cows"},
+ Jupiter:{deity:"Brihaspati, Vishnu, Dakshinamurti",japa:"Om Graam Greem Graum Sah Gurave Namah – 19,000",stotra:"Guru stotra; Vishnu Sahasranama; Om Brim Brihaspataye Namah",daana:"Chana dal, turmeric, yellow cloth, bananas, ghee, books – Thursday",vrata:"Thursday",ratna:"Yellow sapphire (pukhraj) in gold, index finger, Thursday",root:"Banana root or turmeric root",colour:"Yellow",karma:"Respect teachers and elders; teach; live ethically; turmeric or saffron tilak"},
+ Venus:{deity:"Lakshmi, Shukracharya",japa:"Om Draam Dreem Draum Sah Shukraya Namah – 16,000",stotra:"Shri Suktam; Lakshmi puja on Fridays",daana:"Rice, sugar, curd, white clothes, perfume, cosmetics to women – Friday",vrata:"Friday",ratna:"Diamond (or white sapphire / opal) in silver or platinum, middle or little finger, Friday",root:"Sarpankha or gular root",colour:"White, pastel",karma:"Respect women and spouse; keep body and home clean and beautiful; music and arts; moderate pleasures"},
+ Saturn:{deity:"Shani, Hanuman, Bhairava",japa:"Om Praam Preem Praum Sah Shanaischaraya Namah – 23,000",stotra:"Shani stotra (Dasharatha); Hanuman Chalisa on Saturdays; mustard-oil lamp under a peepal tree on Saturday evening",daana:"Black sesame, mustard oil, iron, black cloth, urad dal, blankets, shoes – Saturday, to the poor and workers",vrata:"Saturday",ratna:"Blue sapphire (neelam) only after a trial and expert advice; amethyst is milder; middle finger",root:"Shami (bichhu) root",colour:"Black, dark blue",karma:"Serve labourers, the elderly and disabled; be punctual and honest; avoid alcohol and cheating"},
+ Rahu:{deity:"Durga, Bhairava",japa:"Om Bhraam Bhreem Bhraum Sah Rahave Namah – 18,000",stotra:"Durga Saptashati or Durga Chalisa; Rahu stotra",daana:"Urad, black sesame, coconut, blanket, mustard, blue cloth – Saturday",vrata:"Saturday",ratna:"Hessonite (gomed) only on expert advice",root:"White sandalwood or nagarmotha root",colour:"Smoky blue, grey",karma:"Avoid intoxicants and shortcuts; keep surroundings clean; help sweepers and outcasts; meditation"},
+ Ketu:{deity:"Ganesha, Chitragupta",japa:"Om Sraam Sreem Sraum Sah Ketave Namah – 17,000",stotra:"Ganesha Atharvashirsha; Ketu stotra",daana:"Blanket, black and white sesame, seven grains (saptadhanya); feed stray dogs – Tuesday or Saturday",vrata:"Tuesday",ratna:"Cat's eye (lahsuniya) only on expert advice",root:"Ashwagandha root",colour:"Grey, multicoloured",karma:"Meditation, pilgrimage, spiritual practice; feed dogs; avoid deception"}};
+const UP_TYPES=["Shanti / Puja","Mantra / Japa","Stotra","Daana (charity)","Vrata (fast)","Ratna (gem)","Mool (root)","Karma / Seva (conduct)","Matching","Custom","Note"];
+function quickUpaya(k){const u=PL_UPAYA[k];return u?u.japa.split(" – ")[0]+" · Daana: "+u.daana.split(" – ")[0]:"—";}
+function planetUpayaList(p){const u=PL_UPAYA[p];return [["Deity",u.deity],["Mantra / Japa",u.japa],["Stotra",u.stotra],["Daana (charity)",u.daana],["Vrata (fast)",u.vrata],["Ratna (gem)",u.ratna],["Mool (root)",u.root],["Colour",u.colour],["Karma / Seva (conduct)",u.karma]];}
+function doshaUpaya(d,C){const n=d.name,L=[];const add=(t,x)=>L.push([t,x]);
+ if(n.startsWith("Gand-mool")){const i=C.moonI,lord=nakLordOf(i);add("Shanti / Puja","Gand-mool nakshatra shanti on the 27th day after birth (when the Moon returns to "+NAK[i].n+") or on a later "+NAK[i].n+" day. Bath with water from many sources and herbs is part of the traditional rite.");
+  add("Mantra / Japa","Nakshatra devata: Om "+DEITY_DAT[i]+" Namah (108 daily). Nakshatra lord "+lord+": "+PL_UPAYA[lord].japa);add("Daana (charity)",PL_UPAYA[lord].daana);add("Custom","In some families the father does not see the child's face before the shanti – a regional custom, not a shastra requirement.");}
+ else if(/Gandanta|Abhukta/.test(n)&&!n.startsWith("Planets")){add("Shanti / Puja","Gandanta shanti with Navagraha puja; Ganesha puja first");add("Mantra / Japa","Maha Mrityunjaya mantra – 108 daily, or 1.25 lakh japa through priests");add("Daana (charity)","Black sesame, cow (go-daana) or its value, gold as per capacity");add("Stotra","Shiva and Ganesha worship on the birth-nakshatra day each month");}
+ else if(n.startsWith("Amavasya")){add("Shanti / Puja","Darsha (Amavasya) janma shanti; Rudrabhishek");add("Stotra","Pitri tarpan on Amavasya");add("Mantra / Japa","Surya and Chandra beej mantra japa");add("Daana (charity)","Rice, milk, white cloth; feed cows and crows");}
+ else if(n.startsWith("Krishna Chaturdashi")){add("Shanti / Puja","Krishna Chaturdashi janma shanti (rite depends on which of the 6 parts)");add("Mantra / Japa","Maha Mrityunjaya; Rudrabhishek");add("Daana (charity)","Black sesame and oil");}
+ else if(n.startsWith("Vishti")){add("Shanti / Puja","Bhadra (Vishti) karana janma shanti");add("Mantra / Japa","Om Gam Ganapataye Namah – 108 daily");add("Stotra","Shiva worship");}
+ else if(n.startsWith("Inauspicious Yoga")){add("Shanti / Puja","Nitya-yoga shanti; for Vyatipata and Vaidhriti, Surya and Chandra puja");add("Daana (charity)","Charity on the day this yoga recurs is said to give large merit");}
+ else if(n.startsWith("Sankranti")){add("Shanti / Puja","Sankranti janma shanti");add("Stotra","Surya arghya daily; Aditya Hridayam");add("Daana (charity)","Wheat, jaggery and sesame on Sankranti days");}
+ else if(n.startsWith("Possible eclipse")){add("Shanti / Puja","Grahana janma shanti");add("Mantra / Japa","Rahu / Ketu beej + Surya / Chandra beej japa; japa during later eclipses is most effective");add("Daana (charity)","Daana after each eclipse");}
+ else if(n.startsWith("Mangal")){add("Matching","Marry a partner who also has Mangal dosha, or whose chart cancels it (Kuja-samya) – the main remedy in practice");add("Shanti / Puja","Hanuman worship on Tuesdays; Mangal shanti (e.g. Mangalnath, Ujjain); Kumbh or Vishnu vivah before marriage is a traditional custom");add("Mantra / Japa",PL_UPAYA.Mars.japa+"; Mangal Chandika stotra");add("Daana (charity)",PL_UPAYA.Mars.daana);add("Ratna (gem)","Red coral only if Mars rules good houses for your lagna");add("Karma / Seva (conduct)","Control anger; regular exercise; blood donation");}
+ else if(n.startsWith("Kaal Sarp")){add("Shanti / Puja","Kaal Sarp shanti at Trimbakeshwar, Ujjain or Srikalahasti; Nag Panchami puja");add("Mantra / Japa","Maha Mrityunjaya; Om Namah Shivaya; Rahu and Ketu beej japa");add("Daana (charity)","Black sesame, blanket; offering a silver snake pair in a Shiva temple is a traditional practice");add("Note","A modern, popular yoga – treat as a mild indicator.");}
+ else if(n.startsWith("Kemadruma")){add("Mantra / Japa",PL_UPAYA.Moon.japa+"; Om Namah Shivaya");add("Shanti / Puja","Shiva abhishek with milk on Mondays; Purnima puja");add("Daana (charity)",PL_UPAYA.Moon.daana);add("Ratna (gem)","Pearl or moonstone in silver, if the Moon is a good-house lord");add("Karma / Seva (conduct)","Serve mother; build a support network; daily meditation");}
+ else if(n.startsWith("Grahan yoga")){add("Stotra","Aditya Hridayam (Sun) or Chandra mantra (Moon); Durga Saptashati");add("Mantra / Japa","Rahu / Ketu beej japa, especially during eclipses");add("Daana (charity)","Items of the luminary and of Rahu / Ketu");}
+ else if(n.startsWith("Guru-Chandal")){add("Mantra / Japa",PL_UPAYA.Jupiter.japa+"; Vishnu Sahasranama");add("Vrata (fast)","Thursday");add("Daana (charity)",PL_UPAYA.Jupiter.daana);add("Karma / Seva (conduct)","Respect teachers; avoid unethical shortcuts");}
+ else if(n.startsWith("Planets in Gandanta")){d.detail.split(" in ")[0].split(", ").forEach(p=>PL_UPAYA[p]&&add("Mantra / Japa",p+": "+PL_UPAYA[p].japa));add("Stotra","Maha Mrityunjaya mantra");}
+ else if(n.startsWith("64th navamsa")){const l=ROWS[C.nav64].padaLord;add("Mantra / Japa",l+" (lord of the 64th navamsa): "+PL_UPAYA[l].japa+" – especially in its dasha / antardasha");add("Daana (charity)",PL_UPAYA[l].daana);}
+ else if(n.startsWith("22nd drekkana")){const l=SIGN_LORD[C.d22Sign];add("Mantra / Japa",l+" (Khara lord): "+PL_UPAYA[l].japa+" – in its periods and when transits hit this degree");add("Daana (charity)",PL_UPAYA[l].daana);}
+ else if(n.startsWith("Combust")){add("Stotra","Surya arghya daily (keeps the Sun benign)");d.detail.split(", ").forEach(p=>PL_UPAYA[p]&&add("Mantra / Japa",p+": "+PL_UPAYA[p].japa));}
+ else if(/Rahu Kalam|Yamaganda|Gulika/.test(n)){add("Mantra / Japa","Minor indicator – Durga or Bhairava worship; Rahu beej japa if Rahu is also weak");}
+ return L;}
+function upayaHTML(L){if(!L.length)return "";return `<details class="up"><summary>🪔 Upaya (remedies)</summary><ul class="flist">${L.map(([t,x])=>`<li><b>${esc(t)}:</b> ${esc(x)}</li>`).join("")}</ul></details>`;}
+function planetIssues(C,p){const o=C.G[p],I=[],h=houseOf(o.sign,C.lagSign);
+ if(o.dig==="Debilitated")I.push("debilitated");if(o.dig==="Enemy sign")I.push("in an enemy sign");if(o.flags.some(f=>f[1].startsWith("Combust")))I.push("combust");
+ if([6,8,12].includes(h))I.push("in house "+h+" (dusthana)");if(o.flags.some(f=>f[1].includes("Gandanta")))I.push("in gandanta");
+ if(["Sun","Moon","Jupiter"].includes(p)&&(C.G.Rahu.sign===o.sign||C.G.Ketu.sign===o.sign))I.push("with Rahu / Ketu");
+ if(p!=="Saturn"&&p!=="Rahu"&&p!=="Ketu"&&C.G.Saturn.sign===o.sign)I.push("with Saturn");return I;}
+function renderPlanetUpaya(){const box=$("#upaya");if(!box||!CH)return;const C=CH;
+ const ruled=p=>[...Array(12).keys()].map(i=>i+1).filter(h=>SIGN_LORD[(C.lagSign+h-1)%12]===p);
+ const card=p=>{const I=planetIssues(C,p),r=ruled(p),good=r.some(h=>[1,5,9].includes(h))||(r.some(h=>[4,7,10].includes(h))&&!r.some(h=>[6,8,12].includes(h))),badLord=r.length&&r.every(h=>[6,8,12,3,11].includes(h));
+  const gemNote=p==="Rahu"||p==="Ketu"?"Node – gems only on expert advice.":good?"Rules good houses ("+r.join(", ")+") – its gem is generally suitable.":badLord?"Rules difficult houses ("+r.join(", ")+") – avoid its gem; use mantra, daana and seva.":"Mixed lordship ("+r.join(", ")+") – take expert advice before wearing its gem.";
+  return `<details class="rbd up" ${I.length?"open":""}><summary>${p} <small>${PL_HI[p]}</small> ${I.length?chip("needs support: "+I.join(", "),"warn"):chip("no major affliction","good")}</summary>${kvh(planetUpayaList(p).map(([a,b])=>[a,esc(b)]))}<p class="hint">💎 ${esc(gemNote)}</p></details>`;};
+ const order=PLANETS.slice().sort((a,b)=>planetIssues(C,b).length-planetIssues(C,a).length);
+ box.innerHTML=`<h2 style="margin-top:18px">🪔 Planet-wise upaya</h2><p class="hint">Afflicted planets are listed first and open. Types of upaya: <b>Mantra / Japa</b> (sound), <b>Stotra / Puja</b> (worship), <b>Daana</b> (charity on the planet's day), <b>Vrata</b> (fast), <b>Ratna</b> (gem), <b>Mool</b> (herbal root worn instead of a gem), <b>Karma / Seva</b> (conduct – often the most effective). Japa counts are the traditional totals, usually completed in 40 days.</p>${order.map(card).join("")}
+ <p class="note">Remedies are traditional practices. Gems can intensify a planet either way – take a qualified astrologer's advice before wearing one. Do not replace medical, legal or financial help with remedies.</p>`;}
+
+/* muhurta parihara */
+const DIK_ITEM=["ghee or dalia (porridge)","look in a mirror / milk","jaggery (gud)","coriander or sesame","curd","barley (jau)","ginger or urad"];
+function pariharaFor(f){const n=f.name;
+ if(n==="Tara bala"){if(/Vipat/.test(f.val))return "Tara daana: give jaggery (guda) before the act.";if(/Pratyak/.test(f.val))return "Tara daana: give salt (lavana) before the act.";return "Mild – prefer a good tara day.";}
+ if(n.startsWith("Naidhana"))return "Classical tara daana: sesame (tila) with gold. For major acts still avoided – choose another day.";
+ if(n==="Chandrashtama")return "Postpone. If unavoidable: Chandra puja, Om Som Somaya Namah, daana of rice / white cloth.";
+ if(n.startsWith("Vishti"))return "Bhadra-vasa: with the Moon in Cancer, Leo, Aquarius or Pisces Bhadra is on earth (harmful); in other signs many allow it. Bhadra-puchha (last 3 ghatis) is permitted. Otherwise wait.";
+ if(n==="Dik shool")return "Better to avoid. Popular practice if unavoidable: take "+DIK_ITEM[f.val&&VARA.findIndex(v=>f.val.startsWith(v.split(" ")[0]))]+" before leaving, or start a few steps the day before (prasthana).";
+ if(n==="Nakshatra shool")return "Change the day or direction, or do prasthana (send an article ahead) in a good muhurta.";
+ if(/gandanta/i.test(n))return "Wait until the gandanta window (±2 ghatis; lagna ±½ ghati) passes.";
+ if(/Rahu Kalam|Yamaganda|Gulika/.test(n))return "No remedy – shift by about 1½ hours.";
+ if(n==="Dur muhurta")return "Shift to the next muhurta (48 min).";
+ if(n.startsWith("Varjyam"))return "Shift 1½–2 hours; the nakshatra's Amrita ghatis come later.";
+ if(n==="Panchaka")return "Choose the next lagna (changes every ~2 h) to get a Rahita remainder.";
+ if(/Lagna type|8th house|Ashtama|Moon not in|Moon from lagna|Papa-kartari|Venus not|7th house|Malefics in kendra|Lagna lord|Janma-ashtama/.test(n))return "Pick another lagna on the same day.";
+ if(/asta/.test(n))return "Wait for the planet's udaya (rise). In real need some allow it after Guru / Shukra japa and daana.";
+ if(/Kharmas|Adhik|Chaturmas|Uttarayana|dual sign|Holashtak|Pitru|Masa|Simha/.test(n))return "Period-level rule – no parihara for major samskaras; wait for the next permitted period.";
+ if(n.startsWith("Sankranti"))return "Wait 16 ghatis; use the time for daana and snana.";
+ if(n.startsWith("Grahan"))return "Avoid; use the day for japa and daana.";
+ if(/Amavasya|Krakacha|Samvartaka|Vyatipata|Yamaghanta|Kshaya|Yoga/.test(n))return "Day-level fault – choose another day (yoga faults: wait for the faulty ghatis to pass).";
+ if(/nakshatra|Prescribed|Rejected pada|Janma nakshatra/i.test(n))return "Wait for a prescribed nakshatra.";
+ if(/Chandra bala|Guru bala|Surya bala/.test(n))return "Worship and daana of that planet before the act; or choose a day with better bala.";
+ if(n.startsWith("Door")||n.startsWith("Vama"))return "Choose a tithi / lagna matching the door direction.";
+ if(n==="Chandra vasa"||n.startsWith("Panchak"))return "Change the day or direction of departure.";
+ return "Choose a nearby window without this fault.";}
+
+/* ================= SAVED KUNDLIS + IMPORT / EXPORT ================= */
+let KL=bigGet("nk_kundlis")||[];
+function saveKL(){KL.sort((a,b)=>a.name.localeCompare(b.name));bigSet("nk_kundlis",KL);renderKL();}
+function kFromForm(){const c=$("#city");return {name:$("#bname").value.trim(),date:$("#bdate").value,time:$("#btime").value.length===5?$("#btime").value+":00":$("#btime").value,place:c.value!==""?c.selectedOptions[0].text:"",lat:+$("#lat").value,lon:+$("#lon").value,tz:+$("#tz").value,dst:$("#dst").checked?1:0,tzr:$("#tzr").value,node:$("#node").value};}
+function kToForm(k){$("#bname").value=k.name||"";$("#bdate").value=k.date;$("#btime").value=(k.time||"12:00:00").length===5?k.time+":00":k.time;
+ const ci=CITIES.findIndex(c=>c[0]===k.place);$("#city").value=ci>=0?String(ci):"";if(ci>=0)applyCity();
+ if(k.lat!=="" && k.lat!=null)$("#lat").value=k.lat;if(k.lon!=="" && k.lon!=null)$("#lon").value=k.lon;if(k.tz!=="" && k.tz!=null)$("#tz").value=k.tz;$("#tzr").value=k.tzr||(+k.dst?"plus1":"auto");$("#node").value=k.node||"mean";suggestDST();}
+function upsertK(k){const i=KL.findIndex(x=>x.name.toLowerCase()===k.name.toLowerCase());if(i>=0)KL[i]=k;else KL.push(k);}
+function renderKL(){const s=$("#kList");if(!s)return;const cur=s.value;s.innerHTML=KL.length?KL.map((k,i)=>`<option value="${i}">${esc(k.name)} · ${esc(k.date)} ${esc((k.time||"").slice(0,5))} · ${esc(k.place||(k.lat+", "+k.lon))}</option>`).join(""):'<option value="">— no saved kundlis yet —</option>';if(cur&&KL[+cur])s.value=cur;$("#kCount").textContent=KL.length+" saved";}
+function kStatus(t){$("#kSt").textContent=t;}
+function dl(name,text,type){const b=new Blob([text],{type});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+const csvQ=v=>{v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+const K_COLS=["name","date","time","place","lat","lon","tz","tzr","node"];
+function kCSV(){return [K_COLS.join(",")].concat(KL.map(k=>K_COLS.map(c=>csvQ(k[c])).join(","))).join("\n");}
+function rulesCSV(){const L=["rule,mode,importance"];RULES.forEach(([n,k])=>{const c=ruleCfg(n);L.push([csvQ(n),k==="strict"?c.mode:"",c.w].join(","));});MW.th.forEach((v,i)=>L.push(["threshold_"+["very_good","good","neutral","bad"][i],"",v].join(",")));Object.keys(AYW).forEach(k=>L.push(["ayurveda_"+k,"",AYW[k]].join(",")));return L.join("\n");}
+function parseCSV(t){const rows=[];let r=[],f="",q=false;t=t.replace(/^\ufeff/,"");
+ for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}
+  else if(c==='"')q=true;else if(c===","||c===";"&&!t.includes(",")){r.push(f);f="";}else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;r.push(f);rows.push(r);r=[];f="";}else f+=c;}
+ if(f!==""||r.length){r.push(f);rows.push(r);}return rows.filter(x=>x.some(v=>v.trim()!==""));}
+function normDate(s){s=String(s||"").trim();let m;if(m=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/))return m[1]+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0");
+ if(m=s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/))return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");return null;}
+function normTime(s){s=String(s||"").trim().toLowerCase();const m=s.match(/^(\d{1,2})[:.](\d{2})(?:[:.](\d{2}))?\s*(am|pm)?$/);if(!m)return null;let h=+m[1];if(m[4]==="pm"&&h<12)h+=12;if(m[4]==="am"&&h===12)h=0;if(h>23||+m[2]>59)return null;return String(h).padStart(2,"0")+":"+m[2]+":"+(m[3]||"00");}
+function findCity(p){if(!p)return -1;const q=p.toLowerCase().trim();let i=CITIES.findIndex(c=>c[0].toLowerCase()===q);if(i<0)i=CITIES.findIndex(c=>c[0].toLowerCase().startsWith(q.split(",")[0]));return i;}
+function importKRows(rows){const h=rows[0].map(x=>x.trim().toLowerCase());const col=(...names)=>h.findIndex(x=>names.includes(x));
+ const ix={name:col("name","person"),date:col("date","dob","birth date","date of birth"),time:col("time","tob","birth time","time of birth"),place:col("place","city","birthplace","birth place"),lat:col("lat","latitude"),lon:col("lon","lng","long","longitude"),tz:col("tz","utc","offset","timezone","utc offset"),dst:col("dst"),tzr:col("tzr","clock","clock rule"),node:col("node")};
+ let ok=0,bad=[];rows.slice(1).forEach((r,n)=>{const g=k=>ix[k]>=0?(r[ix[k]]||"").trim():"";const name=g("name"),date=normDate(g("date")),time=normTime(g("time"))||"12:00:00";
+  if(!name||!date){bad.push(n+2);return;}const ci=findCity(g("place"));let lat=g("lat"),lon=g("lon"),tz=g("tz");
+  if(ci>=0){if(lat==="")lat=CITIES[ci][1];if(lon==="")lon=CITIES[ci][2];if(tz==="")tz=CITIES[ci][3];}
+  if(lat===""||lon===""){bad.push(n+2);return;}
+  upsertK({name,date,time,place:ci>=0?CITIES[ci][0]:g("place"),lat:+lat,lon:+lon,tz:tz===""?5.5:+tz,dst:/^(1|y|yes|true)$/i.test(g("dst"))?1:0,tzr:["auto","std","plus1","lmt"].includes(g("tzr"))?g("tzr"):(/^(1|y|yes|true)$/i.test(g("dst"))?"plus1":"auto"),node:/true/i.test(g("node"))?"true":"mean"});ok++;});
+ return {ok,bad};}
+function importRuleRows(rows){let n=0;rows.slice(1).forEach(r=>{const name=(r[0]||"").trim(),mode=(r[1]||"").trim().toLowerCase(),w=parseFloat(r[2]);
+  const th=["threshold_very_good","threshold_good","threshold_neutral","threshold_bad"].indexOf(name);
+  if(th>=0&&isFinite(w)){MW.th[th]=w;n++;return;}
+  if(name.startsWith("ayurveda_")&&isFinite(w)){AYW[name.slice(9)]=w;n++;return;}
+  if(RULES.some(x=>x[0]===name)){const o=Object.assign({},MW.rules[name]);if(["strict","weighted","off"].includes(mode))o.mode=mode;if(isFinite(w))o.w=w;MW.rules[name]=o;n++;}});
+ return n;}
+function afterImport(msg){saveKL();saveMW();bigSet("nk_ayw",AYW);renderMWTable();renderAywCtl();if(CH)renderAyur();kStatus(msg);}
+function importText(text,fname){text=String(text);const isJson=/\.json$/i.test(fname)||/^\s*[\[{]/.test(text);
+ if(isJson){let d;try{d=JSON.parse(text);}catch(e){kStatus("⚠ Not valid JSON: "+e.message);return;}
+  const arr=Array.isArray(d)?d:(d.kundlis||[]);let ok=0;arr.forEach(k=>{const date=normDate(k.date||k.dob),name=(k.name||"").trim();if(!name||!date)return;const ci=findCity(k.place||k.city);
+   upsertK({name,date,time:normTime(k.time||k.tob)||"12:00:00",place:ci>=0?CITIES[ci][0]:(k.place||""),lat:k.lat!=null?+k.lat:(ci>=0?CITIES[ci][1]:0),lon:k.lon!=null?+k.lon:(ci>=0?CITIES[ci][2]:0),tz:k.tz!=null?+k.tz:(ci>=0?CITIES[ci][3]:5.5),dst:k.dst?1:0,tzr:k.tzr||(k.dst?"plus1":"auto"),node:k.node==="true"?"true":"mean"});ok++;});
+  if(!Array.isArray(d)){if(d.muhurtaRules){MW=Object.assign({rules:{},th:MW_DEF.th.slice()},d.muhurtaRules);}if(d.ayurWeights)AYW=Object.assign({},AYW_DEF,d.ayurWeights);
+   if(d.lastBirth)ckSet("nk_birth",d.lastBirth);if(d.lastMuhurta)ckSet("nk_mu",d.lastMuhurta);}
+  afterImport("✓ Imported "+ok+" kundli(s)"+(Array.isArray(d)?"":" and all settings")+" from "+fname+".");return;}
+ const rows=parseCSV(text);if(rows.length<2){kStatus("⚠ The CSV has no data rows.");return;}
+ if(rows[0].map(x=>x.trim().toLowerCase()).includes("rule")){const n=importRuleRows(rows);afterImport("✓ Updated "+n+" rule / weight settings from "+fname+".");return;}
+ const r=importKRows(rows);afterImport("✓ Imported "+r.ok+" kundli(s) from "+fname+"."+(r.bad.length?" Skipped rows "+r.bad.join(", ")+" (need name, date and a known place or lat/lon).":""));}
+(function initKL(){renderKL();renderMWTable();renderAywCtl();
+ $("#kLoad").addEventListener("click",()=>{const k=KL[+$("#kList").value];if(!k)return;kToForm(k);run();if(typeof saveBirth==="function")saveBirth();kStatus("Loaded "+k.name+".");});
+ $("#kSave").addEventListener("click",()=>{const k=kFromForm();if(!k.name){kStatus("⚠ Enter a name first.");$("#bname").focus();return;}if(!k.date){kStatus("⚠ Enter a date.");return;}const ex=KL.some(x=>x.name.toLowerCase()===k.name.toLowerCase());upsertK(k);saveKL();kStatus((ex?"Updated ":"Saved ")+k.name+".");});
+ $("#kDel").addEventListener("click",()=>{const i=+$("#kList").value;const k=KL[i];if(!k)return;if(!confirm("Delete the saved kundli of "+k.name+"?"))return;KL.splice(i,1);saveKL();kStatus("Deleted "+k.name+".");});
+ $("#kJson").addEventListener("click",()=>dl("kundli_data.json",JSON.stringify({app:"nakshatra-pada-kundli",version:1,exported:new Date().toISOString(),kundlis:KL,muhurtaRules:MW,ayurWeights:AYW,lastBirth:ckGet("nk_birth"),lastMuhurta:ckGet("nk_mu")},null,1),"application/json"));
+ $("#kCsv").addEventListener("click",()=>dl("kundlis.csv","\ufeff"+kCSV(),"text/csv"));
+ $("#kRules").addEventListener("click",()=>dl("muhurta_ayurveda_settings.csv","\ufeff"+rulesCSV(),"text/csv"));
+ $("#kTpl").addEventListener("click",()=>dl("kundlis_template.csv","name,date,time,place,lat,lon,tz,tzr,node\nRam Sharma,1985-03-10,08:30,\"Gwalior, IN\",,,,auto,mean\nSita Verma,21-07-1990,22:15:00,,26.2183,78.1828,5.5,auto,mean\nOld Record,12-01-1890,06:00,,22.5726,88.3639,,lmt,mean\n","text/csv"));
+ $("#kFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{importText(rd.result,f.name);e.target.value="";};rd.readAsText(f);});
+ $("#genBtn").addEventListener("click",()=>{const k=kFromForm();if(k.name&&k.date&&$("#kAuto").checked){upsertK(k);saveKL();}});})();
+
+/* ================= GLOSSARY ADDITIONS ================= */
+[["upaya|upayas|remedy|remedies","Upaya (उपाय) – remedy","Traditional measures to reduce a dosha or strengthen a weak planet: mantra / japa, stotra and puja, daana (charity), vrata (fasting), ratna (gem), mool (herbal root), yantra, and karma / seva (right conduct and service)."],
+ ["japa|mantra japa","Japa (जप)","Repeating a mantra a set number of times, usually counted on a 108-bead mala. Planet japa totals (e.g. Saturn 23,000) are traditionally finished within about 40 days, often with a closing homa."],
+ ["daana|dana|charity","Daana (दान) – charity","Giving the items linked to a planet or dosha, on its weekday, to someone who needs them. Said to transfer and dissolve the karma behind the affliction."],
+ ["vrata|vrat|fast|fasting","Vrata (व्रत) – vow / fast","A disciplined observance, usually a fast (one meal, no salt, or fruit only) on the planet's weekday."],
+ ["ratna|gem|gemstone","Ratna (रत्न) – gemstone","A gem strengthens its planet in every way. Use it only for planets that rule good houses in your chart; for lords of difficult houses use mantra, daana and seva instead."],
+ ["mool|root|jadi","Mool / jadi (मूल) – herbal root","The root of a plant linked to a planet, worn on the planet's day as a cheaper, milder substitute for a gem."],
+ ["yantra","Yantra (यन्त्र)","A geometric diagram of a deity or planet, energised and worshipped as a remedy."],
+ ["shanti puja|shanti","Shanti puja (शान्ति)","A pacifying ritual by priests – puja, homa, japa and daana – for a birth dosha (Gand-mool, gandanta, eclipse birth etc.)."],
+ ["parihara|pariharam","Parihara (परिहार)","An exception or remedy that cancels or reduces a muhurta fault, e.g. tara daana or Bhadra-puchha."],
+ ["tara daana","Tara daana","Classical charity to neutralise a bad tara: Vipat – jaggery, Pratyak – salt, Naidhana – sesame with gold."],
+ ["bhadra vasa|bhadra puchha|bhadra mukha","Bhadra-vasa / puchha","Where Vishti (Bhadra) 'lives' depends on the Moon's sign: Cancer, Leo, Aquarius, Pisces – on earth (harmful); other signs – heaven or netherworld (milder). The last 3 ghatis (puchha, tail) are allowed; the first 5 ghatis (mukha, face) are the worst."],
+ ["prasthana","Prasthana (प्रस्थान)","Symbolic early departure: moving a personal item or walking a few steps out in a good muhurta, so the real trip counts as already begun."],
+ ["kumbh vivah|kumbh vivaha|vishnu vivah","Kumbh / Vishnu vivah","A symbolic marriage with a pot or a Vishnu idol before the real marriage, done traditionally to absorb Mangal dosha."],
+ ["rudrabhishek|abhishek|abhishekam","Rudrabhishek / Abhishek","Bathing a Shiva linga (or deity) with water, milk and other offerings while chanting – a common shanti for many doshas."],
+ ["maha mrityunjaya|mahamrityunjaya|mrityunjaya","Maha Mrityunjaya mantra","Rig Veda 7.59.12 prayer to Shiva for protection from death and disease; the standard remedy for gandanta, health and Saturn / Rahu afflictions."],
+ ["tarpan|tarpana|pitri tarpan","Tarpan (तर्पण)","Offering water with sesame to the ancestors (pitris), especially on Amavasya and in Pitru paksha."],
+ ["importance|weight|multiplier","Importance (rule weight)","Your own multiplier for a rule's points in the muhurta score: 0 ignores the rule, 1 is the app default, 2 doubles it. Set in tab ⑤ › ⚙."],
+ ["weighted","Weighted rule","A rule that adds or subtracts points but never rejects the time by itself."],
+ ["sanghatika","Sanghatika nakshatra","The 16th nakshatra from the birth star – groups and associations. Malefic transits here can bring trouble through groups."],
+ ["samudayika","Samudayika nakshatra","The 18th nakshatra from the birth star – community and collective events."],
+ ["vainashika","Vainashika nakshatra","The 22nd nakshatra from the birth star – 'destruction'. Watched when malefics transit it."],
+ ["manasa","Manasa nakshatra","The 25th nakshatra from the birth star – the mind."],
+ ["karma nakshatra","Karma nakshatra","The 10th nakshatra from the birth star – work and actions."],
+ ["dinacharya","Dinacharya (दिनचर्या)","Ayurvedic daily routine: waking time, cleansing, massage, exercise, meal and sleep times suited to your dosha."],
+ ["abhyanga","Abhyanga (अभ्यङ्ग)","Warm-oil self-massage – sesame oil for Vata, coconut oil for Pitta; little or none for Kapha."],
+ ["udvartana","Udvartana (उद्वर्तन)","Dry or herbal-powder massage (often gram flour) against the hair – used for Kapha and weight."],
+ ["vikriti","Vikriti (विकृति)","The current imbalance of the doshas, as opposed to prakriti, the inborn constitution."],
+ ["prakriti|constitution","Prakriti (प्रकृति)","The inborn mix of Vata, Pitta and Kapha fixed at conception. It does not change; vikriti (imbalance) does."],
+ ["vata","Vata (वात)","The dosha of Air and Ether: movement, nerves, breath. Dry, light, cold, mobile."],
+ ["pitta","Pitta (पित्त)","The dosha of Fire and Water: digestion, metabolism, heat, intelligence. Hot, sharp, oily."],
+ ["kapha","Kapha (कफ)","The dosha of Earth and Water: structure, lubrication, immunity, stability. Heavy, slow, cool, oily."],
+ ["agni","Agni (अग्नि) – digestive fire","Digestive and metabolic power. Strong in Pitta, irregular in Vata, slow in Kapha. Read from the Sun in the chart."],
+ ["rasa|taste|tastes","Rasa (रस) – taste","Six tastes: sweet, sour, salty (reduce Vata), bitter, astringent (reduce Pitta and Kapha) and pungent (reduces Kapha, raises Pitta)."],
+ ["guna|gunas|qualities","Guna (गुण) – quality","Here: the physical qualities of a dosha, such as heavy / light, hot / cold, oily / dry."],
+ ["sama prakriti|tridoshic|tridosha","Sama (tridoshic) prakriti","All three doshas nearly equal – rare and considered healthy if the balance is kept season by season."],
+ ["nitya yoga|nitya-yoga|27 yogas","Nitya yoga – the 27 daily yogas","Sun + Moon longitude ÷ 13°20'. Each lasts about a day. 18 are auspicious; Vishkumbha, Atiganda, Shula, Ganda, Vyaghata, Vajra and Parigha are faulty only in their opening ghatis; Vyatipata and Vaidhriti are faulty throughout. Tap any yoga name for its meaning."]
+].forEach(([k,t,b])=>GL_LIST.push(glAdd(k,t,b)));
+GL_LIST.sort((a,b)=>a.title.localeCompare(b.title));renderGloss();
+
+/* ================= v4: CLOCK RESOLUTION (fixes DST state bugs) ================= */
+function inWarTime(y,m,d,h){const t=Date.UTC(y,m-1,d)+h*3600e3;return t>=Date.UTC(1942,8,1)&&t<Date.UTC(1945,9,15);}
+function cityRuleNow(){const i=$("#city").value,tz=+$("#tz").value;if(i!==""){const c=CITIES[+i];return c[4]||(c[3]===5.5?"IN":"");}return tz===5.5?"IN":"";}
+function fmtOff(o){const s=o<0?"−":"+",a=Math.abs(o),h=Math.floor(a),m=Math.round((a-h)*60);return "UTC"+s+h+(m?":"+String(m).padStart(2,"0"):"");}
+function resolveClock(){const mode=($("#tzr")||{}).value||"auto";const [y,m,d]=($("#bdate").value||"2000-01-01").split("-").map(Number);const tp=($("#btime").value||"12:00").split(":").map(Number);const h=(tp[0]||0)+(tp[1]||0)/60;
+ let tz=parseFloat($("#tz").value),plus=0,why="",rule="";const lon=parseFloat($("#lon").value);
+ if(mode==="lmt"){tz=+(lon/15).toFixed(4);why="Local mean time: longitude "+lon+"° ÷ 15 = "+fmtOff(tz);}
+ else if(mode==="std")why="Standard time only ("+fmtOff(tz)+"), no summer / war time";
+ else if(mode==="plus1"){plus=1;why="Forced +1 h on "+fmtOff(tz);}
+ else{rule=cityRuleNow();
+  if(rule==="EU"){plus=euDST(y,m,d,h-tz)?1:0;why="Auto – European summer-time rule: "+(plus?"summer time in force (+1 h)":"standard time");}
+  else if(rule==="US"){plus=usDST(y,m,d,h)?1:0;why="Auto – US / Canada DST rule: "+(plus?"daylight time in force (+1 h)":"standard time");}
+  else if(rule==="IN"){plus=inWarTime(y,m,d,h)?1:0;why="Auto – India: "+(plus?"WAR TIME in force 1 Sep 1942 – 15 Oct 1945 (IST + 1 h = UTC+6:30)":"IST, no daylight saving");}
+  else why="Auto – no daylight-saving rule known for this place ("+fmtOff(tz)+")";}
+ const off=tz+plus,ut=h-off;return {mode,rule,tz,plus,off,why,ut,lmt:h-off+lon/15};}
+function suggestDST(){if(!$("#tzr"))return;const c=resolveClock();$("#dst").checked=!!c.plus;$("#dstHint").innerHTML="🕒 <b>Clock rule:</b> "+esc(c.why)+" · offset used <b>"+fmtOff(c.off)+"</b>.";}
+function clockLine(){const c=resolveClock(),f=x=>{x=((x%24)+24)%24;const h=Math.floor(x),m=Math.floor((x-h)*60);return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");};
+ return `🕒 Clock ${esc(($("#btime").value||"").slice(0,5))} · ${esc(c.why)} · offset ${fmtOff(c.off)} · UT ${f(c.ut)} · LMT ${f(c.lmt)} · Ayanamsa ${CH?dms(CH.S.ayan,true):""}`;}
+(function initClock(){$("#city").addEventListener("change",()=>{if($("#tzr").value!=="lmt")$("#tzr").value="auto";suggestDST();});["#lat","#lon"].forEach(s=>$(s).addEventListener("input",()=>{$("#city").value="";suggestDST();}));
+ $("#tz").addEventListener("input",()=>{$("#city").value="";suggestDST();});$("#tzr").addEventListener("change",suggestDST);$("#bdate").addEventListener("input",suggestDST);$("#btime").addEventListener("input",suggestDST);suggestDST();})();
+
+/* ================= v4: FAMOUS KUNDLIS (built-in, read-only) ================= */
+// [name, date, time, place, lat, lon, tz(UTC offset actually in force), rating/source, category, expect {lag,moon} sidereal sign idx or tropical refs]
+const FAMOUS=[
+["Mahatma Gandhi","1869-10-02","07:12","Porbandar",21.6417,69.6293,4.642,"Widely published (B. V. Raman); LMT","India",{lag:6,moon:3}],
+["Jawaharlal Nehru","1889-11-14","23:30","Allahabad",25.4358,81.8463,5.4564,"Widely published; LMT","India",{lag:3,moon:3}],
+["Indira Gandhi","1917-11-19","23:11","Allahabad",25.4358,81.8463,5.5,"AA (Astro-Databank)","India",{lag:3,moon:9}],
+["Rajiv Gandhi","1944-08-20","07:11","Mumbai",18.975,72.8258,6.5,"Widely published; India war time (IST+1)","India",{lag:4,moon:4}],
+["Narendra Modi","1950-09-17","11:00","Vadnagar",23.7845,72.6393,5.5,"Widely published (C)","India",{lag:7,moon:7}],
+["Amitabh Bachchan","1942-10-11","16:00","Allahabad",25.4358,81.8463,6.5,"Widely used; conflicting sources; war time","India",{lag:10,moon:6}],
+["Swami Vivekananda","1863-01-12","06:33","Kolkata",22.5726,88.3639,5.8909,"Widely published (B. V. Raman); LMT","India",{lag:8,moon:5}],
+["Subhas Chandra Bose","1897-01-23","12:00","Cuttack",20.4625,85.8828,5.3528,"AA (father's diary; Madras time)","India",{moon:5}],
+["Atal Bihari Vajpayee","1924-12-25","05:45","Gwalior",26.2183,78.1828,5.5,"A (Times Select Horoscopes)","India",{lag:7,moon:7}],
+["Ramana Maharshi","1879-12-30","01:00","Tiruchuli",9.5333,78.2,5.2133,"Widely published; LMT","India",{moon:2}],
+["Paramahansa Yogananda","1893-01-05","20:38","Gorakhpur",26.7606,83.3732,5.5582,"AA (Astro-Databank); LMT","India",{}],
+["India – Independence","1947-08-15","00:00","New Delhi",28.6139,77.209,5.5,"Event (AA)","Event",{lag:1,moon:3}],
+["India – Republic","1950-01-26","10:15","New Delhi",28.6139,77.209,5.5,"Event (A)","Event",{}],
+["Albert Einstein","1879-03-14","11:30","Ulm",48.4011,9.9876,0.6658,"AA; LMT","World",{t:[353.5,254.533,101.633]}],
+["Barack Obama","1961-08-04","19:24","Honolulu",21.3069,-157.8583,-10,"AA","World",{t:[132.55,63.35,318.05]}],
+["Donald Trump","1946-06-14","10:54","Jamaica, New York",40.7027,-73.789,-4,"AA (EDT)","World",{t:[82.917,261.2,149.917]}],
+["Princess Diana","1961-07-01","19:45","Sandringham",52.8311,0.5054,1,"A (BST)","World",{t:[99.667,325.033,258.4]}],
+["Queen Elizabeth II","1926-04-21","02:40","London",51.5103,-0.1478,1,"AA (BST)","World",{t:[30.2,132.117,291.4]}],
+["King Charles III","1948-11-14","21:14","London",51.5014,-0.1419,0,"AA","World",{t:[232.417,30.433,125.417]}],
+["John F. Kennedy","1917-05-29","15:00","Brookline",42.3318,-71.1212,-5,"A","World",{t:[67.867,null,199.983]}],
+["Marilyn Monroe","1926-06-01","09:30","Los Angeles",34.0522,-118.2437,-8,"AA","World",{t:[70.45,319.1,133.067]}],
+["Steve Jobs","1955-02-24","19:15","San Francisco",37.7749,-122.4194,-8,"AA","World",{t:[null,7.75,172.283]}],
+["Bill Gates","1955-10-28","22:00","Seattle",47.6062,-122.3321,-8,"A","World",{}],
+["Elvis Presley","1935-01-08","04:35","Tupelo",34.2576,-88.7034,-6,"AA","World",{}],
+["Martin Luther King Jr.","1929-01-15","12:00","Atlanta",33.749,-84.388,-6,"AA","World",{}],
+["Adolf Hitler","1889-04-20","18:30","Braunau am Inn",48.2581,13.0349,0.869,"AA; LMT","World",{}],
+["Winston Churchill","1874-11-30","01:30","Woodstock (Blenheim)",51.8481,-1.3549,-0.0903,"AA; LMT","World",{}],
+["Bob Dylan","1941-05-24","21:05","Duluth",46.7867,-92.1005,-6,"AA","World",{}],
+["John Lennon","1940-10-09","18:30","Liverpool",53.4084,-2.9916,1,"AA (BST)","World",{}],
+["Paul McCartney","1942-06-18","14:00","Liverpool",53.4084,-2.9916,2,"A (double summer time)","World",{}],
+["Madonna","1958-08-16","07:05","Bay City, Michigan",43.5945,-83.8889,-5,"AA","World",{}],
+["Angelina Jolie","1975-06-04","09:09","Los Angeles",34.0522,-118.2437,-7,"AA (PDT)","World",{}],
+["Brad Pitt","1963-12-18","06:31","Shawnee",35.3273,-96.9253,-6,"AA","World",{}],
+["Tom Cruise","1962-07-03","15:06","Syracuse",43.0481,-76.1474,-4,"AA (EDT)","World",{}],
+["Leonardo DiCaprio","1974-11-11","02:47","Los Angeles",34.0522,-118.2437,-8,"AA","World",{}],
+["Oprah Winfrey","1954-01-29","04:30","Kosciusko",33.0576,-89.5876,-6,"A","World",{}],
+["Bill Clinton","1946-08-19","08:51","Hope, Arkansas",33.6671,-93.5916,-6,"A","World",{}],
+["Sigmund Freud","1856-05-06","18:30","Příbor",49.6409,18.145,1.2097,"AA; LMT","World",{}],
+["Joe Biden","1942-11-20","08:30","Scranton",41.409,-75.6624,-4,"AA (war time)","World",{}],
+["Ronald Reagan","1911-02-06","04:16","Tampico, Illinois",41.6292,-89.7859,-6,"AA","World",{}],
+["Richard Nixon","1913-01-09","21:35","Yorba Linda",33.8886,-117.8131,-8,"AA","World",{}],
+["George W. Bush","1946-07-06","07:26","New Haven",41.3083,-72.9279,-4,"AA (EDT)","World",{}],
+["Charlie Chaplin","1889-04-16","20:00","London",51.4875,-0.0921,0,"A","World",{}],
+["Pablo Picasso","1881-10-25","23:15","Málaga",36.7213,-4.4214,-0.2948,"AA; LMT","World",{}],
+["Ernest Hemingway","1899-07-21","08:00","Oak Park, Illinois",41.885,-87.7845,-6,"AA","World",{}],
+["Walt Disney","1901-12-05","00:35","Chicago",41.8781,-87.6298,-6,"AA","World",{}],
+["Muhammad Ali","1942-01-17","18:35","Louisville",38.2527,-85.7585,-6,"AA","World",{}],
+["Neil Armstrong","1930-08-05","00:31","Wapakoneta",40.5678,-84.1936,-5,"AA","World",{}],
+["Bruce Lee","1940-11-27","07:12","San Francisco",37.7749,-122.4194,-8,"AA","World",{}],
+["Kurt Cobain","1967-02-20","19:20","Aberdeen, Washington",46.9754,-123.8157,-8,"AA","World",{}]];
+
+var FAM=FAMOUS.map(([name,date,time,place,lat,lon,tz,src,cat,ex])=>({name,date,time:time+":00",place,lat,lon,tz,tzr:"std",src,cat,ex,famous:1}));
+function renderKL(){const s=$("#kList");if(!s)return;const FAM_=typeof FAM!=="undefined"&&FAM?FAM:[];const cur=s.value;
+ s.innerHTML=`<optgroup label="My kundlis (${KL.length})">${KL.length?KL.map((k,i)=>`<option value="m:${i}">${esc(k.name)} · ${esc(k.date)} ${esc((k.time||"").slice(0,5))} · ${esc(k.place||(k.lat+", "+k.lon))}</option>`).join(""):'<option value="" disabled>— none saved yet —</option>'}</optgroup>`+
+ ["India","Event","World"].map(c=>`<optgroup label="Famous – ${c} (built-in)">${FAM_.map((k,i)=>k.cat===c?`<option value="f:${i}">★ ${esc(k.name)} · ${esc(k.date)} ${esc(k.time.slice(0,5))} · ${esc(k.place)}</option>`:"").join("")}</optgroup>`).join("");
+ if(cur&&[...s.options].some(o=>o.value===cur))s.value=cur;$("#kCount").textContent=KL.length+" saved · "+FAM_.length+" famous built-in";}
+function selK(){const v=$("#kList").value||"";const [t,i]=v.split(":");return t==="m"?{k:KL[+i],mine:1,i:+i}:t==="f"?{k:FAM[+i],mine:0}:{};}
+(function initFam(){renderKL();
+ $("#kLoad").addEventListener("click",()=>{const {k,mine}=selK();if(!k)return;kToForm(k);run();if(typeof saveBirth==="function")saveBirth();kStatus("Loaded "+k.name+(mine?"":" ("+k.src+")")+".");});
+ $("#kDel").addEventListener("click",()=>{const {k,mine,i}=selK();if(!k)return;if(!mine){kStatus("Built-in famous kundlis cannot be deleted.");return;}if(!confirm("Delete the saved kundli of "+k.name+"?"))return;KL.splice(i,1);saveKL();kStatus("Deleted "+k.name+".");});})();
+
+/* ================= v4: ENGINE VALIDATION ================= */
+function runValidation(){const out=[];let pass=0,fail=0;
+ FAM.forEach(k=>{const ex=k.ex||{};if(ex.lag==null&&ex.moon==null&&!ex.t)return;const [y,m,d]=k.date.split("-").map(Number),[hh,mi]=k.time.split(":").map(Number);
+  const jd=julianDay(y,m,d,hh+mi/60-k.tz),S=sidereal(jd,k.lat,k.lon,"mean"),t=tropical(jd),asc=ascendantTrop(jd,k.lat,k.lon);const r=[];let ok=true;
+  if(ex.lag!=null){const g=Math.floor(S.Lagna/30)===ex.lag;ok=ok&&g;r.push("Lagna "+SIGNS[Math.floor(S.Lagna/30)]+(g?" ✓":" ✗ expected "+SIGNS[ex.lag]));}
+  if(ex.moon!=null){const g=Math.floor(S.Moon/30)===ex.moon;ok=ok&&g;r.push("Moon "+SIGNS[Math.floor(S.Moon/30)]+(g?" ✓":" ✗"));}
+  if(ex.t)[t.Sun,t.Moon,asc].forEach((v,i)=>{if(ex.t[i]==null)return;const df=Math.abs(((v-ex.t[i]+540)%360)-180)*60;const g=df<9;ok=ok&&g;r.push(["Sun","Moon","Asc"][i]+" Δ"+df.toFixed(1)+"′"+(g?" ✓":" ✗"));});
+  ok?pass++:fail++;out.push({n:k.name,src:k.src,r:r.join(" · "),ok,ty:ex.t?"Tropical position vs published (Astro-Databank)":"Vedic sign vs published Indian chart"});});
+ return {pass,fail,out};}
+function renderValidation(){const V=runValidation();$("#valBox").innerHTML=`<p><b class="${V.fail?"bad":"ok"}">${V.pass} of ${V.pass+V.fail} reference charts reproduced</b> (tolerance 9′ for tropical positions; exact sign for Vedic charts).</p>
+ <div class="scroll"><table class="tbl" id="valT"><thead><tr><th>Chart</th><th>Test</th><th>Result</th><th>Source</th></tr></thead><tbody>${V.out.map(o=>`<tr class="${o.ok?"":"fc"}"><td><b>${esc(o.n)}</b></td><td>${esc(o.ty)}</td><td>${esc(o.r)}</td><td><small>${esc(o.src)}</small></td></tr>`).join("")}</tbody></table></div>`;stackify($("#valT"));}
+
+/* ================= v4: PLANET STRENGTH (for dasha phal) ================= */
+const NAT_MAL=["Sun","Mars","Saturn","Rahu","Ketu"];
+function ownedHouses(C,p){if(p==="Rahu"||p==="Ketu")return [];return [...Array(12).keys()].map(i=>i+1).filter(h=>SIGN_LORD[(C.lagSign+h-1)%12]===p);}
+function planetScore(C,p,depth){const o=C.G[p],h=houseOf(o.sign,C.lagSign),own=ownedHouses(C,p),why=[];let s=0;
+ const dg={"Exalted":2,"Moolatrikona":1.5,"Own sign":1.5,"Friendly sign":0.5,"Neutral sign":0,"Enemy sign":-0.5,"Debilitated":-2}[o.dig]||0;if(dg){s+=dg;why.push(o.dig+(dg>0?" +":" ")+dg);}
+ let hs=0;if([5,9].includes(h))hs=1.5;else if([1,4,7,10].includes(h))hs=1;else if(h===11)hs=1;else if([3,6].includes(h))hs=NAT_MAL.includes(p)?1:-0.5;else if(h===2)hs=0.5;else if([8,12].includes(h))hs=-1.5;
+ if(hs){s+=hs;why.push("house "+h+(hs>0?" +":" ")+hs);}
+ own.forEach(x=>{const v=[5,9].includes(x)?1.5:x===1?1:[4,7,10].includes(x)?0.5:[6,8,12].includes(x)?-1:0;if(v){s+=v;why.push("lord of "+x+(v>0?" +":" ")+v);}});
+ const yk=own.some(x=>[4,7,10].includes(x))&&own.some(x=>[5,9].includes(x));if(yk){s+=1;why.push("yogakaraka +1");}
+ if(o.flags.some(f=>f[1].startsWith("Combust"))){s-=1;why.push("combust −1");}
+ if(o.flags.some(f=>f[1]==="Vargottama")){s+=0.5;why.push("vargottama +0.5");}
+ if(o.flags.some(f=>/Gandanta/.test(f[1]))){s-=0.5;why.push("gandanta −0.5");}
+ if((p==="Rahu"||p==="Ketu")&&!depth){const disp=SIGN_LORD[o.sign],ds=planetScore(C,disp,1);s+=ds.s*0.5;why.push("dispositor "+disp+" ×½ "+(ds.s*0.5).toFixed(1));
+  CKEYS.filter(q=>q!=="Lagna"&&q!==p&&C.G[q].sign===o.sign).forEach(q=>{const v=["Jupiter","Venus","Mercury","Moon"].includes(q)?0.5:-0.5;s+=v;why.push("with "+q+(v>0?" +":" ")+v);});}
+ const asJ=aspSigns("Jupiter",C.G.Jupiter.sign).includes(o.sign)&&p!=="Jupiter";if(asJ){s+=0.5;why.push("Jupiter aspect +0.5");}
+ const v=s>=2.5?"Very favourable":s>=1?"Favourable":s>-1?"Mixed":s>-2.5?"Challenging":"Difficult";
+ return {s:+s.toFixed(2),v,why,h,own,yk};}
+const VCLS={"Very favourable":"vg","Favourable":"g","Mixed":"n","Challenging":"b","Difficult":"vb"};
+
+/* ================= v4: DASHA PHAL (BPHS + Phaladeepika + Saravali + Jataka Parijata) ================= */
+const DP={
+ Sun:{good:"rise in status and authority, favour of government and superiors, father's support, gains through medicine, gold, administration, fame and confidence, travel",bad:"friction with superiors, government or father, fever and heat problems, eye, heart or bone trouble, loss of position, ego clashes, anxiety"},
+ Moon:{good:"peace of mind, mother's happiness, popularity, gain of clothes, milk, vehicles and comforts, marriage or children, journeys by water, success with the public",bad:"mental worry and mood swings, colds, fluid and chest trouble, mother's ill health, losses through women or the public, restlessness"},
+ Mars:{good:"courage and victory over rivals, gain of land and property, brothers' help, success in technical, military, police, sports or surgical work, income through fire and metals",bad:"accidents, cuts, burns and surgery, blood or fever trouble, disputes over land, quarrels with brothers, anger, legal trouble"},
+ Mercury:{good:"learning, writing and speech, trade and business profits, friends, skill and intelligence, success in accounts, media, IT, help from maternal relatives",bad:"nervous strain, skin trouble, business loss, misunderstandings through speech or documents, deception, indecision"},
+ Jupiter:{good:"wisdom, wealth and promotion, children, marriage, religious merit, respect from teachers and elders, good counsel, higher education, expansion",bad:"loss through elders or advisers, liver, fat or sugar trouble, worries about children, wrong judgement, wasted resources"},
+ Venus:{good:"marriage and romance, comforts, vehicles, jewellery, arts and music, wealth, favour of women, luxury and pleasant travel",bad:"over-indulgence, urinary, kidney or reproductive trouble, scandal, spouse's ill health, overspending, laziness"},
+ Saturn:{good:"steady rise through hard work, property and land, leadership of workers or masses, discipline, longevity, results from long effort",bad:"delays and obstacles, chronic illness, joint and nerve pain, separation, loss, low work, depression, hard labour"},
+ Rahu:{good:"sudden gains, foreign travel and connections, politics, technology, power, unconventional success, large ambitions fulfilled",bad:"confusion, deception, fears, infections or poisoning, scandal, sudden falls, addictions, trouble from outsiders"},
+ Ketu:{good:"spiritual growth, detachment, research, sudden insight, healing and occult knowledge, liberation from old bonds",bad:"accidents and wounds, mysterious illness, losses and separations, confusion, isolation, sudden reversals"}};
+const DP_SRC="Principles paraphrased from Brihat Parashara Hora Shastra (Vimshottari dasha-phala), Phaladeepika (Mantreswara – dasha and antardasha phala), Saravali (Kalyana Varma) and Jataka Parijata (Vaidyanatha Dikshita).";
+function houseAreas(hs){return hs.map(h=>h+" ("+HOUSE_MEAN[h-1].split(",").slice(0,2).join(",")+")").join("; ");}
+function mdPhal(C,p){const S=planetScore(C,p),areas=[...new Set([S.h,...S.own])],hm=houseOf(C.G[p].sign,C.moonSign);const L=[];
+ L.push(`${p} signifies ${PL_SIG[p]}. In this chart it sits in house ${S.h} from the lagna (${hm} from the Moon)${S.own.length?" and rules house(s) "+S.own.join(", "):""}, so its period activates: ${houseAreas(areas)}.`);
+ if(S.v==="Very favourable"||S.v==="Favourable")L.push(`Strong ${p} → expect the classical good results: ${DP[p].good}.`);
+ else if(S.v==="Mixed")L.push(`Mixed strength → both sides appear. Good: ${DP[p].good}. Watch for: ${DP[p].bad}.`);
+ else L.push(`Weak or afflicted ${p} → the texts warn of: ${DP[p].bad}. Remedies for ${p} help most in this period.`);
+ if(S.yk)L.push(`${p} is a yogakaraka (rules both a kendra and a trikona) – BPHS treats its period as specially fruitful.`);
+ if(S.own.some(x=>[6,8,12].includes(x)))L.push(`As lord of ${S.own.filter(x=>[6,8,12].includes(x)).join(", ")} (dusthana) it can bring ${S.own.includes(6)?"debts, disease or disputes":""}${S.own.includes(8)?" sudden events or obstacles":""}${S.own.includes(12)?" expenses, travel abroad or losses":""}.`);
+ if(S.own.some(x=>[2,7].includes(x)))L.push(`Lord of a maraka house (2 / 7): in later life BPHS asks for care of health during this period.`);
+ if(p==="Rahu"||p==="Ketu")L.push(`${p} gives the results of its sign lord ${SIGN_LORD[C.G[p].sign]} and of the planets with it (BPHS).`);
+ return {S,L};}
+function adPhal(C,md,ad){const S=planetScore(C,ad),r=rel(ad,md),h=houseOf(C.G[ad].sign,C.G[md].sign);let sc=S.s;
+ const pos=[1,4,5,7,9,10,11].includes(h)?"good":[6,8,12].includes(h)?"bad":"mixed";sc+=pos==="good"?1:pos==="bad"?-1.5:0;sc+=r==="Friend"||r==="Own"||r==="Own-like"?0.5:r==="Enemy"?-0.5:0;
+ const v=sc>=2.5?"Very favourable":sc>=1?"Favourable":sc>-1?"Mixed":sc>-2.5?"Challenging":"Difficult";
+ const areas=[...new Set([S.h,...S.own])];
+ let t=`${ad} is ${r==="Own"?"the same planet as":r.toLowerCase()+" to"} ${md} and sits ${h}${["","st","nd","rd"][h]||"th"} from it (${pos==="good"?"kendra / trikona / 11th – supportive":pos==="bad"?"6 / 8 / 12 – friction":"2nd / 3rd – mixed"}). Brings ${PL_SIG[ad].split(",").slice(0,3).join(",")} into the ${md} period; areas: ${houseAreas(areas)}. `;
+ t+=v.includes("avourable")?"Expect: "+DP[ad].good.split(",").slice(0,4).join(",")+".":v==="Mixed"?"Mixed: "+DP[ad].good.split(",").slice(0,2).join(",")+"; watch "+DP[ad].bad.split(",").slice(0,2).join(",")+".":"Caution: "+DP[ad].bad.split(",").slice(0,4).join(",")+".";
+ if(S.own.some(x=>[6,8,12].includes(x))&&pos==="bad")t+=" Dusthana lord placed 6/8/12 from the MD lord – classic sign of a difficult sub-period (Phaladeepika).";
+ return {v,sc:+sc.toFixed(2),t};}
+function pratyantar(ad){const out=[];let s=ad.start;const len=ad.end-ad.start;const i0=DASHA_SEQ.indexOf(ad.pl);for(let k=0;k<9;k++){const p=DASHA_SEQ[(i0+k)%9],l=len*DASHA_YRS[p]/120;out.push({pl:p,start:s,end:s+l});s+=l;}return out;}
+function renderDashaPhal(){if(!CH)return;const C=CH,D=C.dasha,now=Date.now()/864e5+2440587.5,off=C.off;
+ const md=D.seq.find(m=>now>=m.start&&now<m.end),ad=md&&md.ad.find(a=>now>=a.start&&now<a.end),pd=ad&&pratyantar(ad).find(x=>now>=x.start&&now<x.end);
+ let h=`<div class="card"><h2>Running now</h2>${md?`<p class="story"><b>${md.pl}</b> mahadasha → <b>${ad.pl}</b> antardasha → <b>${pd.pl}</b> pratyantar (${fmtDate(pd.start,off)} → ${fmtDate(pd.end,off)})</p>`:"<p>Outside the computed range.</p>"}`;
+ if(md){const M=mdPhal(C,md.pl),A=adPhal(C,md.pl,ad.pl);h+=`<div class="grid"><div><h3>Mahadasha phal · ${md.pl} <span class="rb ${VCLS[M.S.v]}">${M.S.v}</span></h3><ul class="flist">${M.L.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h3>Antardasha phal · ${md.pl}–${ad.pl} <span class="rb ${VCLS[A.v]}">${A.v}</span></h3><p>${esc(A.t)}</p><p class="hint">🪔 Remedy for the period: ${esc(quickUpaya(md.pl))} · ${esc(quickUpaya(ad.pl))}</p>
+  <h4>Pratyantar dashas in ${md.pl}–${ad.pl}</h4><div class="adl">${pratyantar(ad).map(x=>`<div class="${now>=x.start&&now<x.end?"cur":""}"><span>${md.pl}–${ad.pl}–${x.pl}</span><span>${fmtDate(x.start,off)} → ${fmtDate(x.end,off)}</span></div>`).join("")}</div></div></div>`;}
+ h+=`<p class="hint">${DP_SRC} The strength score is the app's weighting of these rules – open each period for the working.</p></div>`;
+ h+=`<div class="card"><h2>All mahadashas with antardasha phal</h2>`+D.seq.slice(0,9).map(m=>{const M=mdPhal(C,m.pl),cur=now>=m.start&&now<m.end;
+  return `<details class="md${cur?" cur":""}" ${cur?"open":""}><summary><b>${m.pl}</b> <span>${fmtDate(Math.max(m.start,C.jd),off)} → ${fmtDate(m.end,off)}</span><span class="rb ${VCLS[M.S.v]}">${M.S.v} (${M.S.s})</span>${cur?chip("running","good"):""}</summary>
+  <ul class="flist">${M.L.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p class="hint">Working: ${esc(M.S.why.join(" · ")||"no strong factor")}</p>
+  <div class="scroll"><table class="tbl adt"><thead><tr><th>Antardasha</th><th>Period</th><th>Rating</th><th>Phal</th></tr></thead><tbody>${m.ad.map(a=>{const A=adPhal(C,m.pl,a.pl),c2=now>=a.start&&now<a.end;return `<tr class="${c2?"mwch":""}${a.end<C.jd?" past":""}"><td><b>${m.pl}–${a.pl}</b></td><td>${fmtDate(Math.max(a.start,C.jd),off)} → ${fmtDate(a.end,off)}</td><td><span class="rb ${VCLS[A.v]}">${A.v}</span></td><td>${esc(A.t)}</td></tr>`;}).join("")}</tbody></table></div></details>`;}).join("")+`</div>`;
+ $("#dashaPhal").innerHTML=h;$$("#dashaPhal table").forEach(stackify);}
+
+/* ================= v4: VARSHPHAL (Tajik – Tajik Neelakanthi) ================= */
+const TRIRASHI_DAY=["Sun","Venus","Saturn","Venus","Jupiter","Moon","Mercury","Mars","Saturn","Mars","Jupiter","Moon"];
+const TRIRASHI_NIGHT=["Jupiter","Moon","Mercury","Mars","Sun","Venus","Saturn","Venus","Saturn","Moon","Mercury","Mars"];
+const MUNTHA_RES={1:"Good – health, recognition, success in own efforts",2:"Good – gain of wealth, family harmony, good food",3:"Good – courage, gains through siblings and short travel, victory",4:"Adverse – domestic worries, trouble to mother, property disputes",5:"Good – children, intelligence, pleasure, success in studies",6:"Adverse – illness, enemies, debts, disputes",7:"Adverse – friction with spouse or partners, travel troubles",8:"Adverse – accidents, fear, chronic illness, losses",9:"Good – fortune, religious acts, long travel, father's support",10:"Good – honour, promotion, royal / official favour",11:"Good – gains, fulfilment of wishes, friends",12:"Adverse – expenses, losses, hospital or far travel"};
+const MUDDA_START=["Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury","Ketu"];
+function tajikAspect(fromSign,toSign){const h=houseOf(toSign,fromSign);return [1,3,4,5,7,9,10,11].includes(h)?([3,5,9,11].includes(h)?"friendly":h===1?"conjunction":"inimical"):null;}
+function solarReturnJD(natSun,Y,bm,bd){let t=julianDay(Y,bm,bd,0);for(let k=0;k<10;k++){const s=sidSun(t);t+=(((natSun-s+540)%360)-180)/0.98565;}return t;}
+function chartAtJD(jd,lat,lon,off,node){const c=jdToCal(jd+off/24),hh=Math.floor(c.h),mf=(c.h-hh)*60,mi=Math.floor(mf),ss=(mf-mi)*60;return computeChart({y:c.y,m:c.m,d:c.d,hh,mi,ss,lat,lon,tz:off,dst:false,node,name:""});}
+let VARSH=null;
+function computeVarsh(Y){const N=CH,iy=N.inp.y;if(Y<=iy)Y=iy+1;const n=Y-iy;
+ const pv=$("#vPlace").value;let lat=N.inp.lat,lon=N.inp.lon,off=N.off,place="birth place";
+ if(pv!=="birth"){const c=CITIES[+pv];lat=c[1];lon=c[2];off=c[3];place=c[0];}
+ const jd=solarReturnJD(N.S.Sun,Y,N.inp.m,N.inp.d);
+ if(pv!=="birth"){const c=CITIES[+pv],cc=jdToCal(jd+c[3]/24);if(c[4]==="EU"&&euDST(cc.y,cc.m,cc.d,cc.h-c[3]))off=c[3]+1;if(c[4]==="US"&&usDST(cc.y,cc.m,cc.d,cc.h))off=c[3]+1;}
+ else off=N.inp.tz;
+ const V=chartAtJD(jd,lat,lon,off,N.inp.node);
+ const mun=(N.lagSign+n)%12,munH=houseOf(mun,V.lagSign),munL=SIGN_LORD[mun];
+ const sunH=houseOf(V.G.Sun.sign,V.lagSign),day=sunH>=7;
+ const tri=(day?TRIRASHI_DAY:TRIRASHI_NIGHT)[V.lagSign],dina=day?SIGN_LORD[V.G.Sun.sign]:SIGN_LORD[V.G.Moon.sign];
+ const P5=[["Muntha lord",munL],["Janma lagna lord",SIGN_LORD[N.lagSign]],["Varsha lagna lord",SIGN_LORD[V.lagSign]],["Tri-rashi pati",tri],[day?"Dina pati (Sun's sign lord)":"Ratri pati (Moon's sign lord)",dina]];
+ const strength=p=>{const S=planetScore(V,p);return S.s;};
+ const cand=P5.map(([r,p])=>({r,p,asp:tajikAspect(V.G[p].sign,V.lagSign),st:strength(p)}));
+ const asp=cand.filter(c=>c.asp);const pick=(asp.length?asp:cand).slice().sort((a,b)=>b.st-a.st)[0];
+ const nk=N.moonI+1,rem=(nk+n-2)%9;const startL=MUDDA_START[rem];let s=jd;const i0=DASHA_SEQ.indexOf(startL),mud=[];
+ for(let k=0;k<9;k++){const p=DASHA_SEQ[(i0+k)%9],l=DASHA_YRS[p]*365.2425/120;mud.push({pl:p,start:s,end:s+l});s+=l;}
+ const mlH=houseOf(V.G[munL].sign,V.lagSign),mlS=planetScore(V,munL);
+ VARSH={Y,n,jd,V,off,place,mun,munH,munL,mlH,mlS,day,cand,pick,mud,lat,lon};return VARSH;}
+function renderVarsh(){if(!CH)return;const yi=$("#vYear");if(!yi.value){const y=new Date().getFullYear();yi.value=Math.max(CH.inp.y+1,y);} 
+ const R=computeVarsh(+yi.value),V=R.V,style=$("#cstyle").value,off=R.off;
+ const d1=CKEYS.map(k=>({k,sign:V.G[k].sign,t:PL_AB[k]+" "+Math.floor(V.G[k].deg)+"°"+(V.G[k].retro&&k!=="Rahu"&&k!=="Ketu"?"ᴿ":"")}));d1.push({k:"Muntha",sign:R.mun,t:"★ Muntha"});
+ const cid=regChart(V,CH,"Varsha "+R.Y+" · D1"),f=style==="north"?northSVG:southSVG;
+ const nat=CKEYS.map(k=>({k,sign:CH.G[k].sign,t:PL_AB[k]+" "+Math.floor(CH.G[k].deg)+"°"}));nat.push({k:"Muntha",sign:CH.lagSign,t:"Muntha (birth)"});const cidN=regChart(CH,null,"Birth · D1");
+ const res=MUNTHA_RES[R.munH],good=res.startsWith("Good");
+ $("#varsh").innerHTML=`<div class="card"><h2>Varsha Pravesh ${R.Y} – year ${R.n+1} of life (${R.n} years completed)</h2>
+  <p class="story">Sun returns to its birth position (${inSign(CH.S.Sun)} sidereal) on <b>${fmtTime(R.jd,off).slice(0,16)}</b> (${fmtOff(off)}) at ${esc(R.place)} – a ${R.day?"day":"night"} varsha pravesh.</p>
+  <div class="munbox ${good?"mg":"mb"}"><div><span>Muntha</span><b>${SIGNS[R.mun]} (${SIGNS_HI[R.mun]})</b></div><div><span>House from Varsha lagna</span><b>${R.munH}</b></div><div><span>Muntha lord</span><b>${R.munL} – in house ${R.mlH}, ${V.G[R.munL].dig||""}</b></div><div><span>Result</span><b>${esc(res)}</b></div></div>
+  <p class="hint">Muntha = birth lagna (${SIGNS[CH.lagSign]}) advanced one sign per completed year: ${SIGNS[CH.lagSign]} + ${R.n} = ${SIGNS[R.mun]}. Muntha lord strength in the varsha chart: <span class="rb ${VCLS[R.mlS.v]}">${R.mlS.v}</span> – a strong Muntha lord confirms good Muntha results; weak or in 6/8/12 it reduces them (Tajik Neelakanthi).</p>
+  <div class="charts"><div><h4>Varsha kundli ${R.Y} (★ = Muntha)</h4>${f(V.lagSign,d1,cid,"Varsha "+R.Y)}</div><div><h4>Birth kundli</h4>${f(CH.lagSign,nat,cidN,"Birth chart")}</div></div></div>
+  <div class="grid"><div class="card"><h2>Panchadhikari & Varshesha (year lord)</h2><div class="scroll"><table class="tbl" id="vpT"><thead><tr><th>Office</th><th>Planet</th><th>Aspect on Varsha lagna</th><th>Strength</th></tr></thead><tbody>${R.cand.map(c=>`<tr class="${c===R.pick?"mwch":""}"><td>${c.r}</td><td><b>${c.p}</b></td><td>${c.asp||"none"}</td><td>${c.st}</td></tr>`).join("")}</tbody></table></div>
+   <p class="story">Varshesha: <b>${R.pick.p}</b> (${R.pick.r}) – ${esc(DP[R.pick.p].good.split(",").slice(0,3).join(","))} if strong; ${esc(DP[R.pick.p].bad.split(",").slice(0,2).join(","))} if weak.</p>
+   <p class="hint">Rule: of the five office-bearers, the strongest one that aspects the varsha lagna becomes the year lord. Strength here uses dignity, house and lordship (full Panchavargiya bala is not computed).</p></div>
+  <div class="card"><h2>Mudda dasha ${R.Y}</h2><p class="hint">Start lord = (janma nakshatra no. ${CH.moonI+1} + ${R.n} − 2) mod 9 → ${R.mud[0].pl}. Vimshottari proportions compressed into one year.</p><div class="adl">${R.mud.map(x=>{const now=Date.now()/864e5+2440587.5,c=now>=x.start&&now<x.end;return `<div class="${c?"cur":""}"><span>${x.pl} · ${Math.round(x.end-x.start)} d</span><span>${fmtDate(x.start,off)} → ${fmtDate(x.end,off)}</span></div>`;}).join("")}</div></div></div>
+  <div class="card"><h2>Grahas in the varsha chart</h2><div class="scroll"><table id="vPT" class="tbl"></table></div></div>`;
+ $("#vPT").innerHTML=planetTable(V.G,{head:"<th>House from Varsha lagna</th><th>Natal house</th>",cell:(k,o)=>`<td>${houseOf(o.sign,V.lagSign)}</td><td>${houseOf(o.sign,CH.lagSign)}</td>`});
+ stackify($("#vPT"));stackify($("#vpT"));
+ const m=$(`#varsh .hz[data-cid="${cid}"][data-h="${R.munH}"]`);if(m)m.classList.add("munh");const m2=$(`#varsh .hz[data-cid="${cidN}"][data-h="1"]`);if(m2)m2.classList.add("munh");}
+function showMunthaPop(cid,x,y){const R=VARSH;if(!R)return;const isV=CHART_REG[cid]&&/Varsha/.test(CHART_REG[cid].label);
+ showPop(`<h3>★ Muntha ${isV?R.Y:"(birth)"}</h3>`+kvh([["Sign",isV?SIGNS[R.mun]:SIGNS[CH.lagSign]],["House",isV?R.munH+" from Varsha lagna":"1 (starts at birth lagna)"],["Lord",isV?R.munL+" in house "+R.mlH:SIGN_LORD[CH.lagSign]],["Result",esc(isV?MUNTHA_RES[R.munH]:"Muntha moves one sign every year")],["Rule","Birth lagna + completed years. Good in 1, 2, 3, 5, 9, 10, 11; adverse in 4, 6, 7, 8, 12."]]),x,y);}
+
+/* ================= v4: ASHTAKAVARGA (BPHS) ================= */
+const AV_CONTRIB=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Lagna"];
+const AVT={
+ Sun:[[1,2,4,7,8,9,10,11],[3,6,10,11],[1,2,4,7,8,9,10,11],[3,5,6,9,10,11,12],[5,6,9,11],[6,7,12],[1,2,4,7,8,9,10,11],[3,4,6,10,11,12]],
+ Moon:[[3,6,7,8,10,11],[1,3,6,7,10,11],[2,3,5,6,9,10,11],[1,3,4,5,7,8,10,11],[1,4,7,8,10,11,12],[3,4,5,7,9,10,11],[3,5,6,11],[3,6,10,11]],
+ Mars:[[3,5,6,10,11],[3,6,11],[1,2,4,7,8,10,11],[3,5,6,11],[6,10,11,12],[6,8,11,12],[1,4,7,8,9,10,11],[1,3,6,10,11]],
+ Mercury:[[5,6,9,11,12],[2,4,6,8,10,11],[1,2,4,7,8,9,10,11],[1,3,5,6,9,10,11,12],[6,8,11,12],[1,2,3,4,5,8,9,11],[1,2,4,7,8,9,10,11],[1,2,4,6,8,10,11]],
+ Jupiter:[[1,2,3,4,7,8,9,10,11],[2,5,7,9,11],[1,2,4,7,8,10,11],[1,2,4,5,6,9,10,11],[1,2,3,4,7,8,10,11],[2,5,6,9,10,11],[3,5,6,12],[1,2,4,5,6,7,9,10,11]],
+ Venus:[[8,11,12],[1,2,3,4,5,8,9,11,12],[3,5,6,9,11,12],[3,5,6,9,11],[5,8,9,10,11],[1,2,3,4,5,8,9,10,11],[3,4,5,8,9,10,11],[1,2,3,4,5,8,9,11]],
+ Saturn:[[1,2,4,7,8,10,11],[3,6,11],[3,5,6,10,11,12],[6,8,9,10,11,12],[5,6,11,12],[6,11,12],[3,5,6,11],[1,3,4,6,10,11]]};
+const AV_PL=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"];
+function computeAV(C){const sg=k=>k==="Lagna"?C.lagSign:C.G[k].sign;const B={};
+ AV_PL.forEach(p=>{B[p]=Array(12).fill(0);AV_CONTRIB.forEach((c,ci)=>{const from=sg(c);AVT[p][ci].forEach(h=>{B[p][(from+h-1)%12]++;});});});
+ const SAV=Array(12).fill(0);AV_PL.forEach(p=>B[p].forEach((v,i)=>SAV[i]+=v));return {B,SAV};}
+function renderAV(){if(!CH)return;const C=CH,A=computeAV(C),L=C.lagSign,ord=[...Array(12).keys()].map(h=>(L+h)%12);
+ const tot=p=>A.B[p].reduce((a,b)=>a+b,0),EXP={Sun:48,Moon:49,Mars:39,Mercury:54,Jupiter:56,Venus:52,Saturn:39};
+ const cell=(v,hi)=>`<td class="avc${v>=5?" av5":v<=2?" av2":""}${hi?" avp":""}">${v}</td>`;
+ let t=`<div class="scroll"><table class="avt" id="avT"><thead><tr><th>BAV \\ House</th>${ord.map((s,h)=>`<th>${h+1}<br><small>${SIGNS[s].slice(0,3)}</small></th>`).join("")}<th>Total</th></tr></thead><tbody>`+
+  AV_PL.map(p=>`<tr><td><b>${p}</b></td>${ord.map(s=>cell(A.B[p][s],C.G[p].sign===s)).join("")}<td>${tot(p)} ${tot(p)===EXP[p]?"✓":"✗"}</td></tr>`).join("")+
+  `<tr class="savr"><td><b>SAV</b></td>${ord.map(s=>`<td class="avc ${A.SAV[s]>=28?"av5":A.SAV[s]<25?"av2":""}"><b>${A.SAV[s]}</b></td>`).join("")}<td><b>${A.SAV.reduce((a,b)=>a+b,0)}</b></td></tr></tbody></table></div>`;
+ const hS=h=>A.SAV[(L+h-1)%12];
+ const strong=[],weak=[];for(let h=1;h<=12;h++){if(hS(h)>=28)strong.push(h);else if(hS(h)<25)weak.push(h);}
+ const wealth=hS(11)>hS(10)&&hS(12)<hS(11)&&hS(1)>hS(12);
+ const pl=AV_PL.map(p=>{const b=A.B[p][C.G[p].sign];return [p,b,b>=5?"Strong – gives good results of its houses":b===4?"Average":"Weak – results of its houses are reduced"];});
+ const now=sidereal(Date.now()/864e5+2440587.5,C.inp.lat,C.inp.lon,C.inp.node);
+ const tr=AV_PL.map(p=>{const s=Math.floor(now[p]/30),b=A.B[p][s],sv=A.SAV[s];return [p,SIGNS[s],houseOf(s,C.moonSign),b,sv,b>=4&&sv>=28?"Favourable":b>=4?"Fairly good":sv>=28?"Mixed":"Weak transit"];});
+ const sat=houseOf(Math.floor(now.Saturn/30),C.moonSign);const sade=[12,1,2].includes(sat)?`Sade Sati is running (Saturn in house ${sat} from the Moon – ${["rising","peak","setting"][[12,1,2].indexOf(sat)]} phase).`:[4,8].includes(sat)?`Saturn's dhaiya / kantaka (house ${sat} from the Moon).`:"No Sade Sati now.";
+ $("#av").innerHTML=`<div class="card"><h2>Bhinnashtakavarga (BAV) and Sarvashtakavarga (SAV)</h2><p class="hint">Each planet gets a benefic point (bindu) in a sign when it falls in a prescribed house counted from each of the 8 contributors (7 planets + Lagna). Rows are tested against the fixed totals (Sun 48, Moon 49, Mars 39, Mercury 54, Jupiter 56, Venus 52, Saturn 39; SAV 337). Columns are houses from your lagna; the planet's own sign is outlined.</p>${t}</div>
+ <div class="grid"><div class="card"><h2>Standard results – houses</h2><ul class="flist">
+  <li><b class="ok">Strong houses (SAV ≥ 28):</b> ${strong.length?strong.map(h=>h+" – "+HOUSE_MEAN[h-1].split(",").slice(0,2).join(",")+" ("+hS(h)+")").join("; "):"none"}</li>
+  <li><b class="bad">Weak houses (SAV < 25):</b> ${weak.length?weak.map(h=>h+" – "+HOUSE_MEAN[h-1].split(",").slice(0,2).join(",")+" ("+hS(h)+")").join("; "):"none"}</li>
+  <li><b>Wealth rule</b> (11th > 10th, 12th < 11th, 1st > 12th): 11=${hS(11)}, 10=${hS(10)}, 12=${hS(12)}, 1=${hS(1)} → ${wealth?'<span class="ok">fulfilled – income exceeds expense, steady prosperity</span>':'<span class="mix">not fully met – watch expenses</span>'}</li>
+  <li><b>Kendra total</b> ${[1,4,7,10].reduce((a,h)=>a+hS(h),0)} · <b>Trikona total</b> ${[1,5,9].reduce((a,h)=>a+hS(h),0)} · <b>Dusthana total</b> ${[6,8,12].reduce((a,h)=>a+hS(h),0)}</li>
+  <li>Average house = 28. Undertake important works when the Moon or Jupiter transits signs with high SAV.</li></ul></div>
+ <div class="card"><h2>Planets in their own BAV</h2><div class="scroll"><table class="tbl" id="avP"><thead><tr><th>Planet</th><th>Bindus where it sits</th><th>Conclusion</th></tr></thead><tbody>${pl.map(([p,b,c])=>`<tr><td><b>${p}</b></td><td>${b}</td><td>${c}</td></tr>`).join("")}</tbody></table></div></div></div>
+ <div class="card"><h2>Today's transits through your Ashtakavarga</h2><p class="story">${esc(sade)}</p><div class="scroll"><table class="tbl" id="avTr"><thead><tr><th>Planet</th><th>Transit sign</th><th>House from Moon</th><th>Its BAV bindus</th><th>SAV</th><th>Result</th></tr></thead><tbody>${tr.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join("")}</tbody></table></div>
+ <p class="hint">Rule: a transit gives good results when the planet's own BAV has 4 or more bindus in that sign; SAV ≥ 28 adds support. Sources: BPHS (Ashtakavarga chapters) and Phaladeepika. Trikona and Ekadhipatya shodhana and Kakshya are not applied.</p></div>`;
+ ["#avP","#avTr"].forEach(s=>stackify($(s)));}
+
+function renderV4(){renderDashaPhal();renderVarsh();renderAV();}
+
+/* glossary */
+[["muntha","Muntha (मुन्था)","A Tajik point: the birth lagna sign advanced one sign for each completed year of life. Its house in the annual chart and the strength of its lord colour the year. Good in houses 1, 2, 3, 5, 9, 10, 11; adverse in 4, 6, 7, 8, 12."],
+ ["varshphal|varshaphal|varsha phal|annual chart|varsh kundli|varsha kundli","Varshphal (वर्षफल) – annual horoscope","Tajik system: a chart cast for the moment the Sun returns to its exact sidereal birth longitude each year (Varsha Pravesh). Read with Muntha, the year lord (Varshesha) and Mudda dasha. Main text: Tajik Neelakanthi."],
+ ["varsha pravesh","Varsha Pravesh","The exact moment of the solar return – start of the annual chart."],
+ ["varshesha|year lord","Varshesha – year lord","The strongest of the five office-bearers (Panchadhikari) that aspects the varsha lagna."],
+ ["panchadhikari","Panchadhikari – five office-bearers","Muntha lord, Janma lagna lord, Varsha lagna lord, Tri-rashi pati and Dina / Ratri pati."],
+ ["tri rashi pati|trirashi","Tri-rashi pati","A Tajik lord of the varsha lagna fixed by a table, different for day and night annual charts."],
+ ["mudda dasha|mudda","Mudda dasha","Vimshottari dasha compressed into one year (e.g. Venus 60 days, Sun 18 days) starting from the lord given by (birth nakshatra + completed years − 2) mod 9."],
+ ["tajik|tajika","Tajik (ताजिक)","Annual-chart astrology adopted from Persian sources, with its own aspects (3/11 and 5/9 friendly; 1/4/7/10 inimical) and yogas."],
+ ["ashtakavarga|ashtakvarga|bav|sav|bindu|bindus|rekha","Ashtakavarga (अष्टकवर्ग)","BPHS system of benefic points (bindus). Each planet's chart (BAV) gets points from 8 contributors; the total of all seven is the SAV (337). Houses with 28+ SAV are strong; transits through signs with 4+ bindus in that planet's BAV are favourable."],
+ ["sade sati|sadesati","Sade Sati","Saturn's 7½-year transit over the 12th, 1st and 2nd signs from the birth Moon."],
+ ["pratyantar|pratyantardasha","Pratyantar dasha","Third-level sub-period inside an antardasha, in the same Vimshottari proportions."],
+ ["yogakaraka","Yogakaraka","A planet that rules both a kendra (4/7/10) and a trikona (5/9) from the lagna – the best planet for that lagna."],
+ ["bphs|brihat parashara hora shastra|parashara","Brihat Parashara Hora Shastra (BPHS)","The foundational text of Parashari Jyotish: charts, vargas, yogas, Vimshottari dasha and its results, Ashtakavarga and remedies."],
+ ["phaladeepika","Phaladeepika","Mantreswara's text (South India) – strong on house results, dasha and antardasha results and Ashtakavarga."],
+ ["saravali","Saravali","Kalyana Varma's large compendium on planetary results in signs, houses and combinations."],
+ ["jataka parijata","Jataka Parijata","Vaidyanatha Dikshita's text on yogas, dasha results and Pushkara points."],
+ ["lmt|local mean time","Local mean time (LMT)","Clock time set by the place's longitude (4 minutes per degree). Used before standard time zones (India before about 1906, much of Europe before 1890)."],
+ ["war time|ist+1","India war time","From 1 Sep 1942 to 15 Oct 1945 Indian clocks were one hour ahead of IST (UTC+6:30). Births in this period must subtract 1 hour – the app's Auto rule does this."]
+].forEach(([k,t,b])=>GL_LIST.push(glAdd(k,t,b)));GL_LIST.sort((a,b)=>a.title.localeCompare(b.title));renderGloss();
+
+(function initV4(){const vp=$("#vPlace");vp.innerHTML='<option value="birth">Birth place</option>'+CITIES.map((c,i)=>`<option value="${i}">${esc(c[0])}</option>`).join("");
+ $("#vYear").addEventListener("change",()=>CH&&renderVarsh());vp.addEventListener("change",()=>CH&&renderVarsh());
+ $("#vPrev").addEventListener("click",()=>{$("#vYear").value=+$("#vYear").value-1;CH&&renderVarsh();});$("#vNext").addEventListener("click",()=>{$("#vYear").value=+$("#vYear").value+1;CH&&renderVarsh();});
+ $("#valRun").addEventListener("click",renderValidation);renderValidation();
+ if(CH){renderV4();$("#clockInfo").textContent=clockLine();}})();
+
+/* ================= v5: MUNTHA-LORD HIGHLIGHT + PDF REPORT ================= */
+const ML_RES={1:"Strong – self-effort brings the year's gains",2:"Good – wealth and family support",3:"Good – courage, initiative, siblings help",4:"Mixed – home matters dominate",5:"Good – children, learning, creativity",6:"Weak – illness, disputes, debts reduce Muntha's good",7:"Mixed – partnerships decide the year",8:"Weak – obstacles, health care needed",9:"Very good – fortune and dharma",10:"Very good – career and status",11:"Very good – gains and wishes",12:"Weak – expenses, travel, losses"};
+function markVarsh(root,cid,R){const q=s=>root.querySelector(s);
+ const m=q(`.hz[data-cid="${cid}"][data-h="${R.munH}"]`);if(m)m.classList.add("munh");
+ const l=q(`.hz[data-cid="${cid}"][data-h="${R.mlH}"]`);if(l)l.classList.add("mlh");
+ const g=q(`.plc[data-cid="${cid}"][data-k="${R.munL}"]`);if(g)g.classList.add("munl");}
+function varshItems(R){const V=R.V;const d=CKEYS.map(k=>({k,sign:V.G[k].sign,t:(k===R.munL?"◆":"")+PL_AB[k]+" "+Math.floor(V.G[k].deg)+"°"+(V.G[k].retro&&k!=="Rahu"&&k!=="Ketu"?"ᴿ":"")}));d.push({k:"Muntha",sign:R.mun,t:"★ Muntha"});return d;}
+
+const _rv=renderVarsh;
+renderVarsh=function(){_rv();const R=VARSH;if(!R)return;const box=$("#varsh");
+ const svg=box.querySelector(".charts>div:first-child svg");const cid=svg&&svg.querySelector(".plc")?svg.querySelector(".plc").dataset.cid:null;if(!cid)return;
+ // relabel muntha lord in chart
+ const g=svg.querySelector(`.plc[data-k="${R.munL}"] text`);if(g&&!g.textContent.startsWith("◆"))g.textContent="◆"+g.textContent;
+ markVarsh(box,cid,R);
+ const mb=box.querySelector(".munbox");if(mb)mb.insertAdjacentHTML("afterend",`<div class="mlbox"><div><span>◆ Muntha lord</span><b>${R.munL} (${PL_HI[R.munL]})</b></div><div><span>Placed in</span><b>house ${R.mlH} · ${SIGNS[R.V.G[R.munL].sign]} ${dms(R.V.G[R.munL].deg)}</b></div><div><span>Nakshatra</span><b>${R.V.G[R.munL].row.nak} ${R.V.G[R.munL].p}</b></div><div><span>Dignity · strength</span><b>${R.V.G[R.munL].dig||"—"} · ${R.mlS.v}</b></div><div><span>Placement result</span><b>${ML_RES[R.mlH]}</b></div></div>
+ <p class="hint">Chart key: <span class="kmun">★ gold house</span> = Muntha · <span class="kml">◆ blue house</span> = Muntha lord's placement.</p>`);
+ const h4=box.querySelector(".charts>div:first-child h4");if(h4)h4.textContent="Varsha kundli "+R.Y+" (★ Muntha · ◆ Muntha lord)";};
+
+/* ---------- report ---------- */
+function rptChart(C,style,label,items,asc){const cid=regChart(C,null,label),f=style==="north"?northSVG:southSVG;return {cid,svg:f(asc,items,cid,label)};}
+function buildReport(){if(!CH)return null;const C=CH,style=$("#cstyle").value,off=C.off,N=NAK[C.moonI],mo=C.G.Moon,P=C.P;
+ const n=+$("#rpN").value||3,y0=+$("#rpY").value||new Date().getFullYear();
+ const d1=CKEYS.map(k=>({k,sign:C.G[k].sign,t:PL_AB[k]+" "+Math.floor(C.G[k].deg)+"°"+(C.G[k].retro&&k!=="Rahu"&&k!=="Ketu"?"ᴿ":"")}));
+ const d9=CKEYS.map(k=>({k,sign:C.G[k].nav,t:PL_AB[k]+(k!=="Lagna"&&C.G[k].nav===C.G[k].sign?"*":"")}));
+ const A=rptChart(C,style,"Rashi D1",d1,C.lagSign),B=rptChart(C,style,"Navamsa D9",d9,C.G.Lagna.nav);
+ const kv=L=>`<table class="rkv">${L.map(([a,b])=>`<tr><th>${a}</th><td>${b}</td></tr>`).join("")}</table>`;
+ const pt=`<table class="rt"><tr><th>Graha</th><th>Position</th><th>Nakshatra-pada</th><th>Nak/Pada lord</th><th>Dignity</th><th>H</th></tr>${CKEYS.map(k=>{const o=C.G[k];return `<tr><td>${k}${o.retro&&k!=="Rahu"&&k!=="Ketu"?" (R)":""}</td><td>${inSign(o.lon)}</td><td>${o.row.nak} ${o.p}</td><td>${o.row.nakLord}/${o.row.padaLord}</td><td>${o.dig||"—"}</td><td>${houseOf(o.sign,C.lagSign)}</td></tr>`;}).join("")}</table>`;
+ const pan=kv([["Vara",VARA[P.vara].split(" ")[0]],["Tithi",P.paksha+" "+P.tName],["Nakshatra",N.n+" "+mo.p+" ("+nakLordOf(C.moonI)+")"],["Yoga",P.yoga],["Karana",P.karana],["Sunrise/set",fmtTime(P.rise,off).slice(11,16)+" / "+fmtTime(P.set,off).slice(11,16)],["Moon",inSign(C.S.Moon)+" · "+(C.G.Moon.dig||"")],["Rashi / lord",SIGNS[C.moonSign]+" / "+SIGN_LORD[C.moonSign]],["Gana · Yoni",N.gana+" · "+N.yoni],["Nadi · Varna",NADI(C.moonI)+" · "+SIGN_VARNA[C.moonSign%4]],["Name letter",mo.row.syl.split(" ")[1]||mo.row.syl],["Deity",N.deity.split(" (")[0]],["Ayanamsa",dms(C.S.ayan,true)]]);
+ const D=C.dasha,now=Date.now()/864e5+2440587.5,dd=j=>{const c=jdToCal(j+off/24);return String(c.d).padStart(2,"0")+"-"+String(c.m).padStart(2,"0")+"-"+String(c.y).slice(-2);};
+ const das=`<table class="rt rdas"><tr><th>MD</th><th>From – to</th>${[...Array(9)].map((_,i)=>`<th>AD ${i+1}</th>`).join("")}</tr>${D.seq.slice(0,9).map(m=>`<tr class="${now>=m.start&&now<m.end?"rcur":""}"><td><b>${PL_AB[m.pl]}</b></td><td>${dd(Math.max(m.start,C.jd))}–${dd(m.end)}</td>${m.ad.map(a=>`<td class="${now>=a.start&&now<a.end?"rcur":""}${a.end<C.jd?" rpast":""}">${PL_AB[a.pl]} ${dd(a.start)}</td>`).join("")}</tr>`).join("")}</table><p class="rnote">Birth dasha ${D.lord}, balance ${Math.floor(D.balanceYrs)}y ${Math.floor((D.balanceYrs%1)*12)}m. Each AD cell shows its start date; shaded = running.</p>`;
+ const keep=VARSH,vs=[];
+ for(let i=0;i<n;i++){const Y=y0+i;if(Y<=C.inp.y)continue;const R=computeVarsh(Y);const ch=rptChart(R.V,style,"Varsha "+Y,varshItems(R),R.V.lagSign);
+  vs.push(`<div class="rv"><h3>Varshphal ${Y} · age ${R.n} · ${fmtTime(R.jd,R.off).slice(0,16)}</h3><div class="rvg"><div class="rch">${ch.svg}</div><div class="rvi"><div>${kv([["★ Muntha",SIGNS[R.mun]+" · house "+R.munH],["Result",MUNTHA_RES[R.munH]],["◆ Muntha lord",R.munL+" · house "+R.mlH+" · "+SIGNS[R.V.G[R.munL].sign]],["Placement",ML_RES[R.mlH]+" ("+R.mlS.v+")"],["Varsha lagna",SIGNS[R.V.lagSign]],["Year lord",R.pick.p+" ("+R.pick.r+")"]])}</div>
+  <table class="rt rmud"><tr><th>Mudda dasha</th><th>From</th><th>To</th></tr>${R.mud.map(x=>`<tr><td>${x.pl}</td><td>${dd(x.start)}</td><td>${dd(x.end)}</td></tr>`).join("")}</table></div></div></div>`);
+  vs[vs.length-1]=vs[vs.length-1].replace("%%CID%%",ch.cid);vs.push({cid:ch.cid,R});}
+ VARSH=keep;
+ const html=`<div class="rp"><header class="rh"><h1>${esc(C.inp.name||"Kundli")}</h1><p>${String(C.inp.d).padStart(2,"0")}-${String(C.inp.m).padStart(2,"0")}-${C.inp.y} ${String(C.inp.hh).padStart(2,"0")}:${String(C.inp.mi).padStart(2,"0")} · ${C.inp.lat.toFixed(4)}, ${C.inp.lon.toFixed(4)} · ${fmtOff(off)} · Lagna ${SIGNS[C.lagSign]} ${dms(C.G.Lagna.deg)} · Moon ${N.n} ${mo.p} · Lahiri</p></header>
+  <div class="rg2"><div class="rch"><h3>Rashi (D1)</h3>${A.svg}</div><div class="rch"><h3>Navamsa (D9)</h3>${B.svg}</div></div>
+  <div class="rg2"><div><h3>Grahas</h3>${pt}</div><div><h3>Moon & Panchanga at birth</h3>${pan}</div></div>
+  <h3>Vimshottari Mahadasha / Antardasha</h3>${das}
+  <div class="rvs">${vs.filter(x=>typeof x==="string").join("")}</div>
+  <p class="rnote">★ gold = Muntha · ◆ blue = Muntha lord. Generated offline by the Nakshatra Pada app; positions accurate to ~1–2′.</p></div>`;
+ return {html,vs:vs.filter(x=>typeof x!=="string")};}
+function printReport(){const r=buildReport();if(!r){alert("Generate a kundli first.");return;}const box=$("#report");box.innerHTML=r.html;r.vs.forEach(({cid,R})=>markVarsh(box,cid,R));
+ document.body.classList.add("printing");const done=()=>{document.body.classList.remove("printing");window.removeEventListener("afterprint",done);};window.addEventListener("afterprint",done);
+ setTimeout(()=>{window.print();setTimeout(()=>{if(!matchMedia("print").matches)done();},1500);},60);}
+(function initRep(){$("#rpY").value=new Date().getFullYear();$("#rpGo").addEventListener("click",printReport);$("#rpGo2").addEventListener("click",()=>{$("#rpN").value=$("#rpN2").value;printReport();});
+ if(VARSH&&CH)renderVarsh();})();
+
 /* ================= COOKIES: remember last details ================= */
 const CK_DAYS=365;
 function ckSet(n,v){const s=encodeURIComponent(JSON.stringify(v));try{document.cookie=n+"="+s+";max-age="+CK_DAYS*86400+";path=/;SameSite=Lax";}catch(_){}try{localStorage.setItem(n,s);}catch(_){}}
@@ -1610,7 +2214,7 @@ function ckDel(n){try{document.cookie=n+"=;max-age=0;path=/";}catch(_){}try{loca
 const GWALIOR=CITIES.findIndex(c=>c[0].startsWith("Gwalior"));
 function localDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function localTime(d){return [d.getHours(),d.getMinutes(),d.getSeconds()].map(x=>String(x).padStart(2,"0")).join(":");}
-const BIRTH_IDS=["bname","bdate","btime","city","lat","lon","tz","dst","node","cstyle"];
+const BIRTH_IDS=["bname","bdate","btime","city","lat","lon","tz","tzr","node","cstyle"];
 const MU_IDS=["mAct","mNature","mDoor","mDir","mCity","mLat","mLon","mTz","mRule","mKalam"];
 function grab(ids){const o={};ids.forEach(id=>{const e=document.getElementById(id);if(e)o[id]=e.type==="checkbox"?e.checked:e.value;});return o;}
 function put(ids,o){ids.forEach(id=>{const e=document.getElementById(id);if(e&&o&&id in o){if(e.type==="checkbox")e.checked=!!o[id];else e.value=o[id];}});}
@@ -1623,7 +2227,7 @@ function setNow(){const n=new Date();$("#bdate").value=localDate(n);$("#btime").
  setNow();
  const lc=ckGet("nk_lastcity");if(lc){$("#city").value=lc.city;if(lc.city!=="")applyCity();$("#lat").value=lc.lat;$("#lon").value=lc.lon;$("#tz").value=lc.tz;}
  const b=ckGet("nk_birth");
- if(b){put(BIRTH_IDS,b);$("#city").dataset.dst=b.cityDst||"";$("#savedNote").innerHTML=`Restored your last details${b.bname?" for <b>"+esc(b.bname)+"</b>":""}. <button type="button" class="linkb" id="useNow">Use current time</button> · <button type="button" class="linkb" id="clrSaved">Forget saved details</button>`;}
+ if(b){put(BIRTH_IDS,b);$("#city").dataset.dst=b.cityDst||"";suggestDST();$("#savedNote").innerHTML=`Restored your last details${b.bname?" for <b>"+esc(b.bname)+"</b>":""}. <button type="button" class="linkb" id="useNow">Use current time</button> · <button type="button" class="linkb" id="clrSaved">Forget saved details</button>`;}
  else $("#savedNote").innerHTML=`Default: Gwalior, current date and time. Your details are saved on this device after you press Generate. <button type="button" class="linkb" id="useNow">Refresh to now</button>`;
  const m=ckGet("nk_mu");if(m){const r=document.querySelector(`input[name=mMode][value="${m.mMode}"]`);if(r)r.checked=true;put(MU_IDS,m);mModeUI();}
  else if(lc&&lc.city!==""){$("#mCity").value=lc.city;mApplyCity();}
