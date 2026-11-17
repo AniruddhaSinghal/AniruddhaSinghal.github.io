@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f7a4d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Rasoi Stock · Kitchen Grocery Manager</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%98%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f5f3ee;--card:#ffffff;--ink:#1d2421;--mute:#6b746f;--line:#e6e2d8;
+  --acc:#1f7a4d;--acc2:#e8f3ec;--saf:#ef8a1f;--saf2:#fff1e2;
+  --red:#d24b43;--red2:#fdeceb;--amb:#d99a00;--amb2:#fff6dc;--grn:#2e9a5c;--grn2:#e7f5ec;--gry2:#eef0ee;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05);
+  --r:16px;--navh:64px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#121614;--card:#1b211e;--ink:#e9eeeb;--mute:#9aa49f;--line:#2b3430;
+  --acc:#4cc28a;--acc2:#183126;--saf:#ffa64d;--saf2:#3a2a17;--red:#ff7a70;--red2:#3a1f1d;
+  --amb:#ffc940;--amb2:#3a3115;--grn:#4cc28a;--grn2:#183126;--gry2:#252c29;--shadow:none}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+body{padding-bottom:calc(var(--navh) + env(safe-area-inset-bottom) + 12px);overscroll-behavior-y:contain}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:640px;margin:0 auto;padding:0 14px}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(env(safe-area-inset-top) + 10px) 0 8px}
+.toprow{display:flex;align-items:center;gap:10px}
+.brand{font-weight:800;font-size:20px;letter-spacing:-.3px;flex:1}
+.brand small{display:block;font-weight:500;font-size:12px;color:var(--mute);letter-spacing:0}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px;white-space:nowrap}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin:10px 0;border:1px solid var(--line)}
+h2{font-size:17px;margin:18px 2px 6px}
+h3{font-size:15px;margin:0 0 6px}
+.mute{color:var(--mute)}.small{font-size:12.5px}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:600;background:var(--gry2);min-height:44px}
+.btn.pri{background:var(--acc);color:#fff}
+.btn.wa{background:#25d366;color:#06331a}
+.btn.saf{background:var(--saf);color:#fff}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.sm{padding:7px 11px;min-height:36px;font-size:13.5px;border-radius:10px}
+.btn.block{width:100%}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.btn:disabled{opacity:.45}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{border-radius:14px;padding:12px;border:0;text-align:left;min-height:84px}
+.stat b{display:block;font-size:26px;line-height:1.1}
+.stat span{font-size:13px;font-weight:600}
+.s-red{background:var(--red2);color:var(--red)}.s-amb{background:var(--amb2);color:var(--amb)}
+.s-gry{background:var(--gry2);color:var(--mute)}.s-saf{background:var(--saf2);color:var(--saf)}
+.banner{display:flex;gap:12px;align-items:center;background:var(--acc);color:#fff;border-radius:var(--r);padding:14px;margin:10px 0}
+.banner .btn{background:#fff;color:#14512f}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600;min-height:36px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{opacity:.65;font-weight:500;margin-left:3px}
+.search{width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;min-height:44px}
+.cathead{display:flex;align-items:center;gap:8px;margin:16px 2px 6px;font-weight:700}
+.cathead .mute{font-weight:500;font-size:12.5px}
+.list{background:var(--card);border-radius:var(--r);border:1px solid var(--line);overflow:hidden}
+.item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-top:1px solid var(--line);min-height:62px}
+.item:first-child{border-top:0}
+.item .main{flex:1;min-width:0;border:0;background:none;text-align:left;padding:0}
+.iname{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ihi{color:var(--mute);font-size:12.5px;margin-left:4px;font-weight:500}
+.isub{font-size:12.5px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:6px;border-radius:6px;background:var(--gry2);margin-top:6px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;border-radius:6px}
+.bar u{position:absolute;top:-1px;bottom:-1px;width:2px;background:var(--ink);opacity:.35}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.t-out{background:var(--red2);color:var(--red)}.t-low{background:var(--saf2);color:var(--saf)}
+.t-soon{background:var(--amb2);color:var(--amb)}.t-ok{background:var(--grn2);color:var(--grn)}
+.t-unk{background:var(--gry2);color:var(--mute)}.t-off{background:var(--gry2);color:var(--mute)}
+.cartbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:18px;flex:0 0 auto}
+.cartbtn.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chk{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);background:var(--card);flex:0 0 auto;display:grid;place-items:center;font-size:15px;color:#fff;padding:0}
+.chk.on{background:var(--acc);border-color:var(--acc)}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:0 0 auto}
+.stepper button{width:34px;height:36px;border:0;background:var(--gry2);font-size:18px;font-weight:700}
+.stepper span{min-width:62px;text-align:center;font-weight:700;font-size:13.5px;padding:0 4px}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.bottom .in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--navh)}
+nav.bottom button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11.5px;font-weight:600;color:var(--mute);position:relative}
+nav.bottom button .ic{font-size:21px;line-height:1}
+nav.bottom button.on{color:var(--acc)}
+nav.bottom .badge{position:absolute;top:7px;left:calc(50% + 6px);background:var(--red);color:#fff;border-radius:999px;font-size:10.5px;padding:1px 6px;font-weight:700}
+.actionbar{position:sticky;bottom:calc(var(--navh) + env(safe-area-inset-bottom) + 6px);z-index:15;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;box-shadow:0 6px 24px rgba(0,0,0,.12);margin-top:12px}
+.abtns{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--card);border-radius:20px 20px 0 0;max-height:90vh;max-height:90dvh;overflow-y:auto;transform:translateY(105%);transition:transform .25s ease;padding:8px 16px calc(18px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+.sheet:not(.on){visibility:hidden;transition:transform .25s ease,visibility 0s .25s}
+.sheet.on{transform:none}
+.grab{width:40px;height:5px;border-radius:5px;background:var(--line);margin:4px auto 10px}
+.sheethead{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+.sheethead h3{font-size:19px;margin:0}
+.x{border:0;background:var(--gry2);border-radius:999px;width:36px;height:36px;font-size:18px;flex:0 0 auto}
+.sect{border-top:1px solid var(--line);padding:12px 0}
+.sect:first-of-type{border-top:0}
+.lbl{font-size:12.5px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.qgrid .btn{padding:8px 4px;font-size:13px;min-height:40px}
+.inp{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;min-height:44px}
+.inrow{display:flex;gap:8px;align-items:center}
+.inrow .inp{flex:1}
+.unit{font-weight:700;color:var(--mute);min-width:28px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f2 label,.fl{display:block;font-size:12.5px;color:var(--mute);font-weight:600}
+.f2 label .inp,.fl .inp{margin-top:4px}
+input[type=range]{width:100%;accent-color:var(--acc);height:30px}
+.rangehead{display:flex;justify-content:space-between;align-items:baseline}
+.big{font-size:20px;font-weight:800}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-weight:600;font-size:13.5px;color:var(--ink);background:var(--bg)}
+.toggle{display:flex;align-items:center;gap:10px;padding:8px 0;min-height:44px}
+.toggle input{width:22px;height:22px;accent-color:var(--acc);flex:0 0 auto}
+.sw{appearance:none;-webkit-appearance:none;width:46px!important;height:28px!important;border-radius:999px;background:var(--line);position:relative;transition:.2s;flex:0 0 auto;margin:0}
+.sw:checked{background:var(--acc)}
+.sw::after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw:checked::after{left:21px}
+.toast{position:fixed;left:50%;bottom:calc(var(--navh) + env(safe-area-inset-bottom) + 14px);transform:translate(-50%,30px);background:#222;color:#fff;padding:11px 14px;border-radius:12px;z-index:80;opacity:0;transition:.25s;display:flex;gap:12px;align-items:center;max-width:92vw;font-size:14px;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{background:none;border:0;color:#7fe0a8;font-weight:800;padding:4px}
+.empty{text-align:center;padding:28px 12px;color:var(--mute)}
+.empty .e{font-size:40px}
+.audit{position:fixed;inset:0;z-index:70;background:var(--bg);display:none;flex-direction:column;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(16px + env(safe-area-inset-bottom))}
+.audit.on{display:flex}
+.audit .prog{height:6px;background:var(--gry2);border-radius:6px;overflow:hidden;margin:10px 0}
+.audit .prog i{display:block;height:100%;background:var(--acc)}
+.audit .acard{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:6px}
+.audit .aname{font-size:28px;font-weight:800;letter-spacing:-.4px}
+.audit .ahi{font-size:20px;color:var(--mute)}
+.audit .agrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.audit .agrid .btn{min-height:56px;font-size:15.5px}
+.tl{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.tl:first-child{border-top:0}
+.tl .d{width:54px;text-align:center;font-weight:800;font-size:13px;border-radius:10px;padding:6px 0;flex:0 0 auto}
+details summary{cursor:pointer;font-weight:600;padding:6px 0}
+.kv{display:flex;justify-content:space-between;padding:4px 0;font-size:14px}
+.kv b{font-weight:700}
+.note{background:var(--amb2);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:13px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="top"><div class="wrap">
+    <div class="toprow">
+      <div class="brand">🥘 Rasoi Stock<small id="subtitle">Kitchen grocery manager</small></div>
+      <button class="pill" id="hhPill" type="button" aria-label="Household settings">👨‍👩‍👧‍👦 5</button>
+    </div>
+  </div></header>
+  <main class="wrap" id="view" aria-live="polite"></main>
+</div>
+
+<nav class="bottom" aria-label="Main"><div class="in">
+  <button type="button" data-tab="home" class="on"><span class="ic">🏠</span>Home</button>
+  <button type="button" data-tab="pantry"><span class="ic">🧺</span>Pantry</button>
+  <button type="button" data-tab="list"><span class="ic">🛒</span>Order list<span class="badge hide" id="listBadge">0</span></button>
+  <button type="button" data-tab="settings"><span class="ic">⚙️</span>Settings</button>
+</div></nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="audit" id="audit" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast" role="status"><span id="toastMsg"></span><button type="button" id="toastBtn" class="hide">UNDO</button></div>
+<input type="file" id="fileIn" accept=".csv,text/csv" class="hide">
+
+<script>
+(function(){
+"use strict";
+/* =========================================================
+   CATALOG — monthly usage defaults are for a 5-person
+   vegetarian (North Indian, urban) household.
+   Tuple: [id, name, hindi, unit, monthlyFor5, packSize, minStock, optional(1 = off by default), searchTerm]
+   Units: g, ml, or a count label (pkt, pc, roll, cyl, loaf...)
+   ========================================================= */
+const CATS=[
+ {id:'grain',n:'Atta, Rice & Grains',ic:'🌾',items:[
+  ['atta','Atta (wheat flour)','आटा','g',20000,10000,2000,0,'chakki atta'],
+  ['rice','Rice (daily)','चावल','g',3000,5000,1000],
+  ['basmati','Basmati rice','बासमती चावल','g',2000,5000,1000],
+  ['besan','Besan (gram flour)','बेसन','g',1000,500,500],
+  ['suji','Suji / Rava','सूजी','g',1000,500,500],
+  ['poha','Poha','पोहा','g',1000,500,500],
+  ['maida','Maida','मैदा','g',500,500,500],
+  ['dalia','Dalia (broken wheat)','दलिया','g',500,500,500],
+  ['oats','Oats','ओट्स','g',750,1000,500],
+  ['sevai','Seviyan (vermicelli)','सेवइयां','g',200,400,200],
+  ['sabudana','Sabudana','साबूदाना','g',250,500,250],
+  ['riceflour','Rice flour','चावल का आटा','g',250,500,250,1],
+  ['makki','Makki atta (maize flour)','मक्के का आटा','g',1000,1000,500,1],
+  ['bajra','Bajra atta','बाजरे का आटा','g',500,1000,250,1],
+  ['ragi','Ragi flour','रागी आटा','g',250,500,250,1],
+  ['jowar','Jowar atta','ज्वार का आटा','g',500,1000,250,1],
+  ['multigrain','Multigrain atta','मल्टीग्रेन आटा','g',2000,5000,1000,1],
+  ['kuttu','Kuttu atta (vrat)','कुट्टू का आटा','g',200,500,0,1],
+  ['singhara','Singhara atta (vrat)','सिंघाड़े का आटा','g',200,500,0,1],
+  ['samak','Samak rice (vrat)','समक चावल','g',200,500,0,1]
+ ]},
+ {id:'dal',n:'Dals & Pulses',ic:'🫘',items:[
+  ['toor','Arhar / Toor dal','अरहर दाल','g',1200,1000,1000],
+  ['moong','Moong dal (yellow)','मूंग दाल धुली','g',600,1000,500],
+  ['moongch','Moong dal chilka','मूंग दाल छिलका','g',300,1000,500],
+  ['moongs','Whole moong','साबुत मूंग','g',300,1000,500],
+  ['masoor','Masoor dal (red)','मसूर दाल','g',400,1000,500],
+  ['masoors','Whole masoor','साबुत मसूर','g',200,500,250],
+  ['chanadal','Chana dal','चना दाल','g',500,1000,500],
+  ['urad','Urad dal (dhuli)','उड़द दाल धुली','g',300,1000,500],
+  ['urads','Whole urad','साबुत उड़द','g',300,1000,500],
+  ['rajma','Rajma','राजमा','g',400,1000,500],
+  ['kabuli','Kabuli chana','काबुली चना','g',400,1000,500],
+  ['kalachana','Kala chana','काला चना','g',300,1000,500],
+  ['lobia','Lobia','लोबिया','g',150,500,250],
+  ['soya','Soya chunks','सोया चंक्स','g',300,200,200],
+  ['moth','Moth dal','मोठ','g',100,500,250,1],
+  ['safedmatar','Dry white peas','सफ़ेद मटर','g',200,500,250,1]
+ ]},
+ {id:'oil',n:'Oil & Ghee',ic:'🫗',items:[
+  ['mustardoil','Mustard oil','सरसों का तेल','ml',2000,1000,1000],
+  ['refined','Refined oil','रिफाइंड तेल','ml',2500,1000,1000,0,'refined sunflower oil'],
+  ['ghee','Desi ghee','देसी घी','ml',1000,1000,500],
+  ['groundnutoil','Groundnut oil','मूंगफली का तेल','ml',1000,1000,500,1],
+  ['oliveoil','Olive oil','ऑलिव ऑयल','ml',250,500,250,1]
+ ]},
+ {id:'sugar',n:'Sugar, Salt & Sweeteners',ic:'🧂',items:[
+  ['sugar','Sugar','चीनी','g',3500,1000,1000],
+  ['salt','Salt (iodised)','नमक','g',1500,1000,1000,0,'iodised salt'],
+  ['sendha','Sendha namak (rock salt)','सेंधा नमक','g',200,1000,250],
+  ['kalanamak','Kala namak (black salt)','काला नमक','g',100,100,50],
+  ['gud','Gud (jaggery)','गुड़','g',500,1000,250],
+  ['honey','Honey','शहद','g',250,500,200],
+  ['mishri','Mishri','मिश्री','g',100,250,50,1]
+ ]},
+ {id:'whole',n:'Whole Spices',ic:'🌰',cv:60,items:[
+  ['jeera','Jeera (cumin)','जीरा','g',250,200,100],
+  ['rai','Rai (mustard seeds)','राई','g',100,100,50],
+  ['methidana','Methi dana','मेथी दाना','g',50,100,50],
+  ['saunf','Saunf (fennel)','सौंफ','g',150,100,50],
+  ['ajwain','Ajwain','अजवाइन','g',50,100,50],
+  ['kalonji','Kalonji','कलौंजी','g',25,100,25],
+  ['hing','Hing (asafoetida)','हींग','g',10,50,10],
+  ['kalimirch','Black pepper (whole)','काली मिर्च','g',50,100,50],
+  ['laung','Laung (cloves)','लौंग','g',20,50,20],
+  ['elaichi','Choti elaichi','छोटी इलायची','g',30,50,25,0,'green cardamom'],
+  ['badielaichi','Badi elaichi','बड़ी इलायची','g',20,50,20,0,'black cardamom'],
+  ['dalchini','Dalchini (cinnamon)','दालचीनी','g',20,50,20],
+  ['tejpatta','Tej patta (bay leaf)','तेज पत्ता','g',10,50,10],
+  ['sabutmirch','Whole red chilli','साबुत लाल मिर्च','g',50,100,50],
+  ['sabutdhaniya','Whole coriander seeds','साबुत धनिया','g',100,200,50],
+  ['kasurimethi','Kasuri methi','कसूरी मेथी','g',25,100,25],
+  ['til','White til (sesame)','सफ़ेद तिल','g',50,100,50],
+  ['chakraphool','Star anise','चक्र फूल','g',5,50,10,1],
+  ['jaiphal','Jaiphal & javitri','जायफल जावित्री','g',5,50,10,1],
+  ['khuskhus','Khus khus (poppy)','खसखस','g',25,100,25,1]
+ ]},
+ {id:'powder',n:'Masala & Powders',ic:'🌶️',cv:60,items:[
+  ['haldi','Haldi (turmeric) powder','हल्दी','g',200,200,100],
+  ['lalmirch','Red chilli powder','लाल मिर्च पाउडर','g',200,200,100],
+  ['kashmiri','Kashmiri mirch powder','कश्मीरी मिर्च','g',100,100,50],
+  ['dhaniyap','Dhaniya (coriander) powder','धनिया पाउडर','g',250,200,100],
+  ['jeerap','Jeera powder','जीरा पाउडर','g',50,100,50],
+  ['garam','Garam masala','गरम मसाला','g',75,100,50],
+  ['amchur','Amchur powder','अमचूर','g',50,100,50],
+  ['chaat','Chaat masala','चाट मसाला','g',75,100,50],
+  ['kitchenking','Kitchen King masala','किचन किंग मसाला','g',50,100,50],
+  ['chole','Chole masala','छोले मसाला','g',50,100,50],
+  ['pavbhaji','Pav bhaji masala','पाव भाजी मसाला','g',50,100,50],
+  ['sambhar','Sambhar masala','सांभर मसाला','g',50,100,50],
+  ['kalimirchp','Black pepper powder','काली मिर्च पाउडर','g',30,100,25],
+  ['chaimasala','Chai masala','चाय मसाला','g',30,50,25],
+  ['sonth','Sonth (dry ginger) powder','सोंठ','g',20,100,20,1],
+  ['rajmamasala','Rajma masala','राजमा मसाला','g',30,100,50,1],
+  ['biryani','Biryani / pulao masala','बिरयानी मसाला','g',30,50,25,1]
+ ]},
+ {id:'dairy',n:'Dairy & Bread',ic:'🥛',cv:3,items:[
+  ['milk','Milk','दूध','ml',60000,1000,1000,0,'toned milk'],
+  ['curd','Curd','दही','g',6000,400,400],
+  ['paneer','Paneer','पनीर','g',2000,200,200,0,'fresh paneer'],
+  ['butter','Butter','मक्खन','g',500,100,100,0,'butter',30],
+  ['cheese','Cheese slices / cubes','चीज़','g',200,200,100,0,'cheese slices',30],
+  ['bread','Bread','ब्रेड','loaf',8,1,1],
+  ['cream','Fresh cream','क्रीम','ml',200,200,0,1,'fresh cream',10]
+ ]},
+ {id:'veg',n:'Vegetables & Fruits',ic:'🥬',cv:4,items:[
+  ['onion','Onion','प्याज़','g',6000,1000,2000,0,'onion',10],
+  ['potato','Potato','आलू','g',8000,1000,2000,0,'potato',10],
+  ['tomato','Tomato','टमाटर','g',6000,1000,1000,0,'tomato',5],
+  ['garlic','Garlic','लहसुन','g',500,250,200,0,'garlic',15],
+  ['ginger','Ginger','अदरक','g',500,250,100,0,'ginger',7],
+  ['greenchilli','Green chilli','हरी मिर्च','g',300,100,50],
+  ['lemon','Lemon','नींबू','pc',30,4,3,0,'lemon',7],
+  ['dhaniyapatta','Coriander leaves','हरा धनिया','g',1000,100,50,0,'coriander leaves',3],
+  ['pudina','Mint (pudina)','पुदीना','g',200,100,0,0,'mint leaves',3],
+  ['greenveg','Seasonal green vegetables','हरी सब्ज़ियाँ','g',20000,1000,1000,0,'fresh vegetables',3],
+  ['banana','Banana','केला','pc',60,12,6],
+  ['fruits','Seasonal fruits','फल','g',10000,1000,1000,0,'fresh fruits'],
+  ['curryleaf','Curry leaves','कड़ी पत्ता','g',50,50,0,1]
+ ]},
+ {id:'dry',n:'Dry Fruits, Nuts & Seeds',ic:'🥜',items:[
+  ['badam','Almonds','बादाम','g',500,500,250],
+  ['kaju','Cashews','काजू','g',250,250,100],
+  ['kishmish','Raisins','किशमिश','g',250,250,100],
+  ['akhrot','Walnuts','अखरोट','g',250,250,100],
+  ['mungfali','Peanuts (raw)','मूंगफली','g',500,500,250],
+  ['makhana','Makhana','मखाना','g',200,100,100],
+  ['khajoor','Dates','खजूर','g',250,500,200],
+  ['pista','Pistachios','पिस्ता','g',100,200,50,1],
+  ['alsi','Flax seeds','अलसी','g',100,200,50,1],
+  ['pumpkinseed','Pumpkin / chia seeds','कद्दू बीज','g',100,200,50,1]
+ ]},
+ {id:'bev',n:'Tea, Coffee & Drinks',ic:'☕',items:[
+  ['chai','Tea leaves','चाय पत्ती','g',750,500,250,0,'tea'],
+  ['coffee','Coffee','कॉफ़ी','g',100,100,50,0,'instant coffee'],
+  ['healthdrink','Health drink (Bournvita/Horlicks)','हेल्थ ड्रिंक','g',500,500,200,0,'bournvita'],
+  ['greentea','Green tea bags','ग्रीन टी','pc',30,25,10,1],
+  ['sharbat','Sharbat (Rooh Afza etc.)','शरबत','ml',375,750,0,1,'rooh afza']
+ ]},
+ {id:'snack',n:'Snacks & Breakfast',ic:'🍪',cv:15,items:[
+  ['namkeen','Namkeen / bhujia','नमकीन','g',1500,400,400,0,'namkeen bhujia'],
+  ['biscuit','Biscuits','बिस्कुट','pkt',20,4,4],
+  ['rusk','Rusk','रस्क','pkt',4,1,1,0,'rusk toast'],
+  ['cornflakes','Cornflakes / muesli','कॉर्नफ्लेक्स','g',500,500,250],
+  ['maggi','Instant noodles','मैगी','pkt',12,4,4,0,'maggi noodles'],
+  ['papad','Papad','पापड़','g',200,200,100],
+  ['chips','Chips','चिप्स','pkt',6,2,2,0,'potato chips'],
+  ['pasta','Pasta / macaroni','पास्ता','g',500,500,250,1],
+  ['khakhra','Khakhra','खाखरा','g',200,200,0,1],
+  ['jam','Jam','जैम','g',200,500,0,1,'mixed fruit jam',30],
+  ['peanutbutter','Peanut butter','पीनट बटर','g',250,500,0,1,'peanut butter',30],
+  ['popcorn','Popcorn kernels','पॉपकॉर्न','g',200,500,0,1]
+ ]},
+ {id:'sauce',n:'Pickles, Sauces & Baking',ic:'🫙',cv:45,items:[
+  ['ketchup','Tomato ketchup','टोमैटो केचप','g',500,500,200],
+  ['achar','Pickle (achar)','अचार','g',500,500,250,0,'mango pickle'],
+  ['imli','Imli (tamarind)','इमली','g',200,200,100,0,'tamarind'],
+  ['soda','Baking soda','खाने का सोडा','g',50,100,50],
+  ['cornflour','Cornflour','कॉर्नफ्लोर','g',100,100,50],
+  ['eno','Eno / fruit salt','ईनो','pc',6,6,2,0,'eno sachet'],
+  ['soysauce','Soy sauce','सोया सॉस','ml',100,200,0,1],
+  ['vinegar','Vinegar','सिरका','ml',100,500,0,1],
+  ['chillisauce','Green chilli sauce','चिली सॉस','ml',100,200,0,1],
+  ['mayo','Veg mayonnaise','मेयोनेज़','g',250,250,0,1],
+  ['bakingpowder','Baking powder','बेकिंग पाउडर','g',25,100,0,1],
+  ['custard','Custard powder','कस्टर्ड पाउडर','g',100,100,0,1],
+  ['kesar','Kesar (saffron)','केसर','g',0.5,1,0,1]
+ ]},
+ {id:'clean',n:'Kitchen & Cleaning',ic:'🧽',cv:30,items:[
+  ['lpg','LPG cylinder (14.2 kg)','गैस सिलेंडर','cyl',0.9,1,1,0,'lpg cylinder'],
+  ['dishliquid','Dishwash liquid','बर्तन धोने का लिक्विड','ml',1000,500,250,0,'dishwash liquid'],
+  ['dishbar','Dishwash bar','बर्तन साबुन','pc',4,3,1,1,'dishwash bar'],
+  ['scrub','Scrub pads','स्क्रब पैड','pc',4,3,2,0,'scrub pad'],
+  ['steelscrub','Steel scrubber','स्टील स्क्रबर','pc',2,2,1],
+  ['detergent','Detergent powder','डिटर्जेंट पाउडर','g',3000,1000,1000],
+  ['liqdetergent','Liquid detergent','लिक्विड डिटर्जेंट','ml',1000,1000,500,1],
+  ['floorclean','Floor cleaner','फ़र्श क्लीनर','ml',1000,1000,500],
+  ['toiletclean','Toilet cleaner','टॉयलेट क्लीनर','ml',500,500,500],
+  ['garbagebag','Garbage bags','कूड़े की थैली','roll',2,1,1,0,'garbage bags'],
+  ['foil','Aluminium foil','एल्युमिनियम फॉयल','roll',0.5,1,0],
+  ['tissue','Kitchen tissue roll','किचन टिशू','roll',2,2,1,0,'kitchen towel roll'],
+  ['matchbox','Matchbox / lighter','माचिस','pc',2,10,2,0,'matchbox'],
+  ['handwash','Handwash','हैंडवॉश','ml',500,200,200],
+  ['clingwrap','Cling wrap','क्लिंग रैप','roll',0.3,1,0,1]
+ ]},
+ {id:'care',n:'Personal Care',ic:'🧴',cv:30,items:[
+  ['soap','Bath soap','नहाने का साबुन','pc',8,4,2,0,'bath soap'],
+  ['shampoo','Shampoo','शैम्पू','ml',400,340,150],
+  ['toothpaste','Toothpaste','टूथपेस्ट','g',400,150,150],
+  ['hairoil','Hair oil','बालों का तेल','ml',200,200,100,0,'coconut hair oil'],
+  ['toothbrush','Toothbrush','टूथब्रश','pc',1.7,5,0,1]
+ ]},
+ {id:'puja',n:'Puja Essentials',ic:'🪔',cv:60,items:[
+  ['agarbatti','Agarbatti','अगरबत्ती','pkt',2,1,1],
+  ['kapoor','Kapoor (camphor)','कपूर','g',50,50,20,0,'camphor'],
+  ['batti','Cotton wicks (batti)','रुई बत्ती','pkt',1,1,1,0,'cotton wicks'],
+  ['dhoop','Dhoop sticks','धूप','pkt',1,1,0,1]
+ ]}
+];
+const STORES={
+  blinkit:{n:'Blinkit',u:'https://blinkit.com/s/?q={q}'},
+  zepto:{n:'Zepto',u:'https://www.zeptonow.com/search?query={q}'},
+  instamart:{n:'Instamart',u:'https://www.swiggy.com/instamart/search?custom_back=true&query={q}'},
+  bigbasket:{n:'BigBasket',u:'https://www.bigbasket.com/ps/?q={q}'},
+  amazon:{n:'Amazon',u:'https://www.amazon.in/s?k={q}'},
+  flipkart:{n:'Flipkart',u:'https://www.flipkart.com/search?q={q}&marketplace=GROCERY'},
+  jiomart:{n:'JioMart',u:'https://www.jiomart.com/search/{q}'}
+};
+const DAY=864e5, KEY='rasoi.v1', COOKIE='rsk', COOKIE_BUDGET=4800;
+
+/* ===================== STATE ===================== */
+const DEF_SET={hh:5,safety:7,lead:1,cover:30,learn:true,hindiMsg:true,phone:'',
+  stores:['blinkit','zepto','instamart','amazon','bigbasket'],custom:'',notif:false,lastNotif:0,lastNotifKey:'',lastBackup:0,seenIntro:false};
+let S={set:{...DEF_SET},it:{},custom:[]};
+let DEFS={}, ORDER=[];
+function buildDefs(){
+  DEFS={};ORDER=[];
+  CATS.forEach(c=>c.items.forEach(t=>{
+    DEFS[t[0]]={id:t[0],n:t[1],hi:t[2],u:t[3],mo:t[4],pk:t[5],mn:t[6],opt:!!t[7],q:t[8]||'',cv:t[9]||null,cat:c.id,custom:false};
+    ORDER.push(t[0]);
+  }));
+  S.custom.forEach(d=>{DEFS[d.id]={...d,custom:true};ORDER.push(d.id)});
+}
+function st(id){return S.it[id]||(S.it[id]={})}
+
+/* ===================== STORAGE (localStorage + cookie mirror) ===================== */
+let lsOK=true, ckOK=true, lastSaved=0;
+function save(){
+  lastSaved=Date.now();
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){lsOK=false}
+  try{writeCookies()}catch(e){ckOK=false}
+}
+function setCookie(n,v,days){document.cookie=n+'='+v+';max-age='+(days*86400)+';path=/;SameSite=Lax'}
+function getCookies(){const o={};document.cookie.split(';').forEach(p=>{const i=p.indexOf('=');if(i>0)o[p.slice(0,i).trim()]=p.slice(i+1).trim()});return o}
+/* Compact mirror: settings + per-item essentials. Kept small so the site never gets "cookie too large" errors. */
+function writeCookies(){
+  const s=S.set;
+  const head=['v2',s.hh,s.safety,s.lead,s.cover,s.learn?1:0,s.hindiMsg?1:0,(s.phone||'').replace(/\D/g,''),s.stores.join('.')].join('~');
+  const rows=Object.entries(S.it).filter(([id,v])=>DEFS[id]&&!DEFS[id].custom&&(v.t||v.m||v.on!==undefined||v.L||v.lb))
+    .sort((a,b)=>(b[1].t||b[1].lb||0)-(a[1].t||a[1].lb||0))
+    .map(([id,v])=>[id,r2(v.c),v.t?Math.round(v.t/36e5):'',r2(v.b),v.m?r2(v.m):'',v.on===undefined?'':(v.on?1:0),v.L?1:'',v.lb?Math.round(v.lb/36e5):''].join(',').replace(/,+$/,''));
+  let str=head, used=0;
+  for(const r of rows){if(str.length+r.length+1>COOKIE_BUDGET)break;str+='|'+r;used++}
+  const enc=encodeURIComponent(str);
+  const parts=enc.match(/.{1,3500}/g)||[];
+  const old=getCookies();
+  Object.keys(old).filter(k=>k.startsWith(COOKIE)).forEach(k=>setCookie(k,'',-1));
+  parts.forEach((p,i)=>setCookie(COOKIE+i,p,400));
+  ckOK=getCookies()[COOKIE+'0']!==undefined;
+  return used;
+}
+function readCookies(){
+  const ck=getCookies();let enc='',i=0;
+  while(ck[COOKIE+i]!==undefined){enc+=ck[COOKIE+i];i++}
+  if(!enc)return false;
+  const str=decodeURIComponent(enc);const parts=str.split('|');const h=parts[0].split('~');
+  if(h[0]!=='v2')return false;
+  Object.assign(S.set,{hh:+h[1]||5,safety:+h[2]||7,lead:+h[3]||1,cover:+h[4]||30,learn:h[5]==='1',hindiMsg:h[6]==='1',phone:h[7]||'',stores:h[8]?h[8].split('.'):DEF_SET.stores});
+  parts.slice(1).forEach(r=>{const a=r.split(',');const v=st(a[0]);
+    if(a[1])v.c=+a[1];if(a[2])v.t=+a[2]*36e5;if(a[3])v.b=+a[3];if(a[4])v.m=+a[4];if(a[5])v.on=a[5]==='1';if(a[6])v.L=1;if(a[7])v.lb=+a[7]*36e5;});
+  return true;
+}
+let restoredFrom='';
+function load(){
+  let raw=null;
+  try{raw=localStorage.getItem(KEY)}catch(e){lsOK=false}
+  if(raw){try{const o=JSON.parse(raw);S={set:{...DEF_SET,...o.set},it:o.it||{},custom:o.custom||[]};restoredFrom='ls'}catch(e){}}
+  buildDefs();
+  if(!restoredFrom){try{if(readCookies()){restoredFrom='cookie'}}catch(e){}}
+}
+
+/* ===================== MATH ===================== */
+function r2(x){return x===undefined||x===null||isNaN(x)?'':Math.round(x*100)/100}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function D(id){return DEFS[id]}
+function isOn(id){const v=S.it[id];if(v&&v.on!==undefined)return v.on;return !D(id).opt}
+function mult(id){const v=S.it[id];return v&&v.m?v.m:1}
+function packOf(id){const v=S.it[id];return v&&v.pk?v.pk:D(id).pk}
+function minOf(id){const v=S.it[id];return v&&v.mn!==undefined&&v.mn!==''?v.mn:D(id).mn}
+function baseDaily(id){return D(id).mo*(S.set.hh/5)/30}
+function daily(id){return baseDaily(id)*mult(id)}
+function coverOf(id){const v=S.it[id];if(v&&v.cv)return v.cv;const d=D(id);if(d.cv)return d.cv;const c=CATS.find(c=>c.id===d.cat);return (c&&c.cv)||S.set.cover}
+function est(id){const v=S.it[id];if(!v||!v.t)return null;const days=(Date.now()-v.t)/DAY;return Math.max(0,(v.c||0)+(v.b||0)-daily(id)*days)}
+function rop(id){return Math.max(minOf(id),daily(id)*(S.set.lead+S.set.safety))}
+function target(id){return rop(id)+daily(id)*coverOf(id)}
+function suggestQty(id){
+  const e=est(id), p=packOf(id);
+  const have=e===null?0:e, tg=target(id), need=tg-have;
+  /* round to whole packs; allow up to ¼ pack short of target (avoids buying a whole extra pack for a few grams) */
+  let packs=Math.max(1,Math.ceil((need-0.25*p)/p-1e-9));
+  if(have+packs*p<rop(id)+0.5*(tg-rop(id)))packs++;
+  return packs*p;
+}
+function orderQty(id){const v=S.it[id];return v&&v.q?v.q:suggestQty(id)}
+function info(id){
+  const e=est(id), d=daily(id), r=rop(id);
+  const o={e,d,r,tg:target(id),daysLeft:null,toReorder:null,st:'ok'};
+  if(!isOn(id)){o.st='off';return o}
+  if(e===null){o.st='unk';return o}
+  o.daysLeft=d>0?e/d:Infinity; o.toReorder=d>0?(e-r)/d:Infinity;
+  if(e<=0.0001)o.st='out';else if(e<=r)o.st='low';else if(o.toReorder<=7)o.st='soon';else o.st='ok';
+  return o;
+}
+function inList(id){const v=S.it[id]||{};if(!isOn(id)&&!v.L)return false;if(v.L)return true;const s=info(id).st;return (s==='out'||s==='low')&&!v.x}
+function onIds(){return ORDER.filter(isOn)}
+
+/* ===================== FORMAT ===================== */
+function trim(n,dp){return (+n.toFixed(dp)).toString()}
+function fq(v,u){
+  if(v===null||v===undefined||isNaN(v))return '—';
+  if(u==='g'){return v>=1000?trim(v/1000,2)+' kg':trim(v,v<10?1:0)+' g'}
+  if(u==='ml'){return v>=1000?trim(v/1000,2)+' L':trim(v,0)+' ml'}
+  return trim(v,v<10?1:0)+' '+u;
+}
+function fdays(n){if(n===null)return '';if(n===Infinity)return '∞';if(n<1)return 'today';const d=Math.round(n);return d+(d===1?' day':' days')}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function dname(id){const v=S.it[id];const d=D(id);return d.n}
+function ddate(ts){return new Date(ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}
+function inUnit(id){const d=D(id),p=packOf(id);if(d.u==='g')return p>=500?{l:'kg',f:1000}:{l:'g',f:1};if(d.u==='ml')return p>=500?{l:'L',f:1000}:{l:'ml',f:1};return {l:d.u,f:1}}
+const TAG={out:['Out','t-out'],low:['Order','t-low'],soon:['Soon','t-soon'],ok:['OK','t-ok'],unk:['Not counted','t-unk'],off:['Not used','t-off']};
+const COL={out:'var(--red)',low:'var(--saf)',soon:'var(--amb)',ok:'var(--grn)',unk:'var(--line)',off:'var(--line)'};
+
+/* ===================== UI CORE ===================== */
+const $=s=>document.querySelector(s);
+const view=$('#view');
+let tab='home', pFilter='all', pCat='all', pSearch='';
+function go(t){tab=t;document.querySelectorAll('nav.bottom button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));render();window.scrollTo(0,0)}
+function render(){
+  $('#hhPill').textContent='👨‍👩‍👧‍👦 '+S.set.hh;
+  const n=ORDER.filter(inList).length;
+  const b=$('#listBadge');b.textContent=n;b.classList.toggle('hide',!n);
+  ({home:renderHome,pantry:renderPantry,list:renderList,settings:renderSettings})[tab]();
+}
+let toastT;
+function toast(msg,undo){
+  $('#toastMsg').textContent=msg;const b=$('#toastBtn');b.classList.toggle('hide',!undo);b.onclick=()=>{undo();hideToast()};
+  $('#toast').classList.add('on');clearTimeout(toastT);toastT=setTimeout(hideToast,undo?6000:2600);
+}
+function hideToast(){$('#toast').classList.remove('on')}
+function snapshot(){return JSON.stringify(S)}
+function restore(snap){const o=JSON.parse(snap);S=o;buildDefs();save();render()}
+function openSheet(html,after){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on');$('#sheet').scrollTop=0;if(after)after($('#sheet'))}
+function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}
+$('#scrim').addEventListener('click',closeSheet);
+document.querySelectorAll('nav.bottom button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.tab)));
+$('#hhPill').addEventListener('click',()=>go('settings'));
+
+/* ===================== HOME ===================== */
+function renderHome(){
+  const ids=onIds(), inf={};ids.forEach(id=>inf[id]=info(id));
+  const need=ids.filter(id=>['out','low'].includes(inf[id].st));
+  const soon=ids.filter(id=>inf[id].st==='soon');
+  const unk=ids.filter(id=>inf[id].st==='unk');
+  const never=ids.filter(id=>!(S.it[id]&&S.it[id].lb));
+  const listN=ids.filter(inList).length;
+  const h=new Date().getHours();
+  const greet=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  let html=`<div class="card" style="margin-top:4px"><div class="row"><div class="grow"><h3 style="margin:0">${greet} 🙏</h3>
+   <div class="mute small">${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})} · ${S.set.hh} people · order for ${S.set.cover} days</div></div></div></div>`;
+  if(listN){html+=`<div class="banner"><div class="grow"><b>${listN} item${listN>1?'s':''} to order</b><div class="small" style="opacity:.9">Keep your backup stock full</div></div><button class="btn sm" type="button" data-go="list">Open list</button></div>`}
+  html+=`<div class="stats">
+   <button type="button" class="stat s-red" data-f="need"><b>${need.length}</b><span>Order now</span></button>
+   <button type="button" class="stat s-amb" data-f="soon"><b>${soon.length}</b><span>Running low in 7 days</span></button>
+   <button type="button" class="stat s-gry" data-f="unk"><b>${unk.length}</b><span>Not counted yet</span></button>
+   <button type="button" class="stat s-saf" data-f="never"><b>${never.length}</b><span>Never ordered</span></button></div>`;
+  if(unk.length>5){html+=`<div class="card"><h3>🧺 Pantry check</h3><div class="mute small" style="margin-bottom:10px">Tap through your shelves once. One tap per item: Empty, Low, Half, 1 pack… The app then predicts when each item runs out.</div>
+   <button class="btn pri block" type="button" data-audit="unk">Start pantry check (${unk.length} items)</button></div>`}
+  else{html+=`<div class="row" style="margin-top:10px;gap:8px"><button class="btn ghost grow" type="button" data-audit="all">🧺 Recount pantry</button><button class="btn ghost grow" type="button" data-add="1">＋ Add item</button></div>`}
+  const tl=ids.filter(id=>inf[id].toReorder!==null&&isFinite(inf[id].toReorder)).sort((a,b)=>inf[a].toReorder-inf[b].toReorder).slice(0,10);
+  if(tl.length){
+    html+=`<h2>Runs out next</h2><div class="card" style="padding:4px 14px">`+tl.map(id=>{const i=inf[id];const d=Math.max(0,Math.round(i.toReorder));
+      const col=i.st==='out'?'t-out':i.st==='low'?'t-low':i.st==='soon'?'t-soon':'t-ok';
+      return `<div class="tl"><div class="d ${col}">${i.st==='out'?'OUT':d===0?'NOW':d+'d'}</div><button class="main grow" type="button" data-item="${id}" style="border:0;background:none;text-align:left;padding:0">
+      <div class="iname">${esc(dname(id))}<span class="ihi">${esc(D(id).hi)}</span></div><div class="isub">${fq(i.e,D(id).u)} left · empty in ${fdays(i.daysLeft)}</div></button>
+      <button type="button" class="cartbtn ${inList(id)?'on':''}" data-cart="${id}" aria-label="Toggle in order list">🛒</button></div>`}).join('')+`</div>`;
+  }
+  const lb=S.set.lastBackup, age=lb?Math.floor((Date.now()-lb)/DAY):null;
+  if(Object.keys(S.it).length>3&&(age===null||age>=14)){
+    html+=`<div class="card"><div class="row"><div class="grow"><b>💾 Backup</b><div class="mute small">${age===null?'Never exported.':'Last export '+age+' days ago.'} Browser data can be cleared — keep a CSV copy.</div></div><button class="btn sm pri" type="button" data-export="1">Export</button></div></div>`;
+  }
+  view.innerHTML=html;
+}
+
+/* ===================== PANTRY ===================== */
+function PF(inf){return {all:id=>inf[id].st!=='off',need:id=>['out','low'].includes(inf[id].st),soon:id=>inf[id].st==='soon',unk:id=>inf[id].st==='unk',
+    never:id=>isOn(id)&&!(S.it[id]&&S.it[id].lb),off:id=>inf[id].st==='off'}}
+function renderPantry(){
+  const all=ORDER, inf={};all.forEach(id=>inf[id]=info(id));
+  const F=PF(inf);
+  const FL={all:'All',need:'Order now',soon:'Soon',unk:'Not counted',never:'Never ordered',off:'Not used'};
+  const q=pSearch.trim().toLowerCase();
+  const match=id=>{if(!q)return true;const d=D(id);return (d.n+' '+d.hi+' '+d.q+' '+((S.it[id]||{}).br||'')).toLowerCase().includes(q)};
+  let html=`<div style="position:sticky;top:58px;z-index:10;background:var(--bg);padding:4px 0 2px">
+   <input class="search" id="pSearch" type="search" placeholder="Search atta, दाल, jeera…" value="${esc(pSearch)}" aria-label="Search items">
+   <div class="chips" role="tablist">${Object.keys(FL).map(k=>`<button type="button" class="chip ${pFilter===k?'on':''}" data-pf="${k}">${FL[k]}<span class="n">${all.filter(F[k]).length}</span></button>`).join('')}</div>
+   <div class="chips">${[{id:'all',n:'All categories',ic:''}].concat(CATS).map(c=>`<button type="button" class="chip ${pCat===c.id?'on':''}" data-pc="${c.id}">${c.ic?c.ic+' ':''}${esc(c.id==='all'?c.n:c.n.split(/[,&]/)[0].trim())}</button>`).join('')}</div></div>`;
+  html+='<div id="pList"></div>';
+  view.innerHTML=html;
+  renderPList();
+  const si=$('#pSearch');
+  si.addEventListener('input',e=>{pSearch=e.target.value;renderPList()});
+}
+function renderPList(){
+  const all=ORDER, inf={};all.forEach(id=>inf[id]=info(id));
+  const F=PF(inf);
+  const q=pSearch.trim().toLowerCase();
+  const match=id=>{if(!q)return true;const d=D(id);return (d.n+' '+d.hi+' '+d.q+' '+((S.it[id]||{}).br||'')).toLowerCase().includes(q)};
+  let html='', any=false;
+  CATS.forEach(c=>{
+    if(pCat!=='all'&&pCat!==c.id)return;
+    const ids=all.filter(id=>D(id).cat===c.id&&F[pFilter](id)&&match(id));
+    if(!ids.length)return;any=true;
+    html+=`<div class="cathead"><span>${c.ic}</span><span class="grow">${esc(c.n)}</span><button type="button" class="btn sm ghost" data-audit="cat:${c.id}">Count</button></div><div class="list">`+ids.map(id=>row(id,inf[id])).join('')+`</div>`;
+  });
+  if(!any)html+=`<div class="empty"><div class="e">🔍</div>Nothing here.${q?`<br><button class="btn pri" style="margin-top:12px" type="button" data-add="${esc(pSearch)}">＋ Add “${esc(pSearch)}”</button>`:''}</div>`;
+  html+=`<button class="btn ghost block" style="margin-top:14px" type="button" data-add="1">＋ Add your own item</button>`;
+  $('#pList').innerHTML=html;
+}
+function row(id,i){
+  const d=D(id);const t=TAG[i.st];
+  const pct=i.e===null?0:clamp(i.e/i.tg*100,0,100), mk=clamp(i.r/i.tg*100,0,100);
+  let sub;
+  if(i.st==='off')sub='Tap to start tracking';
+  else if(i.st==='unk')sub='Tap to set how much you have';
+  else sub=`${fq(i.e,d.u)} · ${i.st==='out'?'finished':'lasts '+fdays(i.daysLeft)}`;
+  const br=(S.it[id]||{}).br;
+  return `<div class="item"><button type="button" class="main" data-item="${id}">
+   <div class="row" style="gap:6px"><div class="iname grow">${esc(d.n)}<span class="ihi">${esc(d.hi)}</span></div><span class="tag ${t[1]}">${t[0]}</span></div>
+   <div class="isub">${sub}${br?' · '+esc(br):''}</div>
+   ${i.st!=='off'&&i.st!=='unk'?`<div class="bar"><i style="width:${pct}%;background:${COL[i.st]}"></i><u style="left:${mk}%"></u></div>`:''}
+  </button><button type="button" class="cartbtn ${inList(id)?'on':''}" data-cart="${id}" aria-label="Toggle ${esc(d.n)} in order list">🛒</button></div>`;
+}
+
+/* ===================== ORDER LIST ===================== */
+function renderList(){
+  const checked=ORDER.filter(inList);
+  const sugg=ORDER.filter(id=>isOn(id)&&!inList(id)&&['out','low','soon'].includes(info(id).st))
+    .sort((a,b)=>(info(a).toReorder||0)-(info(b).toReorder||0));
+  let html=`<div class="card" style="margin-top:4px"><div class="lbl" style="margin-bottom:6px">Buy enough for</div>
+   <div class="chips">${[7,15,30,45,60].map(n=>`<button type="button" class="chip ${S.set.cover===n?'on':''}" data-cover="${n}">${n} days</button>`).join('')}</div>
+   <div class="mute small">Plus a ${S.set.safety}-day safety buffer. Fresh items, spices and dairy use their own shorter or longer cycles.</div></div>`;
+  html+=`<input class="search" id="lAdd" type="search" placeholder="＋ Add anything to the list…" aria-label="Add item to list" style="margin-top:6px"><div id="lSug"></div>`;
+  if(!checked.length){html+=`<div class="empty"><div class="e">✅</div>All stocked up. Nothing to order right now.</div>`}
+  else{
+    html+=`<h2>To order · ${checked.length}</h2>`;
+    let total=0, priced=0;
+    CATS.forEach(c=>{
+      const ids=checked.filter(id=>D(id).cat===c.id);if(!ids.length)return;
+      html+=`<div class="cathead"><span>${c.ic}</span><span>${esc(c.n)}</span></div><div class="list">`+ids.map(id=>{
+        const d=D(id), q=orderQty(id), p=packOf(id), v=S.it[id]||{};
+        if(v.pr){total+=v.pr*q/p;priced++}
+        const i=info(id);
+        return `<div class="item"><button type="button" class="chk on" data-uncheck="${id}" aria-label="Remove ${esc(d.n)} from list">✓</button>
+        <button type="button" class="main" data-item="${id}"><div class="iname">${esc(d.n)}<span class="ihi">${esc(d.hi)}</span></div>
+        <div class="isub">${i.st==='unk'?'stock not counted':i.st==='off'?'manual':fq(i.e,d.u)+' left'}${v.br?' · '+esc(v.br):''}${v.pr?' · ₹'+Math.round(v.pr*q/p):''}</div></button>
+        <div class="stepper"><button type="button" data-qd="${id}" aria-label="Less">−</button><span>${fq(q,d.u)}</span><button type="button" data-qu="${id}" aria-label="More">+</button></div></div>`}).join('')+`</div>`;
+    });
+    if(priced)html+=`<div class="mute small" style="margin:8px 2px">Estimated cost (${priced} priced items): <b>₹${Math.round(total).toLocaleString('en-IN')}</b></div>`;
+    html+=`<div class="actionbar"><div class="abtns">
+      <button type="button" class="btn wa" data-share="wa">🟢 WhatsApp${S.set.phone?' kirana':''}</button>
+      <button type="button" class="btn" data-share="copy">📋 Copy</button>
+      <button type="button" class="btn" data-share="native">↗ Share</button></div>
+      <button type="button" class="btn pri block" style="margin-top:8px" data-bought="1">✔ Got these items — add to stock</button></div>`;
+  }
+  if(sugg.length){
+    html+=`<h2>Running low soon <span class="mute small">tap ☐ to add</span></h2><div class="list">`+sugg.map(id=>{const d=D(id),i=info(id);
+      return `<div class="item"><button type="button" class="chk" data-check="${id}" aria-label="Add ${esc(d.n)}"></button>
+      <button type="button" class="main" data-item="${id}"><div class="iname">${esc(d.n)}<span class="ihi">${esc(d.hi)}</span></div><div class="isub">${fq(i.e,d.u)} · reorder in ${fdays(Math.max(0,i.toReorder))}</div></button>
+      <span class="tag ${TAG[i.st][1]}">${TAG[i.st][0]}</span></div>`}).join('')+`</div>`;
+  }
+  view.innerHTML=html;
+  const la=$('#lAdd'), ls=$('#lSug');
+  la.addEventListener('input',()=>{
+    const q=la.value.trim().toLowerCase();
+    if(!q){ls.innerHTML='';return}
+    const res=ORDER.filter(id=>{const d=D(id);return (d.n+' '+d.hi+' '+d.q).toLowerCase().includes(q)}).slice(0,6);
+    ls.innerHTML=`<div class="list" style="margin-top:6px">`+res.map(id=>`<div class="item"><button type="button" class="main" data-addlist="${id}"><div class="iname">＋ ${esc(D(id).n)}<span class="ihi">${esc(D(id).hi)}</span></div><div class="isub">${inList(id)?'already in list':'suggested '+fq(suggestQty(id),D(id).u)}</div></button></div>`).join('')
+      +`<div class="item"><button type="button" class="main" data-add="${esc(la.value.trim())}"><div class="iname">＋ New item “${esc(la.value.trim())}”</div><div class="isub">Create and add to list</div></button></div></div>`;
+  });
+}
+function listText(){
+  const ids=ORDER.filter(inList);
+  const L=[`🛒 *Grocery order* — ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}`,''];
+  let k=1;
+  CATS.forEach(c=>{const g=ids.filter(id=>D(id).cat===c.id);if(!g.length)return;
+    L.push(`*${c.n}*`);
+    g.forEach(id=>{const d=D(id),v=S.it[id]||{};
+      L.push(`${k++}. ${d.n}${S.set.hindiMsg?' ('+d.hi+')':''} – *${fq(orderQty(id),d.u)}*${v.br?' ['+v.br+']':''}`)});
+    L.push('');});
+  L.push(`Total: ${ids.length} items 🙏`);
+  return L.join('\n');
+}
+async function share(mode){
+  const t=listText();
+  if(mode==='copy'){await copy(t);toast('List copied — paste in WhatsApp');return}
+  if(mode==='native'&&navigator.share){try{await navigator.share({text:t})}catch(e){}return}
+  if(mode==='native'){await copy(t);toast('Copied (sharing not supported here)');return}
+  const ph=(S.set.phone||'').replace(/\D/g,'');const num=ph?(ph.length===10?'91'+ph:ph):'';
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(t),'_blank');
+}
+async function copy(t){
+  try{await navigator.clipboard.writeText(t);return}catch(e){}
+  const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}ta.remove();
+}
+function markBought(){
+  const ids=ORDER.filter(inList);if(!ids.length)return;
+  const snap=snapshot(), now=Date.now();
+  ids.forEach(id=>{const v=st(id), q=orderQty(id);
+    if(!v.t){v.c=q;v.t=now;v.b=0}else{v.b=(v.b||0)+q}
+    v.lb=now;v.nb=(v.nb||0)+1;delete v.L;delete v.x;delete v.q;if(v.on===false)v.on=true;});
+  save();render();toast(`${ids.length} items added to stock`,()=>restore(snap));
+}
+
+/* ===================== ITEM SHEET ===================== */
+function sliderToM(v){return Math.round(Math.pow(2,(v-50)/25)*100)/100}
+function mToSlider(m){return Math.round(50+25*Math.log2(m))}
+function openItem(id){
+  const d=D(id), v=st(id), i=info(id), p=packOf(id), U=inUnit(id), on=isOn(id);
+  const lnks=storeLinks(id);
+  const cur=i.e===null?'':r2(i.e/U.f);
+  const html=`<div class="sheethead"><div class="grow"><h3>${esc(d.n)}</h3><div class="mute">${esc(d.hi)} · ${esc((CATS.find(c=>c.id===d.cat)||{}).n||'')}</div></div><button class="x" type="button" data-close="1" aria-label="Close">✕</button></div>
+  <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:6px"><span class="tag ${TAG[i.st][1]}">${TAG[i.st][0]}</span>
+   ${i.e!==null?`<span class="small mute">Now ≈ <b>${fq(i.e,d.u)}</b> · empty in ${fdays(i.daysLeft)} · reorder at ${fq(i.r,d.u)}</span>`:''}</div>
+  <div class="sect"><div class="lbl">How much do you have now?</div>
+   <div class="qgrid">
+    <button class="btn" type="button" data-setc="0">Empty</button>
+    <button class="btn" type="button" data-setc="${p*0.25}">¼ pack</button>
+    <button class="btn" type="button" data-setc="${p*0.5}">½ pack</button>
+    <button class="btn" type="button" data-setc="${p}">1 pack</button></div>
+   <div class="inrow" style="margin-top:8px"><input class="inp" id="cIn" type="number" inputmode="decimal" min="0" step="any" placeholder="Exact amount" value="${cur}"><span class="unit">${U.l}</span><button class="btn pri" type="button" id="cSave">Save</button></div>
+   <div class="mute small" style="margin-top:4px">Pack size: ${fq(p,d.u)}${v.t?' · last counted '+ddate(v.t):''}</div></div>
+  <div class="sect"><div class="lbl">I just bought</div>
+   <div class="qgrid">${[1,2,3,5].map(n=>`<button class="btn" type="button" data-buy="${p*n}">+${fq(p*n,d.u)}</button>`).join('')}</div>
+   ${v.lb?`<div class="mute small" style="margin-top:4px">Last bought ${ddate(v.lb)} · ${v.nb||1} order${(v.nb||1)>1?'s':''} logged</div>`:'<div class="mute small" style="margin-top:4px">Never ordered yet</div>'}</div>
+  <div class="sect"><div class="rangehead"><div class="lbl" style="margin:0">My usage</div><div><span class="big" id="mVal">${mult(id)}×</span></div></div>
+   <input type="range" id="mR" min="0" max="100" step="1" value="${mToSlider(mult(id))}" aria-label="Usage compared with typical household">
+   <div class="row small mute" style="justify-content:space-between"><span>¼× less</span><span>typical</span><span>4× more</span></div>
+   <div class="small" id="mTxt" style="margin-top:4px"></div>
+   ${v.obs?`<div class="note" style="margin-top:8px">📈 From your counts: you actually use ≈ <b>${fq(v.obs*30,d.u)}/month</b>.</div>`:''}</div>
+  <div class="sect"><div class="lbl">Buy online</div><div class="links">${lnks.map(l=>`<a href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.n)} ↗</a>`).join('')}</div>
+   <div class="mute small" style="margin-top:6px">Opens a search${v.br?' for “'+esc(v.br+' '+d.n)+'”':''}. Save an exact product link below.</div></div>
+  <details class="sect"><summary>⚙️ Item details (brand, pack, price, link)</summary>
+   <div class="f2" style="margin-top:8px">
+    <label>Brand / note<input class="inp" id="fBr" value="${esc(v.br||'')}" placeholder="e.g. Aashirvaad"></label>
+    <label>Price per pack ₹<input class="inp" id="fPr" type="number" inputmode="decimal" value="${v.pr||''}" placeholder="optional"></label>
+    <label>Pack size (${U.l})<input class="inp" id="fPk" type="number" inputmode="decimal" step="any" value="${r2(p/U.f)}"></label>
+    <label>Always keep at least (${U.l})<input class="inp" id="fMn" type="number" inputmode="decimal" step="any" value="${r2(minOf(id)/U.f)}"></label>
+    <label>Typical use / month (${U.l}, 5 ppl)<input class="inp" id="fMo" type="number" inputmode="decimal" step="any" value="${r2(d.mo/U.f)}" ${d.custom?'':'disabled'}></label>
+    <label>Restock cycle (days)<input class="inp" id="fCv" type="number" inputmode="numeric" value="${v.cv||''}" placeholder="${coverOf(id)}"></label>
+   </div>
+   <label class="fl" style="margin-top:10px">Exact product link (Blinkit/Amazon/…)<input class="inp" id="fLn" type="url" value="${esc(v.ln||'')}" placeholder="https://…"></label>
+   <button class="btn pri block" type="button" id="fSave" style="margin-top:10px">Save details</button>
+  </details>
+  <div class="sect"><label class="toggle"><input type="checkbox" class="sw" id="onT" ${on?'checked':''}><span class="grow"><b>I use this item</b><div class="mute small">Turn off to hide it from alerts and lists</div></span></label>
+   <div class="row" style="gap:8px;margin-top:6px"><button class="btn grow" type="button" id="tgList">${inList(id)?'Remove from list':'🛒 Add to list'}</button>
+   ${d.custom?'<button class="btn ghost" type="button" id="delIt" style="color:var(--red)">Delete</button>':'<button class="btn ghost" type="button" id="rstIt">Reset</button>'}</div></div>`;
+  openSheet(html,sh=>{
+    const upd=()=>{const m=sliderToM(+sh.querySelector('#mR').value);sh.querySelector('#mVal').textContent=m+'×';
+      const dd=baseDaily(id)*m;sh.querySelector('#mTxt').innerHTML=`≈ <b>${fq(dd*30,d.u)}</b> per month for ${S.set.hh} people · ${fq(dd*7,d.u)} per week`;return m};
+    upd();
+    sh.querySelector('#mR').addEventListener('input',upd);
+    sh.querySelector('#mR').addEventListener('change',()=>{const m=upd();v.m=m===1?undefined:m;if(!v.m)delete v.m;save();render()});
+    sh.querySelectorAll('[data-setc]').forEach(b=>b.addEventListener('click',()=>{setCount(id,+b.dataset.setc);openItem(id)}));
+    sh.querySelector('#cSave').addEventListener('click',()=>{const x=parseFloat(sh.querySelector('#cIn').value);if(isNaN(x)||x<0){toast('Enter a number (0 or more)');return}setCount(id,x*U.f);openItem(id)});
+    sh.querySelectorAll('[data-buy]').forEach(b=>b.addEventListener('click',()=>{const snap=snapshot();addBought(id,+b.dataset.buy);openItem(id);toast('Added '+fq(+b.dataset.buy,d.u),()=>{restore(snap);closeSheet()})}));
+    sh.querySelector('#fSave').addEventListener('click',()=>{
+      const num=(sel)=>{const x=parseFloat(sh.querySelector(sel).value);return isNaN(x)||x<0?null:x};
+      v.br=sh.querySelector('#fBr').value.trim()||undefined;
+      const pr=num('#fPr');v.pr=pr||undefined;
+      const pk=num('#fPk');if(pk&&pk>0){const pv=pk*U.f;if(pv!==d.pk)v.pk=pv;else delete v.pk}
+      const mn=num('#fMn');if(mn!==null){const mv=mn*U.f;if(mv!==d.mn)v.mn=mv;else delete v.mn}
+      const cv=num('#fCv');v.cv=cv&&cv>0?Math.round(cv):undefined;
+      if(d.custom){const mo=num('#fMo');if(mo&&mo>0){const c=S.custom.find(x=>x.id===id);c.mo=mo*U.f;buildDefs()}}
+      const ln=sh.querySelector('#fLn').value.trim();v.ln=/^https?:\/\//i.test(ln)?ln:undefined;
+      Object.keys(v).forEach(k=>v[k]===undefined&&delete v[k]);
+      save();render();toast('Saved');openItem(id);
+    });
+    sh.querySelector('#onT').addEventListener('change',e=>{v.on=e.target.checked;if(v.on===!d.opt)delete v.on;save();render();openItem(id)});
+    sh.querySelector('#tgList').addEventListener('click',()=>{toggleList(id);openItem(id)});
+    const del=sh.querySelector('#delIt');if(del)del.addEventListener('click',()=>{if(!confirm('Delete '+d.n+'?'))return;const snap=snapshot();S.custom=S.custom.filter(x=>x.id!==id);delete S.it[id];buildDefs();save();closeSheet();render();toast('Deleted',()=>restore(snap))});
+    const rst=sh.querySelector('#rstIt');if(rst)rst.addEventListener('click',()=>{if(!confirm('Reset stock, usage and details for '+d.n+'?'))return;const snap=snapshot();delete S.it[id];save();closeSheet();render();toast('Reset',()=>restore(snap))});
+  });
+}
+function storeLinks(id){
+  const d=D(id),v=S.it[id]||{};const term=((v.br?v.br+' ':'')+(d.q||d.n.replace(/\(.*?\)/g,''))).replace(/\s+/g,' ').trim();
+  const q=encodeURIComponent(term);const out=[];
+  if(v.ln)out.push({n:'⭐ My product',u:v.ln});
+  S.set.stores.forEach(k=>{if(STORES[k])out.push({n:STORES[k].n,u:STORES[k].u.replace('{q}',q)})});
+  if(S.set.custom&&S.set.custom.includes('{q}'))out.push({n:'My store',u:S.set.custom.replace('{q}',q)});
+  return out;
+}
+function setCount(id,x,quiet){
+  const v=st(id),now=Date.now(),d=D(id);
+  let learned=null;
+  if(v.t&&S.set.learn){
+    const days=(now-v.t)/DAY;
+    if(days>=3&&x>0){
+      const used=(v.c||0)+(v.b||0)-x;
+      if(used>0){const obs=used/days;v.obs=obs;const base=baseDaily(id);
+        if(base>0){const old=mult(id);const nm=clamp(Math.round((0.5*old+0.5*obs/base)*100)/100,0.25,4);
+          if(Math.abs(nm-old)>=0.05){learned={old,nm};v.m=nm}}}
+    }
+  }
+  const snapM=learned?learned.old:null;
+  v.c=x;v.t=now;v.b=0;delete v.x;delete v.q;
+  if(v.on===false&&x>0)delete v.on;
+  save();render();
+  if(quiet)return;
+  if(learned)toast(`Usage learned: ${learned.old}× → ${learned.nm}×`,()=>{v.m=snapM;if(v.m===1)delete v.m;save();render()});
+  else toast('Stock saved: '+fq(x,d.u));
+}
+function addBought(id,q){
+  const v=st(id),now=Date.now();
+  if(!v.t){v.c=q;v.t=now;v.b=0}else v.b=(v.b||0)+q;
+  v.lb=now;v.nb=(v.nb||0)+1;delete v.L;delete v.x;delete v.q;save();render();
+}
+function toggleList(id){
+  const v=st(id);
+  if(inList(id)){if(v.L)delete v.L;if(inList(id))v.x=1;toast('Removed from list')}
+  else{v.L=1;delete v.x;toast('Added to order list')}
+  save();render();
+}
+
+/* ===================== ADD ITEM ===================== */
+function openAdd(name){
+  const html=`<div class="sheethead"><div class="grow"><h3>Add your own item</h3><div class="mute small">It will be tracked just like the built-in items</div></div><button class="x" type="button" data-close="1" aria-label="Close">✕</button></div>
+  <label class="fl">Name<input class="inp" id="aN" value="${esc(name&&name!=='1'?name:'')}" placeholder="e.g. Kalonji oil"></label>
+  <div class="f2" style="margin-top:10px">
+   <label>Hindi name (optional)<input class="inp" id="aH" placeholder="हिंदी नाम"></label>
+   <label>Category<select class="inp" id="aC">${CATS.map(c=>`<option value="${c.id}">${c.ic} ${esc(c.n)}</option>`).join('')}</select></label>
+   <label>Measured in<select class="inp" id="aU"><option value="g">kg / g (weight)</option><option value="ml">L / ml (liquid)</option><option value="pc">pieces</option><option value="pkt">packets</option><option value="roll">rolls</option><option value="bottle">bottles</option></select></label>
+   <label>Pack size <span id="aUl">(kg)</span><input class="inp" id="aP" type="number" inputmode="decimal" step="any" value="1"></label>
+   <label>Use per month <span class="aUl2">(kg)</span><input class="inp" id="aM" type="number" inputmode="decimal" step="any" value="1"></label>
+   <label>Keep at least <span class="aUl2">(kg)</span><input class="inp" id="aMn" type="number" inputmode="decimal" step="any" value="0.5"></label>
+  </div>
+  <div class="mute small" style="margin-top:6px">“Use per month” is for your whole household right now (${S.set.hh} people).</div>
+  <button class="btn pri block" type="button" id="aSave" style="margin-top:12px">Add item</button>
+  <label class="toggle"><input type="checkbox" id="aL" checked><span>Also add to order list</span></label>`;
+  openSheet(html,sh=>{
+    const U=()=>{const u=sh.querySelector('#aU').value;return u==='g'?{l:'kg',f:1000}:u==='ml'?{l:'L',f:1000}:{l:u,f:1}};
+    const lab=()=>{const l='('+U().l+')';sh.querySelector('#aUl').textContent=l;sh.querySelectorAll('.aUl2').forEach(x=>x.textContent=l)};
+    sh.querySelector('#aU').addEventListener('change',lab);
+    if(pCat&&pCat!=='all')sh.querySelector('#aC').value=pCat;
+    sh.querySelector('#aSave').addEventListener('click',()=>{
+      const n=sh.querySelector('#aN').value.trim();if(!n){toast('Enter a name');return}
+      const u=sh.querySelector('#aU').value,f=U().f;
+      const pk=parseFloat(sh.querySelector('#aP').value),mo=parseFloat(sh.querySelector('#aM').value),mn=parseFloat(sh.querySelector('#aMn').value);
+      if(!(pk>0)){toast('Pack size must be more than 0');return}
+      const id='c'+Date.now().toString(36);
+      S.custom.push({id,n,hi:sh.querySelector('#aH').value.trim(),u,cat:sh.querySelector('#aC').value,
+        mo:(mo>0?mo:pk)*f*5/S.set.hh,pk:pk*f,mn:(mn>=0?mn:0)*f,opt:false,q:'',cv:null});
+      buildDefs();
+      if(sh.querySelector('#aL').checked)st(id).L=1;
+      save();closeSheet();render();toast('Added '+n);
+    });
+  });
+}
+
+/* ===================== PANTRY CHECK (AUDIT) ===================== */
+let aud={ids:[],i:0};
+function startAudit(scope){
+  let ids;
+  if(scope==='unk')ids=onIds().filter(id=>info(id).st==='unk');
+  else if(scope&&scope.startsWith('cat:')){const c=scope.slice(4);ids=ORDER.filter(id=>D(id).cat===c&&isOn(id))}
+  else ids=onIds();
+  if(!ids.length){toast('Nothing to count');return}
+  aud={ids,i:0,done:0};renderAudit();$('#audit').classList.add('on');
+}
+function renderAudit(){
+  const a=$('#audit');
+  if(aud.i>=aud.ids.length){
+    a.innerHTML=`<div class="acard"><div style="font-size:56px">🎉</div><div class="aname">Done!</div><div class="mute">${aud.done} items counted. Your order list is ready.</div>
+    <div class="agrid" style="margin-top:16px"><button class="btn" type="button" data-aexit="home">Home</button><button class="btn pri" type="button" data-aexit="list">Open list</button></div></div>`;return;
+  }
+  const id=aud.ids[aud.i],d=D(id),p=packOf(id),c=CATS.find(c=>c.id===d.cat),i=info(id);
+  a.innerHTML=`<div class="row"><button class="x" type="button" data-aexit="stay" aria-label="Close">✕</button><div class="grow mute small" style="text-align:center">${aud.i+1} of ${aud.ids.length} · ${c.ic} ${esc(c.n)}</div><button class="btn sm ghost" type="button" data-aback="1" ${aud.i?'':'disabled'}>Back</button></div>
+   <div class="prog"><i style="width:${aud.i/aud.ids.length*100}%"></i></div>
+   <div class="acard"><div class="aname">${esc(d.n)}</div><div class="ahi">${esc(d.hi)}</div>
+    <div class="mute small">Pack: ${fq(p,d.u)}${i.e!==null?' · app thinks ≈ '+fq(i.e,d.u):''}</div></div>
+   <div class="agrid">
+    <button class="btn" type="button" data-a="0" style="background:var(--red2);color:var(--red)">Empty</button>
+    <button class="btn" type="button" data-a="${p*0.25}">Low (¼ pack)</button>
+    <button class="btn" type="button" data-a="${p*0.5}">½ pack</button>
+    <button class="btn" type="button" data-a="${p}">1 pack · ${fq(p,d.u)}</button>
+    <button class="btn" type="button" data-a="${p*2}">2 packs</button>
+    <button class="btn" type="button" data-a="${p*3}">3+ packs</button>
+    <button class="btn ghost" type="button" data-askip="off">🚫 Don't use</button>
+    <button class="btn ghost" type="button" data-askip="1">Skip ›</button></div>`;
+}
+$('#audit').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.aexit){$('#audit').classList.remove('on');if(b.dataset.aexit!=='stay')go(b.dataset.aexit);else render();return}
+  if(b.dataset.aback){aud.i=Math.max(0,aud.i-1);renderAudit();return}
+  const id=aud.ids[aud.i];
+  if(b.dataset.a!==undefined){setCount(id,+b.dataset.a,true);aud.done++}
+  else if(b.dataset.askip==='off'){st(id).on=false;if(D(id).opt)delete S.it[id].on;save()}
+  aud.i++;renderAudit();render();
+});
+
+/* ===================== SETTINGS ===================== */
+function renderSettings(){
+  const s=S.set;
+  const sl=(id,lab,min,max,val,unit,help)=>`<div style="margin:10px 0"><div class="rangehead"><span class="fl" style="font-size:14px;color:var(--ink)">${lab}</span><b id="${id}V">${val}${unit}</b></div>
+   <input type="range" id="${id}" min="${min}" max="${max}" step="1" value="${val}" aria-label="${lab}">${help?`<div class="mute small">${help}</div>`:''}</div>`;
+  const perm=('Notification' in window)?Notification.permission:'unsupported';
+  view.innerHTML=`
+  <h2>Household</h2><div class="card">
+   ${sl('sHH','People eating at home',1,12,s.hh,'','All usage estimates scale with this. Defaults are for 5 people.')}
+   ${sl('sSafe','Safety buffer',2,30,s.safety,' days','Order when stock falls below this many days (or the “keep at least” amount).')}
+   ${sl('sLead','Delivery takes',0,7,s.lead,' days','')}
+   ${sl('sCov','Buy enough for',7,60,s.cover,' days','Staples (atta, dal, oil…). Spices, dairy and vegetables use their own cycles.')}
+   <label class="toggle"><input type="checkbox" class="sw" id="sLearn" ${s.learn?'checked':''}><span class="grow"><b>Learn my usage</b><div class="mute small">Each time you recount an item, the app compares and adjusts its usage slider.</div></span></label>
+  </div>
+  <h2>Ordering</h2><div class="card">
+   <label class="fl">Kirana store WhatsApp number<input class="inp" id="sPh" type="tel" inputmode="tel" placeholder="10-digit mobile (optional)" value="${esc(s.phone)}"></label>
+   <div class="mute small" style="margin:4px 0 6px">With a number, the WhatsApp button opens that chat directly. Without it, you pick the contact.</div>
+   <label class="toggle"><input type="checkbox" class="sw" id="sHi" ${s.hindiMsg?'checked':''}><span class="grow"><b>Hindi names in message</b><div class="mute small">e.g. “Arhar / Toor dal (अरहर दाल) – 2 kg”</div></span></label>
+   <div class="lbl" style="margin-top:8px">Shop links to show</div>
+   <div class="chips" style="flex-wrap:wrap">${Object.entries(STORES).map(([k,v])=>`<button type="button" class="chip ${s.stores.includes(k)?'on':''}" data-store="${k}">${v.n}</button>`).join('')}</div>
+   <label class="fl" style="margin-top:8px">Custom shop search link (use {q} for the item)<input class="inp" id="sCus" type="url" placeholder="https://shop.example/search?q={q}" value="${esc(s.custom)}"></label>
+  </div>
+  <h2>Reminders</h2><div class="card">
+   <div class="toggle"><span class="grow"><b>Pop-up alerts</b><div class="mute small" id="nStat">${perm==='granted'?'Allowed. Alerts show when you open the app and items need ordering.':perm==='denied'?'Blocked in browser settings. In-app pop-ups still work.':perm==='unsupported'?'Not supported here. In-app pop-ups still work.':'Shows a pop-up when items are about to run out.'}</div></span>
+   <input type="checkbox" class="sw" id="sNot" ${s.notif?'checked':''} aria-label="Enable pop-up alerts"></div>
+   <div class="note" style="margin:6px 0 10px">A web page can’t wake your phone when it is closed. For reliable phone alarms, add the run-out dates to your calendar 👇</div>
+   <button class="btn block" type="button" id="sIcs">📅 Add run-out reminders to calendar</button>
+   <button class="btn ghost block" type="button" id="sTest" style="margin-top:8px">Test alert now</button>
+  </div>
+  <h2>Data & backup</h2><div class="card">
+   <div class="kv"><span>Saved on this phone</span><b>${lsOK?'✅ Yes':'⚠️ No'}</b></div>
+   <div class="kv"><span>Cookie copy (stock essentials)</span><b>${ckOK?'✅ Yes':'⚠️ No'}</b></div>
+   <div class="kv"><span>Last CSV export</span><b>${s.lastBackup?ddate(s.lastBackup):'Never'}</b></div>
+   ${restoredFrom==='cookie'?'<div class="note" style="margin:6px 0">Data was restored from cookies. Brand, price and link details may be missing — import your CSV to restore everything.</div>':''}
+   <div class="row" style="gap:8px;margin-top:10px"><button class="btn pri grow" type="button" id="sExp">⬇ Export CSV</button><button class="btn grow" type="button" id="sImp">⬆ Import CSV</button></div>
+   <button class="btn ghost block" type="button" id="sReset" style="margin-top:8px;color:var(--red)">Reset everything</button>
+  </div>
+  <details class="card"><summary>How the app estimates stock</summary><div class="small mute" style="line-height:1.55">
+   <p><b>Daily use</b> = typical monthly use for 5 people × (your people ÷ 5) × your usage slider ÷ 30.</p>
+   <p><b>Stock now</b> = last count + what you bought since − daily use × days passed.</p>
+   <p><b>Reorder point</b> = the larger of “keep at least” (≈1 kg for staples, smaller for spices) or daily use × (delivery + safety days).</p>
+   <p><b>Order quantity</b> = enough to reach reorder point + your “buy enough for” days, rounded up to whole packs.</p>
+   <p>Defaults are rough starting estimates for an urban vegetarian family. Recount items now and then — the app learns your real usage.</p></div></details>
+  <div class="mute small" style="text-align:center;margin:16px 0">Rasoi Stock · works offline · your data stays on this phone</div>`;
+  const bindR=(id,key,unit)=>{const r=$('#'+id);r.addEventListener('input',()=>{$('#'+id+'V').textContent=r.value+unit});r.addEventListener('change',()=>{S.set[key]=+r.value;save();render()})};
+  bindR('sHH','hh','');bindR('sSafe','safety',' days');bindR('sLead','lead',' days');bindR('sCov','cover',' days');
+  $('#sLearn').addEventListener('change',e=>{S.set.learn=e.target.checked;save()});
+  $('#sHi').addEventListener('change',e=>{S.set.hindiMsg=e.target.checked;save()});
+  $('#sPh').addEventListener('change',e=>{S.set.phone=e.target.value.replace(/[^\d+]/g,'');save()});
+  $('#sCus').addEventListener('change',e=>{S.set.custom=e.target.value.trim();save()});
+  view.querySelectorAll('[data-store]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.store,a=S.set.stores;const i=a.indexOf(k);if(i>=0)a.splice(i,1);else a.push(k);save();renderSettings()}));
+  $('#sNot').addEventListener('change',async e=>{S.set.notif=e.target.checked;
+    if(S.set.notif&&'Notification' in window&&Notification.permission==='default'){try{await Notification.requestPermission()}catch(_){}}
+    save();renderSettings();});
+  $('#sIcs').addEventListener('click',exportIcs);
+  $('#sTest').addEventListener('click',()=>checkAlerts(true));
+  $('#sExp').addEventListener('click',exportCsv);
+  $('#sImp').addEventListener('click',()=>$('#fileIn').click());
+  $('#sReset').addEventListener('click',()=>{if(!confirm('Delete all stock, settings and custom items on this phone?'))return;const snap=snapshot();S={set:{...DEF_SET},it:{},custom:[]};buildDefs();save();render();toast('Everything reset',()=>restore(snap))});
+}
+
+/* ===================== ALERTS ===================== */
+function checkAlerts(force){
+  const ids=onIds().filter(id=>['out','low'].includes(info(id).st));
+  if(!ids.length){if(force)popup('✅ All stocked up','No item needs ordering right now.');return}
+  const key=ids.slice().sort().join(',');
+  const fresh=force||key!==S.set.lastNotifKey||Date.now()-S.set.lastNotif>6*3600e3;
+  if(!fresh)return;
+  S.set.lastNotif=Date.now();S.set.lastNotifKey=key;save();
+  const out=ids.filter(id=>info(id).st==='out');
+  const names=ids.slice(0,5).map(id=>D(id).n).join(', ')+(ids.length>5?` +${ids.length-5} more`:'');
+  const title=out.length?`⚠️ ${out.length} item${out.length>1?'s':''} finished`:`🛒 ${ids.length} item${ids.length>1?'s':''} running low`;
+  if(S.set.notif&&'Notification' in window&&Notification.permission==='granted'){
+    let shown=false;
+    try{const n=new Notification(title,{body:names,tag:'rasoi'});n.onclick=()=>{window.focus();go('list')};shown=true}catch(e){}
+    if(!shown&&navigator.serviceWorker&&navigator.serviceWorker.getRegistration){navigator.serviceWorker.getRegistration().then(r=>{if(r)r.showNotification(title,{body:names,tag:'rasoi'})}).catch(()=>{})}
+  }
+  if(navigator.vibrate)try{navigator.vibrate([80,60,80])}catch(e){}
+  popup(title,names,true);
+}
+function popup(title,body,withList){
+  openSheet(`<div class="sheethead"><div class="grow"><h3>${esc(title)}</h3></div><button class="x" type="button" data-close="1" aria-label="Close">✕</button></div>
+   <p class="mute" style="margin-top:0">${esc(body)}</p>
+   ${withList?`<div class="row" style="gap:8px"><button class="btn grow" type="button" data-close="1">Later</button><button class="btn pri grow" type="button" data-golist="1">Open order list</button></div>`:`<button class="btn pri block" type="button" data-close="1">OK</button>`}`);
+}
+function pad(n){return String(n).padStart(2,'0')}
+function icsDate(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())}
+function exportIcs(){
+  const byDay={};const now=new Date();now.setHours(0,0,0,0);
+  onIds().forEach(id=>{const i=info(id);if(i.toReorder===null||!isFinite(i.toReorder))return;
+    const d=Math.max(0,Math.floor(i.toReorder));if(d>60)return;const dt=new Date(now.getTime()+d*DAY);const k=icsDate(dt);(byDay[k]=byDay[k]||[]).push(D(id).n)});
+  const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//RasoiStock//EN','CALSCALE:GREGORIAN'];
+  const fold=s=>s.replace(/[,;\\]/g,m=>'\\'+m);
+  Object.entries(byDay).forEach(([k,names],i)=>{
+    L.push('BEGIN:VEVENT','UID:rasoi-'+k+'-'+i+'@rasoistock','DTSTAMP:'+stamp,'DTSTART:'+k+'T100000','DURATION:PT15M',
+      'SUMMARY:'+fold('🛒 Order: '+names.slice(0,3).join(', ')+(names.length>3?' +'+(names.length-3):'')),
+      'DESCRIPTION:'+fold('Running low: '+names.join(', ')+'. Open Rasoi Stock to build the order list.'),
+      'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Grocery reorder','TRIGGER:PT0M','END:VALARM','END:VEVENT');
+  });
+  const sun=new Date(now);sun.setDate(sun.getDate()+((7-sun.getDay())%7||7));
+  L.push('BEGIN:VEVENT','UID:rasoi-weekly@rasoistock','DTSTAMP:'+stamp,'DTSTART:'+icsDate(sun)+'T100000','DURATION:PT10M','RRULE:FREQ=WEEKLY',
+    'SUMMARY:🧺 Kitchen check – open Rasoi Stock','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Kitchen check','TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR');
+  download('rasoi-reminders.ics',L.join('\r\n'),'text/calendar');
+  toast(`${Object.keys(byDay).length} reminder days + weekly check`);
+}
+
+/* ===================== CSV ===================== */
+const COLS=['id','category','name','hindi','unit','monthly_for_5','pack','keep_min','custom','in_use','usage_x','stock_count','count_date','bought_since','last_bought','times_bought','in_list','order_qty','brand','price_per_pack','link','cycle_days','settings_json'];
+function csvCell(x){x=x===undefined||x===null?'':String(x);return /[",\n\r]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x}
+function iso(ts){return ts?new Date(ts).toISOString():''}
+function exportCsv(){
+  const rows=[COLS];
+  rows.push(['__settings__','','','','','','','','','','','','','','','','','','','','','',JSON.stringify(S.set)]);
+  ORDER.forEach(id=>{const d=D(id),v=S.it[id]||{};
+    rows.push([id,d.cat,d.n,d.hi,d.u,r2(d.mo),r2(d.pk),r2(d.mn),d.custom?1:0,isOn(id)?1:0,mult(id),r2(v.c),iso(v.t),r2(v.b),iso(v.lb),v.nb||'',v.L?1:'',v.q||'',v.br||'',v.pr||'',v.ln||'',v.cv||'',
+      JSON.stringify({pk:v.pk,mn:v.mn,x:v.x,obs:v.obs,opt:d.opt})]);});
+  const csv='\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
+  download('rasoi-stock-'+new Date().toISOString().slice(0,10)+'.csv',csv,'text/csv');
+  S.set.lastBackup=Date.now();save();render();toast('CSV exported');
+}
+function download(name,text,type){
+  const blob=new Blob([text],{type:type+';charset=utf-8'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+}
+function parseCsv(t){
+  t=t.replace(/^\ufeff/,'');const rows=[];let row=[],cell='',q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];
+    if(q){if(ch==='"'){if(t[i+1]==='"'){cell+='"';i++}else q=false}else cell+=ch}
+    else if(ch==='"')q=true;else if(ch===','){row.push(cell);cell=''}
+    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell=''}
+    else cell+=ch;}
+  if(cell||row.length){row.push(cell);rows.push(row)}
+  return rows.filter(r=>r.length>1||r[0]);
+}
+$('#fileIn').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const rows=parseCsv(rd.result);const h=rows.shift().map(x=>x.trim());const ix=k=>h.indexOf(k);
+      if(ix('id')<0||ix('stock_count')<0)throw new Error('Not a Rasoi Stock CSV');
+      const snap=snapshot();let n=0;
+      const num=x=>{const v=parseFloat(x);return isNaN(v)?undefined:v};const ts=x=>{const v=Date.parse(x);return isNaN(v)?undefined:v};
+      rows.forEach(r=>{const g=k=>r[ix(k)]!==undefined?r[ix(k)]:'';const id=g('id');if(!id)return;
+        if(id==='__settings__'){try{Object.assign(S.set,JSON.parse(g('settings_json')))}catch(_){}return}
+        let ex={};try{ex=JSON.parse(g('settings_json')||'{}')}catch(_){}
+        if(g('custom')==='1'&&!DEFS[id]){S.custom.push({id,n:g('name'),hi:g('hindi'),u:g('unit')||'g',cat:CATS.some(c=>c.id===g('category'))?g('category'):'grain',mo:num(g('monthly_for_5'))||1,pk:num(g('pack'))||1,mn:num(g('keep_min'))||0,opt:false,q:'',cv:null});buildDefs()}
+        if(!DEFS[id])return;
+        const v={};const d=DEFS[id];
+        const on=g('in_use')==='1';if(on===d.opt)v.on=on;
+        const m=num(g('usage_x'));if(m&&m!==1)v.m=m;
+        const c=num(g('stock_count')),t=ts(g('count_date'));if(c!==undefined&&t){v.c=c;v.t=t;v.b=num(g('bought_since'))||0}
+        const lb=ts(g('last_bought'));if(lb)v.lb=lb;const nb=num(g('times_bought'));if(nb)v.nb=nb;
+        if(g('in_list')==='1')v.L=1;const oq=num(g('order_qty'));if(oq)v.q=oq;
+        if(g('brand'))v.br=g('brand');const pr=num(g('price_per_pack'));if(pr)v.pr=pr;if(g('link'))v.ln=g('link');const cv=num(g('cycle_days'));if(cv)v.cv=cv;
+        ['pk','mn','x','obs'].forEach(k=>{if(ex[k]!==undefined&&ex[k]!==null)v[k]=ex[k]});
+        S.it[id]=v;n++;});
+      save();render();toast(`Imported ${n} items`,()=>restore(snap));
+    }catch(err){toast('Import failed: '+err.message)}
+    e.target.value='';
+  };
+  rd.readAsText(f);
+});
+
+/* ===================== GLOBAL CLICK DELEGATION ===================== */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button,[data-item]');if(!b)return;
+  if(b.closest('#audit'))return;
+  const ds=b.dataset;
+  if(ds.close){closeSheet();return}
+  if(ds.golist){closeSheet();go('list');return}
+  if(ds.go){go(ds.go);return}
+  if(ds.f){pFilter=ds.f;pCat='all';pSearch='';go('pantry');return}
+  if(ds.pf){pFilter=ds.pf;renderPantry();return}
+  if(ds.pc){pCat=ds.pc;renderPantry();return}
+  if(ds.cart){toggleList(ds.cart);return}
+  if(ds.item){openItem(ds.item);return}
+  if(ds.audit){closeSheet();startAudit(ds.audit);return}
+  if(ds.add){openAdd(ds.add);return}
+  if(ds.export){exportCsv();return}
+  if(ds.cover){S.set.cover=+ds.cover;Object.values(S.it).forEach(v=>delete v.q);save();render();return}
+  if(ds.uncheck){toggleList(ds.uncheck);return}
+  if(ds.check){const v=st(ds.check);v.L=1;delete v.x;save();render();return}
+  if(ds.addlist){const v=st(ds.addlist);v.L=1;delete v.x;if(!isOn(ds.addlist))v.on=true;save();render();toast('Added '+D(ds.addlist).n);return}
+  if(ds.qu||ds.qd){const id=ds.qu||ds.qd,p=packOf(id),v=st(id);let q=orderQty(id)+(ds.qu?p:-p);
+    if(q<p){toggleList(id);return}v.q=q;save();render();return}
+  if(ds.share){share(ds.share);return}
+  if(ds.bought){if(confirm('Add all checked quantities to your stock?'))markBought();return}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();$('#audit').classList.remove('on')}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){render();if(S.set.notif)setTimeout(()=>checkAlerts(false),600)}});
+
+/* ===================== START ===================== */
+load();
+save();
+render();
+if(!S.set.seenIntro){
+  S.set.seenIntro=true;save();
+  openSheet(`<div class="sheethead"><div class="grow"><h3>Namaste 🙏 Welcome to Rasoi Stock</h3></div><button class="x" type="button" data-close="1" aria-label="Close">✕</button></div>
+  <div class="small" style="line-height:1.6">
+   <p>1️⃣ <b>Set your household</b> — 5 people by default (top-right).</p>
+   <p>2️⃣ <b>Do one pantry check</b> — tap Empty / ½ / 1 pack for each item. ~5 minutes.</p>
+   <p>3️⃣ <b>The app predicts</b> when each item runs low and fills your order list.</p>
+   <p>4️⃣ <b>Send the list on WhatsApp</b> to your kirana or family, then tap “Got these items”.</p>
+   <p class="mute">Tip: on your phone, use “Add to Home screen” so it opens like an app.</p></div>
+  <button class="btn pri block" type="button" data-audit="unk">Start pantry check</button>
+  <button class="btn ghost block" type="button" data-close="1" style="margin-top:8px">Explore first</button>`);
+}else if(S.set.notif){setTimeout(()=>checkAlerts(false),900)}
+setInterval(()=>{if(!document.hidden){if(tab==='home')render();if(S.set.notif)checkAlerts(false)}},30*60e3);
+})();
+</script>
+</body>
+</html>
